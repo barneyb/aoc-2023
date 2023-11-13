@@ -15,10 +15,6 @@ public class NoTimeForATaxicab extends SolveEachPart<List<Step>, Long, Long> {
         new NoTimeForATaxicab().solveAndPrint();
     }
 
-    protected NoTimeForATaxicab() {
-        super(2016, 1);
-    }
-
     @Override
     protected List<Step> buildModel(Input input) {
         List<Step> steps = new ArrayList<>();

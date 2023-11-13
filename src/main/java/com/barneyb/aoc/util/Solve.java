@@ -7,6 +7,8 @@ import java.lang.management.MemoryUsage;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,13 +25,7 @@ abstract class Solve<Model> {
     private final int year;
     private final int day;
 
-    protected Solve(int year, int day) {
-        validateDay(year, day);
-        this.year = year;
-        this.day = day;
-    }
-
-    protected Solve() {
+    Solve() {
         String[] parts = getClass().getPackageName()
                 .split("\\.");
         int year = Integer.parseInt(parts[parts.length - 2].substring(3));
@@ -68,15 +64,15 @@ abstract class Solve<Model> {
     abstract void solve(Model model,
                         Consumer<Info<?>> doneWithPart);
 
-    protected record Info<T>(T result,
+    record Info<T>(T result,
                              long nanos,
                              Mem mem) {
 
-        public Info(T result) {
+        Info(T result) {
             this(result, 0, Mem.empty());
         }
 
-        public <R> Info<R> map(Function<T, R> map) {
+        <R> Info<R> map(Function<T, R> map) {
             return new Info<>(map.apply(result),
                               nanos,
                               mem);
@@ -118,7 +114,7 @@ abstract class Solve<Model> {
 
     }
 
-    protected final <T> Info<T> workInfo(Supplier<T> work) {
+    final <T> Info<T> workInfo(Supplier<T> work) {
         Runtime.getRuntime().gc();
         Mem mem = Mem.build();
         long startTime = System.nanoTime();
@@ -183,5 +179,25 @@ abstract class Solve<Model> {
         }
         return sb.toString();
     }
+
+    public void test(Object... expected) {
+        Model model = buildModel(getInput());
+        List<Object> actual = new ArrayList<>();
+        test(model, actual::add);
+        Iterator<Object> itr = actual.iterator();
+        for (Object e : expected) {
+            if (!itr.hasNext()) throw new RuntimeException(String.format(
+                    "Too many expected answers provided; '%s' has no corresponding solution",
+                    e));
+            Object a = itr.next();
+            if (!Objects.equals(e, a)) throw new AssertionError(String.format(
+                    "Expected '%s' but got '%s'",
+                    e,
+                    a));
+        }
+    }
+
+    abstract void test(Model model,
+                       Consumer<Object> solutionConsumer);
 
 }

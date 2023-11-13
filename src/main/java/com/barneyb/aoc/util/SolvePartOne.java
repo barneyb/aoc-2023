@@ -1,8 +1,8 @@
 package com.barneyb.aoc.util;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public abstract class SolvePartOne<Model, Answer> extends Solve<Model> {
 
     @Override
@@ -11,11 +11,5 @@ public abstract class SolvePartOne<Model, Answer> extends Solve<Model> {
     }
 
     protected abstract Answer solvePartOne(Model model);
-
-    public void test(Answer partOne) {
-        Model model = buildModel(getInput());
-        Answer actual = solvePartOne(model);
-        assert Objects.equals(partOne, actual);
-    }
 
 }

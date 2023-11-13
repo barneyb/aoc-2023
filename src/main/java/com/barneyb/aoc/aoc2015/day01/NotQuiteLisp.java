@@ -6,10 +6,6 @@ import com.barneyb.aoc.util.SolveTogether;
 
 public class NotQuiteLisp extends SolveTogether<char[], Integer, Integer> {
 
-    public NotQuiteLisp() {
-        super(2015, 1);
-    }
-
     @Override
     protected char[] buildModel(Input input) {
         return input.firstLine()

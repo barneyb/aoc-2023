@@ -10,15 +10,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BathroomSecurityTest {
 
+    public static final String EXAMPLE_INPUT = """
+            ULL
+            RRDDD
+            LURDL
+            UUUUD""";
+
     @Test
     void exampleOne() {
-        Input in = Input.of("""
-                                    ULL
-                                    RRDDD
-                                    LURDL
-                                    UUUUD""");
-
+        Input in = Input.of(EXAMPLE_INPUT);
         BathroomSecurity bathSec = new BathroomSecurity();
+
         List<List<Dir>> rows = bathSec.buildModel(in);
 
         assertEquals(List.of(
@@ -34,8 +36,20 @@ class BathroomSecurityTest {
     }
 
     @Test
-    void partOne() {
-        new BathroomSecurity().test("61529");
+    void realWorld() {
+        new BathroomSecurity().test("61529",
+                                    "C2C28");
+    }
+
+    @Test
+    void exampleTwo() {
+        Input in = Input.of(EXAMPLE_INPUT);
+        BathroomSecurity bathSec = new BathroomSecurity();
+        List<List<Dir>> rows = bathSec.buildModel(in);
+
+        String code = bathSec.solvePartTwo(rows);
+
+        assertEquals("5DB3", code);
     }
 
 }

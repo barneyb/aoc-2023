@@ -12,10 +12,6 @@ public class IWasToldThereWouldBeNoMath extends SolveEachPart<Collection<Box>, L
         new IWasToldThereWouldBeNoMath().solveAndPrint();
     }
 
-    public IWasToldThereWouldBeNoMath() {
-        super(2015, 2);
-    }
-
     @Override
     protected Collection<Box> buildModel(Input input) {
         Collection<Box> boxes = new ArrayList<>();
