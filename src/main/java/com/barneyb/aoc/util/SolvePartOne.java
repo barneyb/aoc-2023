@@ -1,12 +1,9 @@
 package com.barneyb.aoc.util;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public abstract class SolvePartOne<Model, Answer> extends Solve<Model> {
-
-    protected SolvePartOne(int year, int day) {
-        super(year, day);
-    }
 
     @Override
     void solve(Model model, Consumer<Info<?>> doneWithPart) {
@@ -14,5 +11,11 @@ public abstract class SolvePartOne<Model, Answer> extends Solve<Model> {
     }
 
     protected abstract Answer solvePartOne(Model model);
+
+    public void test(Answer partOne) {
+        Model model = buildModel(getInput());
+        Answer actual = solvePartOne(model);
+        assert Objects.equals(partOne, actual);
+    }
 
 }

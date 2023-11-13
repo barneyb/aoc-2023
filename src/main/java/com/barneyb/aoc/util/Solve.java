@@ -29,6 +29,16 @@ abstract class Solve<Model> {
         this.day = day;
     }
 
+    protected Solve() {
+        String[] parts = getClass().getPackageName()
+                .split("\\.");
+        int year = Integer.parseInt(parts[parts.length - 2].substring(3));
+        int day = Integer.parseInt(parts[parts.length - 1].substring(3));
+        validateDay(year, day);
+        this.year = year;
+        this.day = day;
+    }
+
     private void validateDay(int year, int day) {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("America/New_York"));
         int maxYear = year == now.getYear() && Month.DECEMBER == now.getMonth()
@@ -119,8 +129,7 @@ abstract class Solve<Model> {
     }
 
     public final void solveAndPrint() {
-        Input input = Input.of(year, day);
-        Info<Model> model = workInfo(() -> buildModel(input));
+        Info<Model> model = workInfo(() -> buildModel(getInput()));
         System.out.println("Load Data");
         System.out.println(info(model));
         AtomicInteger pn = new AtomicInteger();
@@ -128,6 +137,10 @@ abstract class Solve<Model> {
             System.out.println("Part " + part(pn.incrementAndGet()) + ": " + answer(a.result));
             if (a.nanos > 0) System.out.println(info(a));
         });
+    }
+
+    Input getInput() {
+        return Input.of(year, day);
     }
 
     private String part(int i) {

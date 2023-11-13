@@ -3,6 +3,7 @@ package com.barneyb.aoc.util;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -45,6 +46,15 @@ class InputTest {
         Input in = build();
         in.firstLine();
         assertThrows(RuntimeException.class, in::toString);
+    }
+
+    @Test
+    void stream() {
+        List<String> lines = build().streamLines()
+                .toList();
+
+        assertEquals(List.of("a", "b"),
+                     lines);
     }
 
     private static Input build() {
