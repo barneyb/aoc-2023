@@ -2,7 +2,6 @@ package com.barneyb.aoc.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,7 +48,7 @@ class InputTest {
     }
 
     private static Input build() {
-        return new Input(new ByteArrayInputStream("a\nb\n".getBytes()));
+        return Input.of("a\nb\n");
     }
 
 }

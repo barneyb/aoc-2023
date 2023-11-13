@@ -1,6 +1,7 @@
 package com.barneyb.aoc.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,6 +12,13 @@ public final class Input implements Iterable<String> {
 
     public static Input of(int year, int day) {
         return new Input(year, day);
+    }
+
+    /**
+     * I create an Input from a literal string. I'm mostly useful for tests.
+     */
+    public static Input of(String str) {
+        return new Input(new ByteArrayInputStream(str.getBytes()));
     }
 
     private InputStream inStream;
