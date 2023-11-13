@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2016.day01;
 
+import com.barneyb.aoc.geom.Turn;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

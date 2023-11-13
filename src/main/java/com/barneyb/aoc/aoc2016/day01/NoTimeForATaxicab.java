@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2016.day01;
 
+import com.barneyb.aoc.geom.Point;
 import com.barneyb.aoc.util.Input;
 import com.barneyb.aoc.util.SolveEachPart;
 
