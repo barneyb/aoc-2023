@@ -1,27 +1,24 @@
 package com.barneyb.aoc.aoc2017.day05;
 
+import com.barneyb.aoc.util.ConsumesModel;
 import com.barneyb.aoc.util.Input;
 import com.barneyb.aoc.util.SolveEachPart;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class AMazeOfTwistyTrampolinesAllAlike extends SolveEachPart<List<Integer>, Integer, Integer> {
+@ConsumesModel
+public class AMazeOfTwistyTrampolinesAllAlike extends SolveEachPart<int[], Integer, Integer> {
 
     public static void main(String[] args) {
         new AMazeOfTwistyTrampolinesAllAlike().solveAndPrint();
     }
 
     @Override
-    protected List<Integer> buildModel(Input input) {
+    protected int[] buildModel(Input input) {
         ArrayList<Integer> list = new ArrayList<>();
         for (String s : input) {
             list.add(Integer.valueOf(s));
         }
-        return list;
-    }
-
-    private int[] listToArray(List<Integer> list) {
         int[] arr = new int[list.size()];
         int i = 0;
         for (int j : list) {
@@ -31,8 +28,7 @@ public class AMazeOfTwistyTrampolinesAllAlike extends SolveEachPart<List<Integer
     }
 
     @Override
-    protected Integer solvePartOne(List<Integer> list) {
-        int[] jumps = listToArray(list);
+    protected Integer solvePartOne(int[] jumps) {
         int idx = 0;
         int steps = 0;
         while (idx >= 0 && idx < jumps.length) {
@@ -45,8 +41,7 @@ public class AMazeOfTwistyTrampolinesAllAlike extends SolveEachPart<List<Integer
     }
 
     @Override
-    protected Integer solvePartTwo(List<Integer> list) {
-        int[] jumps = listToArray(list);
+    protected Integer solvePartTwo(int[] jumps) {
         int idx = 0;
         int steps = 0;
         while (idx >= 0 && idx < jumps.length) {
