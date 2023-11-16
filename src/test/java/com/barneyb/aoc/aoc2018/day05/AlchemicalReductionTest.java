@@ -10,9 +10,17 @@ class AlchemicalReductionTest {
     @Test
     void exampleOne() {
         var solver = new AlchemicalReduction();
-        var model = solver.buildModel(Input.of("dabAcCaCBAcCcaDA"));
+        var polymer = solver.buildModel(Input.of("dabAcCaCBAcCcaDA"));
         assertEquals(10, solver
-                .solvePartOne(model));
+                .solvePartOne(polymer));
+    }
+
+    @Test
+    void exampleTwo() {
+        var solver = new AlchemicalReduction();
+        var polymer = solver.buildModel(Input.of("dabAcCaCBAcCcaDA"));
+        assertEquals(4, solver
+                .solvePartTwo(polymer));
     }
 
 }
