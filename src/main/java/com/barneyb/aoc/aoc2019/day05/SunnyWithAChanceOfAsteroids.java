@@ -2,12 +2,12 @@ package com.barneyb.aoc.aoc2019.day05;
 
 import com.barneyb.aoc.aoc2019.day02.Intcode;
 import com.barneyb.aoc.util.Input;
-import com.barneyb.aoc.util.SolvePartOne;
+import com.barneyb.aoc.util.SolveEachPart;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SunnyWithAChanceOfAsteroids extends SolvePartOne<int[], Integer> {
+public class SunnyWithAChanceOfAsteroids extends SolveEachPart<int[], Integer, Integer> {
 
     public static void main(String[] args) {
         new SunnyWithAChanceOfAsteroids()
@@ -21,12 +21,21 @@ public class SunnyWithAChanceOfAsteroids extends SolvePartOne<int[], Integer> {
 
     @Override
     protected Integer solvePartOne(int[] program) {
+        return diagnose(program, 1);
+    }
+
+    private Integer diagnose(int[] program, int code) {
         List<Integer> codes = new ArrayList<>();
         var vm = new Intcode(program,
-                             () -> 1,
+                             () -> code,
                              codes::add);
         vm.run();
         return codes.get(codes.size() - 1);
+    }
+
+    @Override
+    protected Integer solvePartTwo(int[] program) {
+        return diagnose(program, 5);
     }
 
 }

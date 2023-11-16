@@ -10,7 +10,8 @@ public class Intcode {
 
     public static int[] parse(Input input) {
         var source = input.toString()
-                .split(",");
+                .trim()
+                .split("\\s*,\\s*");
         var program = new int[source.length];
         for (int i = 0; i < source.length; i++) {
             String s = source[i];
@@ -100,6 +101,30 @@ public class Intcode {
                 case 4:
                     output(param());
                     break;
+                case 5: {
+                    int operand = param();
+                    int value = param();
+                    if (operand != 0) ip = value;
+                    break;
+                }
+                case 6: {
+                    int operand = param();
+                    int value = param();
+                    if (operand == 0) ip = value;
+                    break;
+                }
+                case 7: {
+                    int a = param();
+                    int b = param();
+                    write(next(), a < b ? 1 : 0);
+                    break;
+                }
+                case 8: {
+                    int a = param();
+                    int b = param();
+                    write(next(), a == b ? 1 : 0);
+                    break;
+                }
                 case 99:
                     return;
                 default:
