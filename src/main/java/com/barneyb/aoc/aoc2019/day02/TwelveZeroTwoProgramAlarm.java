@@ -12,14 +12,7 @@ public class TwelveZeroTwoProgramAlarm extends SolveEachPart<int[], Integer, Int
 
     @Override
     protected int[] buildModel(Input input) {
-        var source = input.toString()
-                .split(",");
-        var program = new int[source.length];
-        for (int i = 0; i < source.length; i++) {
-            String s = source[i];
-            program[i] = Integer.parseInt(s);
-        }
-        return program;
+        return Intcode.parse(input);
     }
 
     @Override
@@ -29,10 +22,10 @@ public class TwelveZeroTwoProgramAlarm extends SolveEachPart<int[], Integer, Int
 
     private int compute(int[] program, int noun, int verb) {
         var vm = new Intcode(program);
-        vm.setPosition(1, noun);
-        vm.setPosition(2, verb);
+        vm.write(1, noun);
+        vm.write(2, verb);
         vm.run();
-        return vm.getPosition(0);
+        return vm.read(0);
     }
 
     @Override
