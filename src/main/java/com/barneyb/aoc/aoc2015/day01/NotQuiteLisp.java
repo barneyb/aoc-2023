@@ -8,8 +8,7 @@ public class NotQuiteLisp extends SolveTogether<char[], Integer, Integer> {
 
     @Override
     protected char[] buildModel(Input input) {
-        return input.firstLine()
-                .toCharArray();
+        return input.toCharArray();
     }
 
     @Override

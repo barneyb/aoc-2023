@@ -147,6 +147,10 @@ public final class Input implements Iterable<String> {
         return sb.toString();
     }
 
+    public char[] toCharArray() {
+        return toString().toCharArray();
+    }
+
     public Stream<String> streamLines() {
         return StreamSupport.stream(spliterator(),
                                     false);
