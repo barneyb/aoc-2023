@@ -3,6 +3,7 @@ package com.barneyb.aoc.aoc2020.day05;
 import com.barneyb.aoc.util.Input;
 import com.barneyb.aoc.util.SolveEachPart;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class BinaryBoarding extends SolveEachPart<List<BoardingPass>, Integer, Integer> {
@@ -20,18 +21,20 @@ public class BinaryBoarding extends SolveEachPart<List<BoardingPass>, Integer, I
 
     @Override
     protected Integer solvePartOne(List<BoardingPass> boardingPasses) {
-        return boardingPasses.stream()
-                .mapToInt(BoardingPass::seatId)
-                .max()
-                .orElseThrow();
+        int max = -1;
+        for (BoardingPass pass : boardingPasses) {
+            max = Math.max(max, pass.seatId());
+        }
+        return max;
     }
 
     @Override
     protected Integer solvePartTwo(List<BoardingPass> boardingPasses) {
-        int[] ids = boardingPasses.stream()
-                .mapToInt(BoardingPass::seatId)
-                .sorted()
-                .toArray();
+        int[] ids = new int[boardingPasses.size()];
+        for (int i = 0; i < boardingPasses.size(); i++) {
+            ids[i] = boardingPasses.get(i).seatId();
+        }
+        Arrays.sort(ids);
         for (int i = ids.length - 2; i >= 0; i--) {
             if (ids[i] + 1 != ids[i + 1]) return ids[i] + 1;
         }
