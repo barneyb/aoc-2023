@@ -20,4 +20,9 @@ class AMazeOfTwistyTrampolinesAllAlikeTest {
                      solver.solvePartTwo(new int[]{ 0, 3, 0, 1, -3 }));
     }
 
+    @Test
+    void realWorld() {
+        new AMazeOfTwistyTrampolinesAllAlike().test(375042, 28707598);
+    }
+
 }

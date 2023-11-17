@@ -24,6 +24,10 @@ abstract class Solve<Model> {
                    long nanos,
                    Mem mem) {
 
+        /**
+         * This is used by {@link SolveTogether}.
+         */
+        @SuppressWarnings("unused")
         Info(T result) {
             this(result, 0, Mem.empty());
         }
@@ -146,6 +150,10 @@ abstract class Solve<Model> {
                     "Too many expected answers provided; '%s' has no corresponding solution",
                     e));
             Object a = itr.next();
+            // let assertions use ints for long too
+            if (e instanceof Integer i && a instanceof Long) {
+                e = i.longValue();
+            }
             if (!Objects.equals(e, a)) throw new AssertionError(String.format(
                     "Expected '%s' but got '%s'",
                     e,

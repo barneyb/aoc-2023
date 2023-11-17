@@ -28,4 +28,9 @@ class IWasToldThereWouldBeNoMathTest {
         assertEquals(34L + 14, a);
     }
 
+    @Test
+    void realWorld() {
+        new IWasToldThereWouldBeNoMath().test(1598415, 3812909);
+    }
+
 }

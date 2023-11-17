@@ -21,4 +21,9 @@ class NotQuiteLispTest {
         assertEquals(5, as.partTwo());
     }
 
+    @Test
+    void realWorld() {
+        new NotQuiteLisp().test(280, 1797);
+    }
+
 }

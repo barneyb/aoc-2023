@@ -8,6 +8,11 @@ public abstract class SolveEachPart<Model, AnswerOne, AnswerTwo> extends Solve<M
     @Override
     void solve(Model model, Consumer<Info<?>> doneWithPart) {
         doneWithPart.accept(workInfo(() -> solvePartOne(model)));
+        Model partTwoModel = getPartTwoModel(model);
+        doneWithPart.accept(workInfo(() -> solvePartTwo(partTwoModel)));
+    }
+
+    private Model getPartTwoModel(Model model) {
         Model partTwoModel;
         if (Arrays.stream(getClass().getAnnotations())
                 .anyMatch(a -> a instanceof ConsumesModel)) {
@@ -15,13 +20,14 @@ public abstract class SolveEachPart<Model, AnswerOne, AnswerTwo> extends Solve<M
         } else {
             partTwoModel = model;
         }
-        doneWithPart.accept(workInfo(() -> solvePartTwo(partTwoModel)));
+        return partTwoModel;
     }
 
     @Override
     void test(Model model, Consumer<Object> solutionConsumer) {
         solutionConsumer.accept(solvePartOne(model));
-        solutionConsumer.accept(solvePartTwo(model));
+        Model partTwoModel = getPartTwoModel(model);
+        solutionConsumer.accept(solvePartTwo(partTwoModel));
     }
 
     protected abstract AnswerOne solvePartOne(Model model);
