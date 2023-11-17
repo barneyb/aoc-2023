@@ -23,4 +23,9 @@ class AlchemicalReductionTest {
                 .solvePartTwo(polymer));
     }
 
+    @Test
+    void realWorld() {
+        new AlchemicalReduction().test(11242, 5492);
+    }
+
 }

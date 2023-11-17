@@ -49,4 +49,9 @@ class NoTimeForATaxicabTest {
         assertEquals(4L, distance);
     }
 
+    @Test
+    void realWorld() {
+        new NoTimeForATaxicab().test(288, 111);
+    }
+
 }
