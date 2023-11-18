@@ -17,12 +17,16 @@ public class HowAboutANiceGameOfChess extends SolveEachPart<String, String, Stri
 
     @Override
     protected String solvePartOne(String doorKey) {
-        StringBuilder sb = new StringBuilder(8);
+        return sequentialCode(doorKey, 8);
+    }
+
+    String sequentialCode(String doorKey, int codeLength) {
+        StringBuilder sb = new StringBuilder(codeLength);
         for (long i = 0; ; i++) {
             byte[] bytes = Digest.md5(doorKey, i);
             if (startsWithFiveZeros(bytes)) {
                 sb.append(Integer.toString(bytes[2] & 0x0f, 16));
-                if (sb.length() == 8) return sb.toString();
+                if (sb.length() == codeLength) return sb.toString();
             }
         }
     }
