@@ -1,7 +1,9 @@
 package com.barneyb.aoc.util;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public abstract class SolveEachPart<Model, AnswerOne, AnswerTwo> extends Solve<Model> {
 
@@ -14,13 +16,20 @@ public abstract class SolveEachPart<Model, AnswerOne, AnswerTwo> extends Solve<M
 
     private Model getPartTwoModel(Model model) {
         Model partTwoModel;
-        if (Arrays.stream(getClass().getAnnotations())
-                .anyMatch(a -> a instanceof ConsumesModel)) {
+        // streams and iterators are always consumed
+        if (model instanceof Stream
+                || model instanceof Iterator
+                || isConsumesModel()) {
             partTwoModel = buildModel(getInput());
         } else {
             partTwoModel = model;
         }
         return partTwoModel;
+    }
+
+    private boolean isConsumesModel() {
+        return Arrays.stream(getClass().getAnnotations())
+                .anyMatch(a -> a instanceof ConsumesModel);
     }
 
     @Override
