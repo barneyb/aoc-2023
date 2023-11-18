@@ -43,8 +43,14 @@ class SupplyStacksTest {
     }
 
     @Test
+    void exampleTwo() {
+        assertEquals("MCD",
+                     new SupplyStacks().solvePartTwo(MODEL_ONE));
+    }
+
+    @Test
     void realWorld() {
-        new SupplyStacks().test("PTWLTDSJV");
+        new SupplyStacks().test("PTWLTDSJV", "WZMFVGGZP");
     }
 
 }

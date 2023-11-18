@@ -1,14 +1,14 @@
 package com.barneyb.aoc.aoc2022.day05;
 
 import com.barneyb.aoc.util.Input;
-import com.barneyb.aoc.util.SolvePartOne;
+import com.barneyb.aoc.util.SolveEachPart;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-public class SupplyStacks extends SolvePartOne<StacksAndMoves, String> {
+public class SupplyStacks extends SolveEachPart<StacksAndMoves, String, String> {
 
     public static void main(String[] args) {
         new SupplyStacks().solveAndPrint();
@@ -65,11 +65,22 @@ public class SupplyStacks extends SolvePartOne<StacksAndMoves, String> {
                 to.addFirst(from.removeFirst());
             }
         }
-        var sb = new StringBuilder();
-        for (Deque<Character> stack : stacks) {
-            sb.append(stack.peekFirst());
+        return readTopCrates(stacks);
+    }
+
+    @Override
+    protected String solvePartTwo(StacksAndMoves model) {
+        List<Deque<Character>> stacks = constructStacks(model.stacks());
+        for (Move move : model.moves()) {
+            var from = stacks.get(move.from() - 1);
+            Deque<Character> temp = new ArrayDeque<>();
+            for (int i = move.count(); i > 0; i--) {
+                temp.addFirst(from.removeFirst());
+            }
+            // no need to actually remove them from temp
+            temp.forEach(stacks.get(move.to() - 1)::addFirst);
         }
-        return sb.toString();
+        return readTopCrates(stacks);
     }
 
     private List<Deque<Character>> constructStacks(List<String> model) {
@@ -82,6 +93,14 @@ public class SupplyStacks extends SolvePartOne<StacksAndMoves, String> {
             stacks.add(stack);
         }
         return stacks;
+    }
+
+    private static String readTopCrates(List<Deque<Character>> stacks) {
+        var sb = new StringBuilder();
+        for (Deque<Character> stack : stacks) {
+            sb.append(stack.peekFirst());
+        }
+        return sb.toString();
     }
 
 }
