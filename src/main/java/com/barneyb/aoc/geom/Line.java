@@ -23,12 +23,18 @@ public record Line(Point a, Point b) implements Iterable<Point> {
     }
 
     public Iterator<Point> points() {
+        Range xr = xRange();
         if (isHorizontal()) {
-            return new Horiz();
+            return new Horiz(xr, a.y());
         } else if (isVertical()) {
-            return new Vert();
+            return new Vert(a.x(), yRange());
+        }
+        Range yr = yRange();
+        if (xr.size() == yr.size()) {
+            return new Diag(xr, yr);
         } else {
-            throw new UnsupportedOperationException("Only vertical and horizontal lines can iterate over their points");
+            throw new UnsupportedOperationException(
+                    "Only vertical, horizontal, and 45-degree lines can iterate over their points");
         }
     }
 
@@ -40,10 +46,15 @@ public record Line(Point a, Point b) implements Iterable<Point> {
         return points();
     }
 
-    private class Horiz implements Iterator<Point> {
+    private static class Horiz implements Iterator<Point> {
 
-        private final Iterator<Long> xs = xRange().iterator();
-        private final long y = a.y();
+        private final Iterator<Long> xs;
+        private final long y;
+
+        public Horiz(Range xr, long y) {
+            this.xs = xr.iterator();
+            this.y = y;
+        }
 
         @Override
         public boolean hasNext() {
@@ -57,10 +68,15 @@ public record Line(Point a, Point b) implements Iterable<Point> {
 
     }
 
-    private class Vert implements Iterator<Point> {
+    private static class Vert implements Iterator<Point> {
 
-        private final long x = a.x();
-        private final Iterator<Long> ys = yRange().iterator();
+        private final long x;
+        private final Iterator<Long> ys;
+
+        public Vert(long x, Range yr) {
+            this.x = x;
+            this.ys = yr.iterator();
+        }
 
         @Override
         public boolean hasNext() {
@@ -70,6 +86,29 @@ public record Line(Point a, Point b) implements Iterable<Point> {
         @Override
         public Point next() {
             return new Point(x, ys.next());
+        }
+
+    }
+
+    private static class Diag implements Iterator<Point> {
+
+        private final Iterator<Long> xs;
+        private final Iterator<Long> ys;
+
+        public Diag(Range xr, Range yr) {
+            assert xr.size() == yr.size() : "Line isn't at 45 degrees";
+            this.xs = xr.iterator();
+            this.ys = yr.iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return xs.hasNext() && ys.hasNext();
+        }
+
+        @Override
+        public Point next() {
+            return new Point(xs.next(), ys.next());
         }
 
     }

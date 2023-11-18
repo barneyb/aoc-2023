@@ -2,14 +2,15 @@ package com.barneyb.aoc.aoc2021.day05;
 
 import com.barneyb.aoc.geom.Line;
 import com.barneyb.aoc.geom.Point;
+import com.barneyb.aoc.util.Answers;
 import com.barneyb.aoc.util.Histogram;
 import com.barneyb.aoc.util.Input;
-import com.barneyb.aoc.util.SolvePartOne;
+import com.barneyb.aoc.util.SolveTogether;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HydrothermalVenture extends SolvePartOne<List<Line>, Integer> {
+public class HydrothermalVenture extends SolveTogether<List<Line>, Integer, Integer> {
 
     public static void main(String[] args) {
         new HydrothermalVenture().solveAndPrint();
@@ -27,13 +28,19 @@ public class HydrothermalVenture extends SolvePartOne<List<Line>, Integer> {
     }
 
     @Override
-    protected Integer solvePartOne(List<Line> lines) {
-        Histogram<Point> hist = new Histogram<>();
-        lines.stream()
-                .filter(l -> l.isHorizontal() || l.isVertical())
-                .forEach(line -> line.points().forEachRemaining(hist::count));
-        return hist.buckets(c -> c > 1)
-                .size();
+    protected Answers<Integer, Integer> solveTogether(List<Line> lines) {
+        Histogram<Point> histOne = new Histogram<>();
+        Histogram<Point> histTwo = new Histogram<>();
+        lines.forEach(line -> {
+            boolean rect = line.isHorizontal() || line.isVertical();
+            line.points().forEachRemaining(p -> {
+                if (rect) histOne.count(p);
+                histTwo.count(p);
+            });
+        });
+        return new Answers<>(
+                histOne.buckets(c -> c > 1).size(),
+                histTwo.buckets(c -> c > 1).size());
     }
 
 }
