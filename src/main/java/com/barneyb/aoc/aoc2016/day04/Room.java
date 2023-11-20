@@ -5,7 +5,7 @@ import com.barneyb.aoc.util.Histogram;
 import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 
-public record Room(String encName, int sector, String chksum, boolean real) {
+public record Room(String encName, long sector, String chksum, boolean real) {
 
     private static final Pattern FORMAT = Pattern.compile(
             "([a-z-]+)-([0-9]+)\\[([a-z]+)]");
@@ -15,10 +15,24 @@ public record Room(String encName, int sector, String chksum, boolean real) {
         if (!m.matches()) throw new RuntimeException(String.format(
                 "Failed to parse '%s'",
                 str));
-        return new Room(m.group(1),
-                        Integer.parseInt(m.group(2)),
-                        m.group(3),
-                        m.group(3).equals(expectedChksum(m.group(1))));
+        String encName = m.group(1);
+        String chksum = m.group(3);
+        return new Room(encName,
+                        Long.parseLong(m.group(2)),
+                        chksum,
+                        chksum.equals(expectedChksum(encName)));
+    }
+
+    public String name() {
+        var sb = new StringBuilder();
+        for (char c : encName.toCharArray()) {
+            if (c == '-') {
+                sb.append(' ');
+                continue;
+            }
+            sb.append((char) ((c - 'a' + sector) % 26 + 'a'));
+        }
+        return sb.toString();
     }
 
     private static String expectedChksum(String encName) {

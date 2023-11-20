@@ -24,4 +24,11 @@ class RoomTest {
         assertFalse(Room.parse("totally-real-room-200[decoy]").real());
     }
 
+    @Test
+    void name() {
+        assertEquals("very encrypted name",
+                     Room.parse("qzmt-zixmtkozy-ivhz-343[asdf]")
+                             .name());
+    }
+
 }

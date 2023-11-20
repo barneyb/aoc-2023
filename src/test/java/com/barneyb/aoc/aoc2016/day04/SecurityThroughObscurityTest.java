@@ -21,7 +21,7 @@ class SecurityThroughObscurityTest {
 
     @Test
     void realWorld() {
-        new SecurityThroughObscurity().test(361724);
+        new SecurityThroughObscurity().test(361724, 482);
     }
 
 }
