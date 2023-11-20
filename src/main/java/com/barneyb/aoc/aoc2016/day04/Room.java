@@ -1,6 +1,7 @@
 package com.barneyb.aoc.aoc2016.day04;
 
 import com.barneyb.aoc.util.Histogram;
+import com.barneyb.aoc.util.PatternUtil;
 
 import java.util.PriorityQueue;
 import java.util.regex.Pattern;
@@ -11,10 +12,7 @@ public record Room(String encName, long sector, String chksum, boolean real) {
             "([a-z-]+)-([0-9]+)\\[([a-z]+)]");
 
     public static Room parse(String str) {
-        var m = FORMAT.matcher(str);
-        if (!m.matches()) throw new RuntimeException(String.format(
-                "Failed to parse '%s'",
-                str));
+        var m = PatternUtil.match(FORMAT, str);
         String encName = m.group(1);
         String chksum = m.group(3);
         return new Room(encName,
