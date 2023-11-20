@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
@@ -35,18 +36,30 @@ public class Histogram<Bucket> {
         return hist.size();
     }
 
+    public boolean isEmpty() {
+        return hist.isEmpty();
+    }
+
+    public void forEach(BiConsumer<? super Bucket, ? super Long> action) {
+        hist.forEach(action);
+    }
+
     public Set<Bucket> buckets() {
         return hist.keySet();
     }
 
     public Set<Bucket> buckets(Predicate<Long> countTest) {
         Set<Bucket> keys = new HashSet<>();
-        for (Map.Entry<Bucket, Long> e : hist.entrySet()) {
+        for (Map.Entry<Bucket, Long> e : entrySet()) {
             if (countTest.test(e.getValue())) {
                 keys.add(e.getKey());
             }
         }
         return keys;
+    }
+
+    public Set<Map.Entry<Bucket, Long>> entrySet() {
+        return hist.entrySet();
     }
 
 }
