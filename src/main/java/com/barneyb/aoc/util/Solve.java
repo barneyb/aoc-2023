@@ -141,9 +141,14 @@ abstract class Solve<Model> {
     }
 
     public void test(Object... expected) {
-        Model model = buildModel(getInput());
         List<Object> actual = new ArrayList<>();
-        test(model, actual::add);
+        System.out.printf("      parts: %d%n",
+                          expected.length);
+        System.out.println(info(workInfo(() -> {
+            Model model = buildModel(getInput());
+            test(model, actual::add);
+            return null;
+        })));
         Iterator<Object> itr = actual.iterator();
         for (Object e : expected) {
             if (!itr.hasNext()) throw new RuntimeException(String.format(
