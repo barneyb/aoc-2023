@@ -3,13 +3,13 @@ package com.barneyb.aoc.aoc2017.day07;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RecursiveCircusTest {
 
-    private static final String EXAMPLE_ONE = """
+    private static final String EXAMPLE = """
             pbga (66)
             xhth (57)
             ebii (61)
@@ -27,13 +27,13 @@ class RecursiveCircusTest {
     @Test
     void buildModel() {
         var progs = new RecursiveCircus().buildModel(
-                Input.of(EXAMPLE_ONE));
+                Input.of(EXAMPLE));
 
         assertEquals(13, progs.size());
         assertEquals("pbga", progs.get(0).name());
         assertEquals(61, progs.get(2).weight());
-        assertEquals(Set.of(), progs.get(4).above());
-        assertEquals(Set.of("pbga", "havc", "qoyq"), progs.get(7).above());
+        assertEquals(List.of(), progs.get(4).above());
+        assertEquals(List.of("pbga", "havc", "qoyq"), progs.get(7).above());
     }
 
     @Test
@@ -42,12 +42,21 @@ class RecursiveCircusTest {
         assertEquals("tknk",
                      solver.solvePartOne(
                              solver.buildModel(
-                                     Input.of(EXAMPLE_ONE))));
+                                     Input.of(EXAMPLE))));
+    }
+
+    @Test
+    void exampleTwo() {
+        var solver = new RecursiveCircus();
+        assertEquals(60,
+                     solver.solvePartTwo(
+                             solver.buildModel(
+                                     Input.of(EXAMPLE))));
     }
 
     @Test
     void realWorld() {
-        new RecursiveCircus().test("hlhomy");
+        new RecursiveCircus().test("hlhomy", 1505);
     }
 
 }

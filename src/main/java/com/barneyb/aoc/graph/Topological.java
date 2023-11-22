@@ -1,9 +1,12 @@
 package com.barneyb.aoc.graph;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,6 +21,7 @@ public class Topological<V> implements Iterable<V> {
      * postorder AND reverse it at the same time.
      */
     private final Deque<V> order;
+    private List<V> reverse;
 
     public Topological(Digraph<V> graph) {
         visited = new HashSet<>(graph.size());
@@ -38,6 +42,15 @@ public class Topological<V> implements Iterable<V> {
     @Override
     public Iterator<V> iterator() {
         return order.iterator();
+    }
+
+    public Iterable<V> reverse() {
+        if (reverse == null) {
+            List<V> list = new ArrayList<>(order);
+            Collections.reverse(list);
+            reverse = list;
+        }
+        return reverse;
     }
 
 }

@@ -2,7 +2,7 @@ package com.barneyb.aoc.aoc2017.day07;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -15,7 +15,7 @@ class ProgramTest {
         var prog = Program.parse("fwft (72) -> ktlj, cntj, xhth");
         assertEquals("fwft", prog.name());
         assertEquals(72, prog.weight());
-        assertEquals(Set.of("ktlj", "cntj", "xhth"), prog.above());
+        assertEquals(List.of("ktlj", "cntj", "xhth"), prog.above());
         assertFalse(prog.isLeaf());
     }
 
@@ -24,7 +24,7 @@ class ProgramTest {
         var prog = Program.parse("ebii (61)");
         assertEquals("ebii", prog.name());
         assertEquals(61, prog.weight());
-        assertEquals(Set.of(), prog.above());
+        assertEquals(List.of(), prog.above());
         assertTrue(prog.isLeaf());
     }
 

@@ -58,6 +58,14 @@ public class Histogram<Bucket> {
         return keys;
     }
 
+    public Bucket bucket(Predicate<Long> countTest) {
+        var matches = buckets(countTest);
+        if (matches.size() != 1) throw new RuntimeException(String.format(
+                "Found %d matching buckets",
+                matches.size()));
+        return matches.iterator().next();
+    }
+
     public Set<Map.Entry<Bucket, Long>> entrySet() {
         return hist.entrySet();
     }
