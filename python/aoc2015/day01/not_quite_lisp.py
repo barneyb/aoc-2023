@@ -1,10 +1,3 @@
-from aocd import get_data
-
-
-def get_input():
-    return get_data(day=1, year=2015)
-
-
 def both_parts(input):
     floor = 0
     pos = -1
@@ -22,4 +15,7 @@ def both_parts(input):
     return floor, pos
 
 
-print(both_parts(get_input()))
+if __name__ == "__main__":
+    from aocd import get_data
+
+    print(both_parts(get_data(year=2015, day=1)))
