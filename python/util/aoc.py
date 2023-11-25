@@ -30,7 +30,7 @@ def solve(file, parse, *parts):
     for part in parts:
         i += 1
         (answer, ns) = timed_ns(lambda: part(model))
-        print(f"Part {i} ({duration_ns(ns)}): {answer}")
+        print(f"Part {i} ({duration_ns(ns)}): {answer if answer else '-'}")
 
 
 def duration_ns(nanos):
