@@ -25,9 +25,9 @@ jobs:
           pip install -r requirements.txt
       - name: Test Python
         working-directory: ./python
-        run: |
-          pip install pytest
-          pytest
+        env:
+          PYTHONPATH: .
+        run: pytest
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
