@@ -4,13 +4,13 @@ PATH_ONE = [('R', 2), ('L', 3)]
 
 
 def test_parse():
-    assert PATH_ONE == parse("R2, L3")
+    assert parse("R2, L3") == PATH_ONE
 
 
 def test_part_one():
-    assert 5 == part_one(PATH_ONE)
+    assert part_one(PATH_ONE) == 5
 
 
 def test_part_two():
     path = parse("R8, R4, R4, R8")
-    assert 4 == part_two(path)
+    assert part_two(path) == 4
