@@ -6,16 +6,31 @@ go see! It's both lovely, and will help make sense of this repo. :)
 
 https://github.com/barneyb/aoc2017 has an index, if you want my details.
 
-## _Python_ Solvers
+## Python Solvers
 
-I don't really know what I'm doing. Please assume that if something seems weird
-it's probably just my inexperience/unfamiliarity with Python and its ecosystem.
+I don't know what I'm doing. If something seems weird, it's just my inexperience
+and/or unfamiliarity with Python and its ecosystem.
+
+To run, ensure you have Python 3.11 or better and then:
+
+```
+cd python
+python -m venv venv
+source venv/bin/activate
+export PYTHONPATH=.
+pip install -r requirements.txt
+pytest
+```
 
 The code uses [advent-of-code-data](https://github.com/wimglenn/advent-of-code-data)
 to manage inputs. So install that, configure your token (see the second section
 of the readme), and you should be able to get _your_ answers with _my_ solvers.
 
-## _Java_ Solvers
+```
+python aoc2015/day01/not_quite_lisp.py
+```
+
+## Java Solvers
 
 I have opted to package the puzzle input files as classpath resources, rather
 that loading them from the filesystem at runtime. This is almost entirely to
@@ -26,3 +41,9 @@ primitives present in every year. 2D mazes, anyone?
 
 The `Input(year,day)` constructor is the only thing aware of this, so trivial to
 refactor if you have different needs/wants. I didn't bother.
+
+To run, ensure you have Java 17 or better and then:
+
+```
+./mvnw test
+```
