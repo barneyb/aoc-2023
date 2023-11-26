@@ -7,7 +7,7 @@ RE_ABA = re.compile(r"(.)(.)\1")
 
 
 def parse(input):
-    return [parse_addr(addr) for addr in input.splitlines()]
+    return (parse_addr(addr) for addr in input.splitlines())
 
 
 def parse_addr(line):

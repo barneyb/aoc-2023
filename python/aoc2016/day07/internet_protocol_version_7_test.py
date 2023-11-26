@@ -8,8 +8,8 @@ def test_parse_addr():
 
 
 def test_parse():
-    assert parse("""a[b]c
-    d[e]f[g]h""") == [
+    assert list(parse("""a[b]c
+    d[e]f[g]h""")) == [
         (["a", "c"], ["b"]),
         (["d", "f", "h"], ["e", "g"])
     ]

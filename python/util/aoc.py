@@ -26,16 +26,15 @@ def timed_ns(work):
 def solve(file, parse, *parts):
     (input, ns) = timed_ns(lambda: get_input(file))
     print(f"Read   ({duration_ns(ns)}): {len(input)} chars")
-    if parse is None:
-        model = input
-    else:
-        (model, ns) = timed_ns(lambda: parse(input))
-        print(f"Parse  ({duration_ns(ns)})")
-    i = 0
-    for part in parts:
-        i += 1
+    for i, part in enumerate(parts):
+        if parse is None:
+            model = input
+        else:
+            (model, ns) = timed_ns(lambda: parse(input))
+            if i == 0:
+                print(f"Parse  ({duration_ns(ns)})")
         (answer, ns) = timed_ns(lambda: part(model))
-        print(f"Part {i} ({duration_ns(ns)}): {answer if answer else '-'}")
+        print(f"Part {i + 1} ({duration_ns(ns)}): {answer if answer else '-'}")
 
 
 def duration_ns(nanos):
