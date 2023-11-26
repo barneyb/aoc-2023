@@ -25,8 +25,9 @@ def parse_line(line):
 
 
 def part_one(instructions):
-    return lit_pixel_count(
-        build_and_execute(instructions, 50, 6))
+    result = build_and_execute(instructions, 50, 6)
+    print(to_string(result, 50, 6))
+    return lit_pixel_count(result)
 
 
 def lit_pixel_count(display):
