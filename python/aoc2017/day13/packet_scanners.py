@@ -1,3 +1,5 @@
+import itertools
+
 from util import aoc
 
 
@@ -13,16 +15,32 @@ def parse(input):
 
 
 def part_one(ranges):
-    lyr = 0
     severity = 0
-    for rng in ranges:
-        if rng is not None and lyr % (rng + rng - 2) == 0:
-            severity += lyr * rng
-        lyr += 1
+    for lyr, rng in get_layers_caught(ranges, 0):
+        severity += lyr * rng
     return severity
+
+
+def get_layers_caught(ranges, delay):
+    lyr = 0
+    tick = delay
+    for rng in ranges:
+        if rng is not None and (lyr + tick) % (rng + rng - 2) == 0:
+            yield lyr, rng
+        lyr += 1
+
+
+def part_two(ranges):
+    for delay in itertools.count():
+        try:
+            next(get_layers_caught(ranges, delay))
+        except StopIteration:
+            # never got caught!
+            return delay
 
 
 if __name__ == "__main__":
     aoc.solve(__file__,
               parse,
-              part_one)
+              part_one,
+              part_two)
