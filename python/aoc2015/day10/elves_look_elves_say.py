@@ -4,15 +4,16 @@ from util import aoc
 def look_and_say(model):
     last = model[0]
     n = 1
-    result = ""
+    result = []
     for c in model[1:]:
         if last == c:
             n += 1
         else:
-            result += str(n) + last
+            result += str(n), last
             last = c
             n = 1
-    return result + str(n) + last
+    result += str(n), last
+    return ''.join(result)
 
 
 def part_one(model):
