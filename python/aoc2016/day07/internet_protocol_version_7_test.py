@@ -29,7 +29,7 @@ def test_supports_tls():
     assert supports_tls(parse_addr("ioxxoj[asdfgh]zxcvbn"))
 
 
-def test_has_aba():
+def test_get_abas():
     assert list(get_abas(["aba", "xyz"])) == ["aba"]
     assert list(get_abas(["zazbz", "cdb"])) == ["zaz", 'zbz']
 
