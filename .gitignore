@@ -5,6 +5,7 @@ target/
 /**/.pytest_cache/
 /python/**/*.egg-info/
 /python/venv/
+/**/__pycache__/
 
 ### IntelliJ IDEA ###
 .idea/
