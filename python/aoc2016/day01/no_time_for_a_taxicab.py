@@ -2,7 +2,7 @@ from util import aoc
 
 
 def parse(input):
-    return [(s[0], int(s[1:])) for s in input.split(", ")]
+    return ((s[0], int(s[1:])) for s in input.split(", "))
 
 
 def part_one(path):

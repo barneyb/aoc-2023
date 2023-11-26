@@ -4,7 +4,7 @@ PATH_ONE = [('R', 2), ('L', 3)]
 
 
 def test_parse():
-    assert parse("R2, L3") == PATH_ONE
+    assert list(parse("R2, L3")) == PATH_ONE
 
 
 def test_part_one():
