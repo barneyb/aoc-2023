@@ -1,6 +1,10 @@
 from re import split
 from time import perf_counter_ns
 
+NANOS_PER_MILLISECOND = 1_000_000
+
+NANOS_PER_SEC = 1_000_000_000
+
 
 def get_input(file):
     from aocd import get_data
@@ -34,5 +38,6 @@ def solve(file, parse, *parts):
 
 
 def duration_ns(nanos):
-    # 1 million nanoseconds per millisecond
-    return f"{nanos / 1_000_000:>8,.2f} ms"
+    if nanos > NANOS_PER_SEC:
+        return f"{nanos / NANOS_PER_SEC :>7,.2f} sec"
+    return f"{nanos / NANOS_PER_MILLISECOND :>8,.2f} ms"
