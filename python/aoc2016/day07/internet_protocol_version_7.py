@@ -2,6 +2,7 @@ import re
 
 from util import aoc
 
+RE_NETS = re.compile("[][]")
 RE_ABBA = re.compile(r"(.)(.)\2\1")
 RE_ABA = re.compile(r"(.)(.)\1")
 
@@ -12,7 +13,7 @@ def parse(input):
 
 def parse_addr(line):
     super, hyper = [], []
-    for i, p in enumerate(re.split("[][]", line.strip())):
+    for i, p in enumerate(RE_NETS.split(line.strip())):
         if not p:
             continue
         if i % 2 == 0:
