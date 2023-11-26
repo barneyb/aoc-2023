@@ -1,3 +1,4 @@
+from os import path
 from re import split
 from time import perf_counter_ns
 
@@ -9,9 +10,9 @@ NANOS_PER_SEC = 1_000_000_000
 def get_input(file):
     from aocd import get_data
 
-    parts = split("[^0-9]+", file)
-    d = int(parts[len(parts) - 2])
-    y = int(parts[len(parts) - 3])
+    parts = split("[^0-9]+", path.dirname(file))
+    d = int(parts[len(parts) - 1])
+    y = int(parts[len(parts) - 2])
     return get_data(year=y, day=d)
 
 
