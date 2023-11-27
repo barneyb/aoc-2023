@@ -15,12 +15,12 @@ def test_parse():
     assert parse(EXAMPLE) == MODEL
 
 
-def parse_display(str):
+def parse_screen(string):
     width = 0
     height = 0
-    display = []
+    pixels = []
     x = 0
-    for c in str:
+    for c in string:
         match c:
             case '\n':
                 if width == 0:
@@ -31,65 +31,71 @@ def parse_display(str):
                 x = 0
             case '#':
                 x += 1
-                display.append(True)
+                pixels.append(True)
             case '.':
                 x += 1
-                display.append(False)
+                pixels.append(False)
+            case _:
+                raise RuntimeError(f"Unknown '{c}' in input")
     if x > 0:
         # no final newline
         height += 1
-    assert len(display) == width * height
-    return display, width, height
+    assert len(pixels) == width * height
+    screen = Screen(width, height)
+    screen.pixels = pixels  # EGADS!!
+    return screen
 
 
 def test_rect():
-    d = build_and_execute([("rect", 3, 2)], 7, 3)
-    assert to_string(d, 7, 3) == """###....
+    screen = Screen(7, 3)
+    screen.execute([("rect", 3, 2)])
+    assert screen.__str__() == """###....
 ###....
 ......."""
 
 
 def test_col():
-    display, width, height = parse_display("""###....
+    screen = parse_screen("""###....
 ###....
 .......""")
-    display = execute(display, [('col', 1, 1)], width, height)
-    assert to_string(display, width, height) == """#.#....
+    screen.execute([('col', 1, 1)])
+    assert screen.__str__() == """#.#....
 ###....
 .#....."""
 
 
 def test_row():
-    display, width, height = parse_display("""###....
+    screen = parse_screen("""###....
 ###....
 .......""")
-    display = execute(display, [('row', 0, 1)], width, height)
-    assert to_string(display, width, height) == """.###...
+    screen.execute([('row', 0, 1)])
+    assert screen.__str__() == """.###...
 ###....
 ......."""
 
 
 def test_col_wrap():
-    display, width, height = parse_display("""#######
+    screen = parse_screen("""#######
 #######
 #.#####""")
-    display = execute(display, [('col', 1, 1)], width, height)
-    assert to_string(display, width, height) == """#.#####
+    screen.execute([('col', 1, 1)], )
+    assert screen.__str__() == """#.#####
 #######
 #######"""
 
 
 def test_row_wrap():
-    display, width, height = parse_display("""###....
+    screen = parse_screen("""###....
 ###....
 .......""")
-    display = execute(display, [('row', 0, 5)], width, height)
-    assert to_string(display, width, height) == """#....##
+    screen.execute([('row', 0, 5)])
+    assert screen.__str__() == """#....##
 ###....
 ......."""
 
 
-def test_part_one():
-    display = build_and_execute(MODEL, 7, 3)
-    print(f"\n{to_string(display, 7, 3)}")
-    assert lit_pixel_count(display) == 6
+def test_example_one():
+    screen = Screen(7, 3)
+    screen.execute(MODEL)
+    print(f"\n{screen}")
+    assert screen.lit_pixel_count() == 6
