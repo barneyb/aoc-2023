@@ -1,4 +1,8 @@
+import re
+
 from util import aoc
+
+RE_MARKER = re.compile(r"\((\d+)x(\d+)\)")
 
 
 def part_one(input):
@@ -6,19 +10,14 @@ def part_one(input):
     decomp_len = 0
     pos = 0
     while pos < comp_len:
-        open = input.find("(", pos)
-        if open < 0:
+        m = RE_MARKER.search(input, pos)
+        if m is None:
             decomp_len += comp_len - pos
             break
-        decomp_len += open - pos
-        pos = open + 1
-        x = input.find("x", pos)
-        pos = x + 1
-        close = input.find(")", pos)
-        pos = close + 1
-        l = int(input[(open + 1):x])
-        pos += l
-        n = int(input[(x + 1):close])
+        decomp_len += m.start() - pos
+        l = int(m.group(1))
+        pos = m.end() + l
+        n = int(m.group(2))
         decomp_len += l * n
     return decomp_len
 
