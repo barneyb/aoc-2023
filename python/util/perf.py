@@ -21,4 +21,6 @@ def format_ns(nanos):
     """
     if nanos > NANOS_PER_SEC:
         return f"{nanos / NANOS_PER_SEC :>7,.2f} sec"
-    return f"{nanos / NANOS_PER_MILLISECOND :>8,.2f} ms"
+    if nanos > NANOS_PER_MILLISECOND:
+        return f"{nanos / NANOS_PER_MILLISECOND :>8,.2f} ms"
+    return f"{nanos:8,d} ns"
