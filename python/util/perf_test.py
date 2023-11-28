@@ -15,10 +15,10 @@ def test_format_ns():
         assert len(r) == 11
         return r.strip()
 
-    assert fmt(0) == "0.00 ms"
-    assert fmt(1) == "0.00 ms"
-    assert fmt(1_000) == "0.00 ms"
-    assert fmt(10_000) == "0.01 ms"
+    assert fmt(0) == "0 ns"
+    assert fmt(1) == "1 ns"
+    assert fmt(1_000) == "1,000 ns"
+    assert fmt(10_000) == "10,000 ns"
     assert fmt(1_234_567) == "1.23 ms"
     assert fmt(123_456_789) == "123.46 ms"
     assert fmt(1_234_567_890) == "1.23 sec"
