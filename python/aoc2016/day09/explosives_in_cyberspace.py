@@ -22,22 +22,24 @@ def part_one(input):
     return decomp_len
 
 
-def part_two(input):
-    comp_len = len(input)
+def decompressed_length(input, start, end):
     decomp_len = 0
-    pos = 0
-    while pos < comp_len:
-        m = RE_MARKER.search(input, pos)
+    while start < end:
+        m = RE_MARKER.search(input, start, end)
         if m is None:
-            decomp_len += comp_len - pos
+            decomp_len += end - start
             break
-        decomp_len += m.start() - pos
+        decomp_len += m.start() - start
         l = int(m.group(1))
-        pos = m.end() + l
-        l = part_two(input[m.end():m.end() + l])
+        start = m.end() + l
+        l = decompressed_length(input, m.end(), m.end() + l)
         n = int(m.group(2))
         decomp_len += l * n
     return decomp_len
+
+
+def part_two(input):
+    return decompressed_length(input, 0, len(input))
 
 
 if __name__ == "__main__":
