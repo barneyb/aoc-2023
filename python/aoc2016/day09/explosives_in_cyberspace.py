@@ -6,23 +6,13 @@ RE_MARKER = re.compile(r"\((\d+)x(\d+)\)")
 
 
 def part_one(input):
-    comp_len = len(input)
-    decomp_len = 0
-    pos = 0
-    while pos < comp_len:
-        m = RE_MARKER.search(input, pos)
-        if m is None:
-            decomp_len += comp_len - pos
-            break
-        decomp_len += m.start() - pos
-        l = int(m.group(1))
-        pos = m.end() + l
-        n = int(m.group(2))
-        decomp_len += l * n
-    return decomp_len
+    return decompressed_length(input,
+                               0,
+                               len(input),
+                               lambda inpt, s, e, sl: e - s)
 
 
-def decompressed_length(input, start, end):
+def decompressed_length(input, start, end, sub_length):
     decomp_len = 0
     while start < end:
         m = RE_MARKER.search(input, start, end)
@@ -32,14 +22,20 @@ def decompressed_length(input, start, end):
         decomp_len += m.start() - start
         l = int(m.group(1))
         start = m.end() + l
-        l = decompressed_length(input, m.end(), m.end() + l)
+        l = sub_length(input,
+                       m.end(),
+                       m.end() + l,
+                       sub_length)
         n = int(m.group(2))
         decomp_len += l * n
     return decomp_len
 
 
 def part_two(input):
-    return decompressed_length(input, 0, len(input))
+    return decompressed_length(input,
+                               0,
+                               len(input),
+                               decompressed_length)
 
 
 if __name__ == "__main__":
