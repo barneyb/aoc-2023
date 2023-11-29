@@ -19,3 +19,7 @@ EXAMPLE_ONE = """1000
 
 def test_part_one():
     assert part_one(EXAMPLE_ONE) == 24_000
+
+
+def test_part_two():
+    assert part_two(EXAMPLE_ONE) == 45_000
