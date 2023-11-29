@@ -16,14 +16,21 @@ def get_input(file):
 
 
 def solve(file, parse, *parts):
-    (input, ns) = timed_ns(lambda: get_input(file))
-    print(f"Read   ({format_ns(ns)}): {len(input)} chars")
+    (input, read_ns) = timed_ns(lambda: get_input(file))
+    print(f"Read   ({format_ns(read_ns)}) : {len(input)} chars")
+    print("--------------------")
+    total_ns = 0
     for i, part in enumerate(parts):
         if parse is None:
             model = input
         else:
             (model, ns) = timed_ns(lambda: parse(input))
+            total_ns += ns
             if i == 0 and model != input:
                 print(f"Parse  ({format_ns(ns)})")
         (answer, ns) = timed_ns(lambda: part(model))
-        print(f"Part {i + 1} ({format_ns(ns)}): {answer if answer else '-'}")
+        total_ns += ns
+        print(f"Part {i + 1} ({format_ns(ns)}) : {answer if answer else '-'}")
+    print(f"Total  ({format_ns(total_ns)})")
+    print("--------------------")
+    print(f"Grand  ({format_ns(total_ns + read_ns)})")
