@@ -31,21 +31,20 @@ def parse(input):
 
 def both_parts(model, lo=17, hi=61):
     who, outputs = simulate(model, lo, hi)
-    return who, reduce(operator.mul, outputs, 1)
+    return who, reduce(operator.mul, outputs[0:3], 1)
 
 
 def simulate(model, lo, hi):
     """I run the simulation, returning a tuple with the bot number that compared
-    the passed lo/hi values and a list of the values in outputs 0, 1, and 2.
+    the passed lo/hi values and a list of values in the outputs bins.
     """
-    if lo > hi:
-        lo, hi = hi, lo  # silly programmer
     inputs, rules = model
     bot_values = {}
     outputs = {}
     who = None
 
     def accept(a, bot):
+        nonlocal who
         if bot not in bot_values:
             bot_values[bot] = a
             return
@@ -54,7 +53,6 @@ def simulate(model, lo, hi):
         if a > b:
             a, b = b, a
         if a == lo and b == hi:
-            nonlocal who
             who = bot
         for n, t in zip((a, b), rules[bot]):
             if t < OUTPUT:
@@ -62,12 +60,11 @@ def simulate(model, lo, hi):
             else:
                 outputs[t - OUTPUT] = n
 
-    for v, b in inputs:
-        accept(v, b)
+    for val, to in inputs:
+        accept(val, to)
 
-    return who, [outputs[0],
-                 outputs[1],
-                 outputs[2]]
+    # implicit assertion: outputs are numbered from zero, with no jumps
+    return who, [outputs[i] for i in range(len(outputs))]
 
 
 if __name__ == "__main__":

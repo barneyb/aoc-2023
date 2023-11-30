@@ -23,8 +23,8 @@ def test_parse():
 
 
 def test_simulate():
-    assert simulate(MODEL, 5, 2) == (2, [5, 2, 3])
+    assert simulate(MODEL, 2, 5) == (2, [5, 2, 3])
 
 
 def test_both_parts():
-    assert both_parts(MODEL, 5, 2) == (2, 30)
+    assert both_parts(MODEL, 2, 5) == (2, 30)
