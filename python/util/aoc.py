@@ -20,7 +20,8 @@ def solve(file, parse, *parts):
     print(f"Read   ({format_ns(read_ns)}) : {len(input)} chars")
     print("--------------------")
     total_ns = 0
-    for i, part in enumerate(parts):
+    i = 0
+    for part in parts:
         if parse is None:
             model = input
         else:
@@ -28,9 +29,15 @@ def solve(file, parse, *parts):
             total_ns += ns
             if i == 0 and model != input:
                 print(f"Parse  ({format_ns(ns)})")
-        (answer, ns) = timed_ns(lambda: part(model))
+        (answers, ns) = timed_ns(lambda: part(model))
         total_ns += ns
-        print(f"Part {i + 1} ({format_ns(ns)}) : {answer if answer else '-'}")
+        if type(answers) != tuple:
+            answers = (answers,)
+        for a in answers:
+            i += 1
+            timing = f"({format_ns(ns)})" if ns > 0 else " " * 13
+            print(f"Part {i} {timing} : {'-' if a is None else a}")
+            ns = 0
     print(f"Total  ({format_ns(total_ns)})")
     print("--------------------")
     print(f"Grand  ({format_ns(total_ns + read_ns)})")
