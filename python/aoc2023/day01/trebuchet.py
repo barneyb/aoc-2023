@@ -36,13 +36,7 @@ def part_two(input):
     return either_part(
         input,
         "\d|" + "|".join(NAMES.keys()),
-        parse_word_digit)
-
-
-def parse_word_digit(s):
-    if len(s) == 1:
-        return int(s)
-    return NAMES[s]
+        lambda s: int(s) if len(s) == 1 else NAMES[s])
 
 
 if __name__ == "__main__":
