@@ -3,6 +3,8 @@ from re import split
 
 from .perf import format_ns, timed_ns
 
+BLOCK = "█"
+
 
 def get_input(file):
     # This import checks the token file _during initialization_, so only import
@@ -36,6 +38,8 @@ def solve(file, parse, *parts):
         for a in answers:
             i += 1
             timing = f"({format_ns(ns)})" if ns > 0 else " " * 13
+            if type(a) == str and '\n' in a:
+                a = '\n' + a
             print(f"Part {i} {timing} : {'-' if a is None else a}")
             ns = 0
     print(f"Total  ({format_ns(total_ns)})")
