@@ -97,5 +97,7 @@ def test_row_wrap():
 def test_example_one():
     screen = Screen(7, 3)
     screen.execute(MODEL)
-    print(f"\n{screen}")
     assert screen.lit_pixel_count() == 6
+    assert screen.__str__() == """.#..#.#
+#.#....
+.#....."""

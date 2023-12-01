@@ -25,14 +25,14 @@ def parse_line(line):
             int(m.group(3)))
 
 
-def part_one(instructions):
+def both_parts(instructions):
     screen = Screen(50, 6)
     screen.execute(instructions)
-    print(screen.__str__(on='█', off=' '))
-    return screen.lit_pixel_count()
+    return (screen.lit_pixel_count(),
+            screen.__str__(on=aoc.BLOCK, off=' '))
 
 
 if __name__ == "__main__":
     aoc.solve(__file__,
               parse,
-              part_one)
+              both_parts)
