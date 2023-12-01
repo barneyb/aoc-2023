@@ -17,17 +17,17 @@ NAMES = {"one"  : 1,
 def part_one(input):
     return either_part(
         input,
-        "1|2|3|4|5|6|7|8|9",
+        "\d",
         int)
 
 
 def either_part(input, digit_expr, parse_digit):
-    re_first = re.compile(r"(" + digit_expr + ")")
-    re_last = re.compile(r"(" + digit_expr[::-1] + ")")
+    re_first = re.compile(r".*?(" + digit_expr + ").*")
+    re_last = re.compile(r".*(" + digit_expr + ").*?")
     nums = []
     for line in input.splitlines():
-        f = re_first.search(line).group()
-        l = re_last.search(line[::-1]).group()[::-1]
+        f = re_first.fullmatch(line).group(1)
+        l = re_last.fullmatch(line).group(1)
         nums.append(parse_digit(f) * 10 + parse_digit(l))
     return sum(n for n in nums)
 
@@ -35,7 +35,7 @@ def either_part(input, digit_expr, parse_digit):
 def part_two(input):
     return either_part(
         input,
-        "1|2|3|4|5|6|7|8|9|one|two|three|four|five|six|seven|eight|nine",
+        "\d|" + "|".join(NAMES.keys()),
         parse_word_digit)
 
 
