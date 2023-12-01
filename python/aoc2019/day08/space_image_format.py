@@ -39,6 +39,8 @@ def part_two(layers, bg=' ', fg='#'):
     height = len(layers[0])
     image = []
     for y in range(height):
+        if y > 0:
+            image.append("\n")
         for x in range(width):
             for l in layers:
                 match l[y][x]:
@@ -49,7 +51,6 @@ def part_two(layers, bg=' ', fg='#'):
                     case 2:
                         continue
                 break
-        image.append("\n")
     return "".join(image)
 
 

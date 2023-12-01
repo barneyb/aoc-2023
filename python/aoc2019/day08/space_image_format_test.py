@@ -17,5 +17,6 @@ def test_example_one():
 
 
 def test_example_two():
-    assert part_two(parse(EXAMPLE_TWO, 2, 2)) \
-           == ' #\n# \n'
+    model = parse(EXAMPLE_TWO, 2, 2)
+    assert part_two(model) == """ #
+# """

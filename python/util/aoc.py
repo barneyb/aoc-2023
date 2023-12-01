@@ -38,7 +38,7 @@ def solve(file, parse, *parts):
         for a in answers:
             i += 1
             timing = f"({format_ns(ns)})" if ns > 0 else " " * 13
-            if type(a) == str and '\n' in a:
+            if type(a) == str and '\n' in a and a[0] != '\n':
                 a = '\n' + a
             print(f"Part {i} {timing} : {'-' if a is None else a}")
             ns = 0
