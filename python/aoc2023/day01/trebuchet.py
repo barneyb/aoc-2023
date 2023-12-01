@@ -4,33 +4,31 @@ from util import aoc
 
 
 def part_one(input):
-    re_first = re.compile(r"\D*(\d)")
-    re_last = re.compile(r"(\d)\D*$")
+    return either_part(
+        input,
+        "1|2|3|4|5|6|7|8|9",
+        int)
+
+
+def either_part(input, digit_expr, parse_digit):
+    re_first = re.compile(r"(" + digit_expr + ")")
+    re_last = re.compile(r"(" + digit_expr[::-1] + ")")
     nums = []
     for line in input.splitlines():
-        f = re_first.match(line)
-        l = re_last.search(line)
-        nums.append(f.group(1) + l.group(1))
-    return sum(int(n) for n in nums)
+        f = re_first.search(line).group()
+        l = re_last.search(line[::-1]).group()[::-1]
+        nums.append(parse_digit(f) * 10 + parse_digit(l))
+    return sum(n for n in nums)
 
 
 def part_two(input):
-    re_digit = re.compile(r"\d|one|two|three|four|five|six|seven|eight|nine")
-    model = []
-    for line in input.splitlines():
-        digits = []
-        i, l = 0, len(line)
-        while i < l:
-            m = re_digit.search(line, i)
-            if not m:
-                break
-            digits.append(parse_digit(m.group()))
-            i += 1
-        model.append(digits[0] * 10 + digits[-1])
-    return sum(model)
+    return either_part(
+        input,
+        "1|2|3|4|5|6|7|8|9|one|two|three|four|five|six|seven|eight|nine",
+        parse_word_digit)
 
 
-def parse_digit(s):
+def parse_word_digit(s):
     if len(s) == 1:
         return int(s)
     match s:
