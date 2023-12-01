@@ -19,29 +19,32 @@ def get_input(file):
 
 def solve(file, parse, *parts):
     (input, read_ns) = timed_ns(lambda: get_input(file))
-    print(f"Read   ({format_ns(read_ns)}) : {len(input)} chars")
-    print("--------------------")
+    print(f"Read    ({format_ns(read_ns)}) : {len(input)} chars")
+    print("-" * 21)
     total_ns = 0
-    i = 0
+    i = 1
     for part in parts:
         if parse is None:
             model = input
         else:
             (model, ns) = timed_ns(lambda: parse(input))
             total_ns += ns
-            if i == 0 and model != input:
-                print(f"Parse  ({format_ns(ns)})")
+            if i == 1 and model != input:
+                print(f"Parse   ({format_ns(ns)})")
         (answers, ns) = timed_ns(lambda: part(model))
         total_ns += ns
         if type(answers) != tuple:
             answers = (answers,)
+        c = ord("a")
         for a in answers:
-            i += 1
             timing = f"({format_ns(ns)})" if ns > 0 else " " * 13
             if type(a) == str and '\n' in a and a[0] != '\n':
                 a = '\n' + a
-            print(f"Part {i} {timing} : {'-' if a is None else a}")
+            lbl = f"{i} " if len(answers) == 1 else f"{i}{chr(c)}"
+            print(f"Part {lbl} {timing} : {'-' if a is None else a}")
             ns = 0
-    print(f"Total  ({format_ns(total_ns)})")
-    print("--------------------")
-    print(f"Grand  ({format_ns(total_ns + read_ns)})")
+            c += 1
+        i += 1
+    print(f"Total   ({format_ns(total_ns)})")
+    print("-" * 21)
+    print(f"Grand   ({format_ns(total_ns + read_ns)})")
