@@ -1,7 +1,7 @@
 from os import path
 from re import split
 
-from .timing import format_ns, with_ns
+from .timing import format_ns, with_bench, with_ns
 from .tracing import format_alloc, with_alloc
 
 BLOCK = "█"
@@ -18,8 +18,11 @@ def get_input(file):
     return get_data(year=y, day=d)
 
 
-def __with_metric(file, run_with_metric, format_metric, parse, *parts):
-    (input, read_m) = run_with_metric(lambda: get_input(file))
+def _with_metric(file, run_with_metric, format_metric, parse, *parts):
+    read_with_metric = run_with_metric
+    if type(run_with_metric) == tuple:
+        read_with_metric, run_with_metric = run_with_metric
+    (input, read_m) = read_with_metric(lambda: get_input(file))
     print(f"Read    ({format_metric(read_m)}) : {len(input)} chars")
     print("-" * 21)
     total_m = 0
@@ -52,8 +55,12 @@ def __with_metric(file, run_with_metric, format_metric, parse, *parts):
 
 
 def solve(file, parse, *parts):
-    __with_metric(file, with_ns, format_ns, parse, *parts)
+    _with_metric(file, with_ns, format_ns, parse, *parts)
+
+
+def bench(file, parse, *parts):
+    _with_metric(file, (with_ns, with_bench), format_ns, parse, *parts)
 
 
 def trace(file, parse, *parts):
-    __with_metric(file, with_alloc, format_alloc, parse, *parts)
+    _with_metric(file, with_alloc, format_alloc, parse, *parts)
