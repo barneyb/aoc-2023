@@ -1,7 +1,7 @@
 import functools
+from collections import Counter
 
 from util import aoc
-from util.Histogram import Histogram
 
 
 def parse(input, width=25, height=6):
@@ -24,10 +24,10 @@ def part_one(layers):
     fewest_zeros = 999_999_999
     result = None
     for layer in layers:
-        hist = Histogram()
+        hist = Counter()
         for row in layer:
             for p in row:
-                hist.count(p)
+                hist[p] += 1
         if hist[0] < fewest_zeros:
             fewest_zeros = hist[0]
             result = hist[1] * hist[2]
