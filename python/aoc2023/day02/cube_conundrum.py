@@ -1,4 +1,5 @@
 from collections import Counter
+from functools import reduce
 
 from util import aoc
 
@@ -30,9 +31,26 @@ def part_one(games):
     return sum
 
 
+def min_cubes(rounds):
+    return reduce(tuple_max, rounds, (0, 0, 0))
+
+
+def tuple_max(left, right):
+    return (
+        max(left[0], right[0]),
+        max(left[1], right[1]),
+        max(left[2], right[2]),
+    )
+
+
+def part_two(games):
+    return sum(r * g * b for r, g, b in (min_cubes(rounds) for _, rounds in games))
+
+
 if __name__ == "__main__":
     aoc.solve(
         __file__,
         parse,
         part_one,
+        part_two,
     )

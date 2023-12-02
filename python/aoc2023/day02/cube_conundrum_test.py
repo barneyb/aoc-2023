@@ -24,3 +24,12 @@ def test_parse():
 def test_part_one():
     model = parse(EXAMPLE)
     assert part_one(model) == 8
+
+
+def test_min_cubes():
+    assert min_cubes(MODEL_ZERO[0][1]) == (4, 2, 6)
+
+
+def test_part_two():
+    model = parse(EXAMPLE)
+    assert part_two(model) == 2286
