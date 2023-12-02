@@ -22,17 +22,17 @@ def parse_screen(string):
     x = 0
     for c in string:
         match c:
-            case '\n':
+            case "\n":
                 if width == 0:
                     width = x
                 else:
                     assert x == width
                 height += 1
                 x = 0
-            case '#':
+            case "#":
                 x += 1
                 pixels.append(True)
-            case '.':
+            case ".":
                 x += 1
                 pixels.append(False)
             case _:
@@ -58,7 +58,7 @@ def test_col():
     screen = parse_screen("""###....
 ###....
 .......""")
-    screen.execute([('col', 1, 1)])
+    screen.execute([("col", 1, 1)])
     assert screen.__str__() == """#.#....
 ###....
 .#....."""
@@ -68,7 +68,7 @@ def test_row():
     screen = parse_screen("""###....
 ###....
 .......""")
-    screen.execute([('row', 0, 1)])
+    screen.execute([("row", 0, 1)])
     assert screen.__str__() == """.###...
 ###....
 ......."""
@@ -78,7 +78,7 @@ def test_col_wrap():
     screen = parse_screen("""#######
 #######
 #.#####""")
-    screen.execute([('col', 1, 1)], )
+    screen.execute([("col", 1, 1)], )
     assert screen.__str__() == """#.#####
 #######
 #######"""
@@ -88,7 +88,7 @@ def test_row_wrap():
     screen = parse_screen("""###....
 ###....
 .......""")
-    screen.execute([('row', 0, 5)])
+    screen.execute([("row", 0, 5)])
     assert screen.__str__() == """#....##
 ###....
 ......."""

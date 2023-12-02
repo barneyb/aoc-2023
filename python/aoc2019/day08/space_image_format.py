@@ -34,7 +34,7 @@ def part_one(layers):
     return result
 
 
-def part_two(layers, bg=' ', fg='#'):
+def part_two(layers, bg=" ", fg="#"):
     width = len(layers[0][0])
     height = len(layers[0])
     image = []

@@ -1,6 +1,6 @@
 from no_time_for_a_taxicab import *
 
-PATH_ONE = [('R', 2), ('L', 3)]
+PATH_ONE = [("R", 2), ("L", 3)]
 
 
 def test_parse():

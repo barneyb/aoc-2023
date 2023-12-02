@@ -31,7 +31,7 @@ def test_supports_tls():
 
 def test_get_abas():
     assert list(get_abas(["aba", "xyz"])) == ["aba"]
-    assert list(get_abas(["zazbz", "cdb"])) == ["zaz", 'zbz']
+    assert list(get_abas(["zazbz", "cdb"])) == ["zaz", "zbz"]
 
 
 def test_supports_ssl():

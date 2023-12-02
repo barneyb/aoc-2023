@@ -30,15 +30,15 @@ class Screen:
         """
         for ins, a, b in instructions:
             match ins:
-                case 'rect':
+                case "rect":
                     self.pixels = [
                         True if i % self.width < a and i // self.width < b else p
                         for i, p in enumerate(self.pixels)]
-                case 'row':
+                case "row":
                     self.pixels = [
                         self.pixels[self._munge_i(i, -b, 0)] if i // self.width == a else p
                         for i, p in enumerate(self.pixels)]
-                case 'col':
+                case "col":
                     self.pixels = [
                         self.pixels[self._munge_i(i, 0, -b)] if i % self.width == a else p
                         for i, p in enumerate(self.pixels)]
@@ -48,7 +48,7 @@ class Screen:
         """I return number of pixels which are currently lit/on."""
         return sum(1 if p else 0 for p in self.pixels)
 
-    def __str__(self, *, on='#', off='.'):
+    def __str__(self, *, on="#", off="."):
         """I convert this Screen to a string with 'height' lines and 'width'
         characters per line, with no trailing newline. On pixels are shown as
         '#' and off pixels are shown as '.'. This can be overridden via params.

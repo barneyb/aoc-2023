@@ -13,7 +13,7 @@ def look_and_say(model):
             last = c
             n = 1
     result += str(n), last
-    return ''.join(result)
+    return "".join(result)
 
 
 def part_one(model):

@@ -20,7 +20,7 @@ def walk(path):
     """
     h, x, y = 0, 0, 0
     for d, n in path:
-        h = h + 1 if d == 'R' else h - 1
+        h = h + 1 if d == "R" else h - 1
         h %= 4
         for _ in range(n):
             match h:

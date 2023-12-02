@@ -29,7 +29,7 @@ def both_parts(instructions):
     screen = Screen(50, 6)
     screen.execute(instructions)
     return (screen.lit_pixel_count(),
-            screen.__str__(on=aoc.BLOCK, off=' '))
+            screen.__str__(on=aoc.BLOCK, off=" "))
 
 
 if __name__ == "__main__":
