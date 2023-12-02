@@ -16,7 +16,7 @@ NAMES = {
 
 
 def part_one(input):
-    return either_part(input, "\d", int)
+    return either_part(input, r"\d", int)
 
 
 def either_part(input, digit_expr, parse_digit):
@@ -33,7 +33,7 @@ def either_part(input, digit_expr, parse_digit):
 def part_two(input):
     return either_part(
         input,
-        "\d|" + "|".join(NAMES.keys()),
+        r"\d|" + "|".join(NAMES.keys()),
         lambda s: int(s) if len(s) == 1 else NAMES[s],
     )
 
