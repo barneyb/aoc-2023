@@ -75,11 +75,21 @@ def tick(model):
 
 def part_one(model, *, steps=100):
     total_flashes = 0
-    curr = model
     for _ in range(steps):
-        curr, flashes = tick(curr)
+        model, flashes = tick(model)
         total_flashes += flashes
     return total_flashes
+
+
+def part_two(model):
+    w, h, _ = model
+    count = w * h
+    step = 0
+    while True:
+        step += 1
+        model, flashes = tick(model)
+        if flashes == count:
+            return step
 
 
 if __name__ == "__main__":
@@ -87,4 +97,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
+        part_two,
     )

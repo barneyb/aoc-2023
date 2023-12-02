@@ -90,3 +90,8 @@ def test_part_one_10_steps():
 def test_part_one_full():
     model = parse(EXAMPLE_ONE_A)
     assert part_one(model) == 1656
+
+
+def test_part_two():
+    model = parse(EXAMPLE_ONE_A)
+    assert part_two(model) == 195
