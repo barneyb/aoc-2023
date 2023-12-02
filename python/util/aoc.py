@@ -1,7 +1,8 @@
 from os import path
 from re import split
 
-from .perf import format_ns, timed_ns
+from .timing import format_ns, with_bench, with_ns
+from .tracing import format_alloc, with_alloc
 
 BLOCK = "█"
 
@@ -17,34 +18,49 @@ def get_input(file):
     return get_data(year=y, day=d)
 
 
-def solve(file, parse, *parts):
-    (input, read_ns) = timed_ns(lambda: get_input(file))
-    print(f"Read    ({format_ns(read_ns)}) : {len(input)} chars")
+def _with_metric(file, run_with_metric, format_metric, parse, *parts):
+    read_with_metric = run_with_metric
+    if type(run_with_metric) == tuple:
+        read_with_metric, run_with_metric = run_with_metric
+    (input, read_m) = read_with_metric(lambda: get_input(file))
+    print(f"Read    ({format_metric(read_m)}) : {len(input)} chars")
     print("-" * 21)
-    total_ns = 0
+    total_m = 0
     i = 1
     for part in parts:
         if parse is None:
             model = input
         else:
-            (model, ns) = timed_ns(lambda: parse(input))
-            total_ns += ns
+            (model, m) = run_with_metric(lambda: parse(input))
+            total_m += m
             if i == 1 and model != input:
-                print(f"Parse   ({format_ns(ns)})")
-        (answers, ns) = timed_ns(lambda: part(model))
-        total_ns += ns
+                print(f"Parse   ({format_metric(m)})")
+        (answers, m) = run_with_metric(lambda: part(model))
+        total_m += m
         if type(answers) != tuple:
             answers = (answers,)
         c = ord("a")
         for a in answers:
-            timing = f"({format_ns(ns)})" if ns > 0 else " " * 13
+            metric = f"({format_metric(m)})" if m > 0 else " " * 13
             if type(a) == str and "\n" in a and a[0] != "\n":
                 a = "\n" + a
             lbl = f"{i} " if len(answers) == 1 else f"{i}{chr(c)}"
-            print(f"Part {lbl} {timing} : {'-' if a is None else a}")
-            ns = 0
+            print(f"Part {lbl} {metric} : {'-' if a is None else a}")
+            m = 0
             c += 1
         i += 1
-    print(f"Total   ({format_ns(total_ns)})")
+    print(f"Total   ({format_metric(total_m)})")
     print("-" * 21)
-    print(f"Grand   ({format_ns(total_ns + read_ns)})")
+    print(f"Grand   ({format_metric(total_m + read_m)})")
+
+
+def solve(file, parse, *parts):
+    _with_metric(file, with_ns, format_ns, parse, *parts)
+
+
+def bench(file, parse, *parts):
+    _with_metric(file, (with_ns, with_bench), format_ns, parse, *parts)
+
+
+def trace(file, parse, *parts):
+    _with_metric(file, with_alloc, format_alloc, parse, *parts)

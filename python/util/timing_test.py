@@ -1,8 +1,8 @@
-from .perf import *
+from .timing import *
 
 
 def test_timed_ns():
-    (r, ns) = timed_ns(lambda: 42)
+    (r, ns) = with_ns(lambda: 42)
     assert r == 42
     # this is sort of a BS assertion, but it takes over a millisecond to return
     # a number from a lambda, it's not really a false positive. :)
