@@ -28,7 +28,7 @@ jobs:
         working-directory: ./python
         env:
           PYTHONPATH: .
-        run: pytest
+        run: pytest -Werror
       - name: No Dirtiness, Python!
         run: git diff --exit-code
       - name: Black Check
