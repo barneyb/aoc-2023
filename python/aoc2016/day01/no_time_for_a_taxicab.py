@@ -20,7 +20,7 @@ def walk(path):
     """
     h, x, y = 0, 0, 0
     for d, n in path:
-        h = h + 1 if d == 'R' else h - 1
+        h = h + 1 if d == "R" else h - 1
         h %= 4
         for _ in range(n):
             match h:
@@ -45,7 +45,9 @@ def part_two(path):
 
 
 if __name__ == "__main__":
-    aoc.solve(__file__,
-              parse,
-              part_one,
-              part_two)
+    aoc.solve(
+        __file__,
+        parse,
+        part_one,
+        part_two,
+    )

@@ -8,11 +8,18 @@ def test_parse_addr():
 
 
 def test_parse():
-    assert list(parse("""a[b]c
-    d[e]f[g]h""")) == [
-        (["a", "c"], ["b"]),
-        (["d", "f", "h"], ["e", "g"])
-    ]
+    assert (
+        list(
+            parse(
+                """a[b]c
+d[e]f[g]h"""
+            )
+        )
+        == [
+            (["a", "c"], ["b"]),
+            (["d", "f", "h"], ["e", "g"]),
+        ]
+    )
 
 
 def test_has_abba():
@@ -31,7 +38,7 @@ def test_supports_tls():
 
 def test_get_abas():
     assert list(get_abas(["aba", "xyz"])) == ["aba"]
-    assert list(get_abas(["zazbz", "cdb"])) == ["zaz", 'zbz']
+    assert list(get_abas(["zazbz", "cdb"])) == ["zaz", "zbz"]
 
 
 def test_supports_ssl():

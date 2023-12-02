@@ -34,7 +34,7 @@ def part_one(layers):
     return result
 
 
-def part_two(layers, bg=' ', fg='#'):
+def part_two(layers, bg=" ", fg="#"):
     width = len(layers[0][0])
     height = len(layers[0])
     image = []
@@ -55,7 +55,9 @@ def part_two(layers, bg=' ', fg='#'):
 
 
 if __name__ == "__main__":
-    aoc.solve(__file__,
-              parse,
-              part_one,
-              functools.partial(part_two, fg=aoc.BLOCK))
+    aoc.solve(
+        __file__,
+        parse,
+        part_one,
+        functools.partial(part_two, fg=aoc.BLOCK),
+    )

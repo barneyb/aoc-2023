@@ -13,7 +13,7 @@ def look_and_say(model):
             last = c
             n = 1
     result += str(n), last
-    return ''.join(result)
+    return "".join(result)
 
 
 def part_one(model):
@@ -29,7 +29,9 @@ def part_two(model):
 
 
 if __name__ == "__main__":
-    aoc.solve(__file__,
-              None,
-              part_one,
-              part_two)
+    aoc.solve(
+        __file__,
+        None,
+        part_one,
+        part_two,
+    )

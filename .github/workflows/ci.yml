@@ -28,9 +28,11 @@ jobs:
         working-directory: ./python
         env:
           PYTHONPATH: .
-        run: pytest
+        run: pytest -Werror
       - name: No Dirtiness, Python!
         run: git diff --exit-code
+      - name: Black Check
+        uses: psf/black@stable
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3

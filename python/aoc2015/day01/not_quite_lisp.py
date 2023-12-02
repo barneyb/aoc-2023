@@ -6,9 +6,9 @@ def part_one(input):
     i = 0
     for c in input:
         i += 1
-        if c == '(':
+        if c == "(":
             floor += 1
-        elif c == ')':
+        elif c == ")":
             floor -= 1
         else:
             raise RuntimeError("Unknown '" + c + "'")
@@ -20,9 +20,9 @@ def part_two(input):
     i = 0
     for c in input:
         i += 1
-        if c == '(':
+        if c == "(":
             floor += 1
-        elif c == ')':
+        elif c == ")":
             floor -= 1
         else:
             raise RuntimeError("Unknown '" + c + "'")
@@ -32,7 +32,9 @@ def part_two(input):
 
 
 if __name__ == "__main__":
-    aoc.solve(__file__,
-              None,
-              part_one,
-              part_two)
+    aoc.solve(
+        __file__,
+        None,
+        part_one,
+        part_two,
+    )

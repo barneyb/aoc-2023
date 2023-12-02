@@ -5,10 +5,12 @@ rotate column x=1 by 1
 rotate row y=0 by 4
 rotate column x=1 by 1"""
 
-MODEL = [("rect", 3, 2),
-         ("col", 1, 1),
-         ("row", 0, 4),
-         ("col", 1, 1)]
+MODEL = [
+    ("rect", 3, 2),
+    ("col", 1, 1),
+    ("row", 0, 4),
+    ("col", 1, 1),
+]
 
 
 def test_parse():
@@ -22,17 +24,17 @@ def parse_screen(string):
     x = 0
     for c in string:
         match c:
-            case '\n':
+            case "\n":
                 if width == 0:
                     width = x
                 else:
                     assert x == width
                 height += 1
                 x = 0
-            case '#':
+            case "#":
                 x += 1
                 pixels.append(True)
-            case '.':
+            case ".":
                 x += 1
                 pixels.append(False)
             case _:
@@ -49,55 +51,83 @@ def parse_screen(string):
 def test_rect():
     screen = Screen(7, 3)
     screen.execute([("rect", 3, 2)])
-    assert screen.__str__() == """###....
+    assert (
+        screen.__str__()
+        == """###....
 ###....
 ......."""
+    )
 
 
 def test_col():
-    screen = parse_screen("""###....
+    screen = parse_screen(
+        """###....
 ###....
-.......""")
-    screen.execute([('col', 1, 1)])
-    assert screen.__str__() == """#.#....
+......."""
+    )
+    screen.execute([("col", 1, 1)])
+    assert (
+        screen.__str__()
+        == """#.#....
 ###....
 .#....."""
+    )
 
 
 def test_row():
-    screen = parse_screen("""###....
-###....
-.......""")
-    screen.execute([('row', 0, 1)])
-    assert screen.__str__() == """.###...
+    screen = parse_screen(
+        """###....
 ###....
 ......."""
+    )
+    screen.execute([("row", 0, 1)])
+    assert (
+        screen.__str__()
+        == """.###...
+###....
+......."""
+    )
 
 
 def test_col_wrap():
-    screen = parse_screen("""#######
+    screen = parse_screen(
+        """#######
 #######
-#.#####""")
-    screen.execute([('col', 1, 1)], )
-    assert screen.__str__() == """#.#####
+#.#####"""
+    )
+    screen.execute(
+        [("col", 1, 1)],
+    )
+    assert (
+        screen.__str__()
+        == """#.#####
 #######
 #######"""
+    )
 
 
 def test_row_wrap():
-    screen = parse_screen("""###....
-###....
-.......""")
-    screen.execute([('row', 0, 5)])
-    assert screen.__str__() == """#....##
+    screen = parse_screen(
+        """###....
 ###....
 ......."""
+    )
+    screen.execute([("row", 0, 5)])
+    assert (
+        screen.__str__()
+        == """#....##
+###....
+......."""
+    )
 
 
 def test_example_one():
     screen = Screen(7, 3)
     screen.execute(MODEL)
     assert screen.lit_pixel_count() == 6
-    assert screen.__str__() == """.#..#.#
+    assert (
+        screen.__str__()
+        == """.#..#.#
 #.#....
 .#....."""
+    )

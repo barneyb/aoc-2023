@@ -38,8 +38,8 @@ def solve(file, parse, *parts):
         c = ord("a")
         for a in answers:
             timing = f"({format_ns(ns)})" if ns > 0 else " " * 13
-            if type(a) == str and '\n' in a and a[0] != '\n':
-                a = '\n' + a
+            if type(a) == str and "\n" in a and a[0] != "\n":
+                a = "\n" + a
             lbl = f"{i} " if len(answers) == 1 else f"{i}{chr(c)}"
             print(f"Part {lbl} {timing} : {'-' if a is None else a}")
             ns = 0
