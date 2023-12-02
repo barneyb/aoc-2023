@@ -8,11 +8,18 @@ def test_parse_addr():
 
 
 def test_parse():
-    assert list(parse("""a[b]c
-    d[e]f[g]h""")) == [
-        (["a", "c"], ["b"]),
-        (["d", "f", "h"], ["e", "g"])
-    ]
+    assert (
+        list(
+            parse(
+                """a[b]c
+d[e]f[g]h"""
+            )
+        )
+        == [
+            (["a", "c"], ["b"]),
+            (["d", "f", "h"], ["e", "g"]),
+        ]
+    )
 
 
 def test_has_abba():

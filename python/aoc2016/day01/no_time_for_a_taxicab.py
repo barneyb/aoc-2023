@@ -45,7 +45,9 @@ def part_two(path):
 
 
 if __name__ == "__main__":
-    aoc.solve(__file__,
-              parse,
-              part_one,
-              part_two)
+    aoc.solve(
+        __file__,
+        parse,
+        part_one,
+        part_two,
+    )

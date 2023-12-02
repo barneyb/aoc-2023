@@ -33,15 +33,22 @@ class Screen:
                 case "rect":
                     self.pixels = [
                         True if i % self.width < a and i // self.width < b else p
-                        for i, p in enumerate(self.pixels)]
+                        for i, p in enumerate(self.pixels)
+                    ]
                 case "row":
                     self.pixels = [
-                        self.pixels[self._munge_i(i, -b, 0)] if i // self.width == a else p
-                        for i, p in enumerate(self.pixels)]
+                        self.pixels[self._munge_i(i, -b, 0)]
+                        if i // self.width == a
+                        else p
+                        for i, p in enumerate(self.pixels)
+                    ]
                 case "col":
                     self.pixels = [
-                        self.pixels[self._munge_i(i, 0, -b)] if i % self.width == a else p
-                        for i, p in enumerate(self.pixels)]
+                        self.pixels[self._munge_i(i, 0, -b)]
+                        if i % self.width == a
+                        else p
+                        for i, p in enumerate(self.pixels)
+                    ]
                     pass
 
     def lit_pixel_count(self):

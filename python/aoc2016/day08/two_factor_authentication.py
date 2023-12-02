@@ -20,19 +20,18 @@ def parse_line(line):
         m = RE_ROW.match(line)
     if not m:
         raise RuntimeError(f"Unmatchable: '{line}'")
-    return (m.group(1),
-            int(m.group(2)),
-            int(m.group(3)))
+    return (m.group(1), int(m.group(2)), int(m.group(3)))
 
 
 def both_parts(instructions):
     screen = Screen(50, 6)
     screen.execute(instructions)
-    return (screen.lit_pixel_count(),
-            screen.__str__(on=aoc.BLOCK, off=" "))
+    return (screen.lit_pixel_count(), screen.__str__(on=aoc.BLOCK, off=" "))
 
 
 if __name__ == "__main__":
-    aoc.solve(__file__,
-              parse,
-              both_parts)
+    aoc.solve(
+        __file__,
+        parse,
+        both_parts,
+    )
