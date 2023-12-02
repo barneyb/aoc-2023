@@ -17,9 +17,19 @@ def part_one(model):
     return hist[1] * hist[3]
 
 
+def part_two(model):
+    hist = Counter()
+    hist[0] = 1  # the charge port
+    for adapter in model:
+        for jlt in range(adapter - 3, adapter):
+            hist[adapter] += hist[jlt]
+    return hist[model[-1]]
+
+
 if __name__ == "__main__":
     aoc.solve(
         __file__,
         parse,
         part_one,
+        part_two,
     )
