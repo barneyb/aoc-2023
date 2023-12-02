@@ -82,7 +82,11 @@ def test_example_1a():
     )
 
 
-def test_part_one():
+def test_part_one_10_steps():
     model = parse(EXAMPLE_ONE_A)
     assert part_one(model, steps=10) == 204
+
+
+def test_part_one_full():
+    model = parse(EXAMPLE_ONE_A)
     assert part_one(model) == 1656
