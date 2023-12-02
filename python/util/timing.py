@@ -5,7 +5,7 @@ NANOS_PER_MILLISECOND = 1_000_000
 NANOS_PER_SEC = 1_000_000_000
 
 
-def timed_ns(work):
+def with_ns(work):
     """I execute the passed work and return a tuple containing the result and
     the number of nanoseconds it took to execute.
     """
