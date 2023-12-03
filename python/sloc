@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+#find aoc* -name '*.py' -not -name '*_test.py' \
+#    | sort \
+#    | xargs wc -l
+
+pygount --suffix py \
+    --folders-to-skip venv,.pytest_cache,__pycache__ \
+    --names-to-skip '*_test.py,__init__.py' \
+    "$@" \
+    .
