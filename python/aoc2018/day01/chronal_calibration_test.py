@@ -16,3 +16,7 @@ def test_parse():
 
 def test_example_one():
     assert part_one(MODEL) == 3
+
+
+def test_example_two():
+    assert part_two(MODEL) == 2
