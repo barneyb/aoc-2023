@@ -27,14 +27,18 @@ def unparse_chars(items, width, convert=str):
 
 
 class LinearGrid:
-    def __init__(self, width, height):
+    def __init__(self, width, height, items=None):
         """Construct a new LinearGrid with the specified width and height. 'i'
         refers to an index in the element list. 'x' andn 'y' refer to planar
         coordinates, and 'p' refers to an (x,y) tuple (a point).
+
+        Supplying the items is optional. Dimension-related methods will work
+        with or without it, mapping-related methods will not.
         """
         super().__init__()
         self.w = width
         self.h = height
+        self.items = items
 
     def to_i(self, p):
         """Convert the point to an index."""
@@ -78,3 +82,6 @@ class LinearGrid:
         """Return whether the passed point is within the grid"""
         x, y = p
         return 0 <= x < self.w and 0 <= y < self.h
+
+    def __getitem__(self, p):
+        return self.items[self.to_i(p)]
