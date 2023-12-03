@@ -1,82 +1,67 @@
 from util import aoc
-from util.linear_grid import LinearGrid, parse_chars
 
 
 def parse(input):
-    return parse_chars(input)
+    schematic = input.splitlines()
+    w = len(schematic[0])
+    h = len(schematic)
+    return w, h, schematic
+
+
+def find_symbols(schematic):
+    symbols = {}
+    for y, line in enumerate(schematic):
+        for x, c in enumerate(line):
+            if c == "." or c.isdigit():
+                continue
+            if c not in symbols:
+                symbols[c] = []
+            symbols[c].append((x, y))
+    return symbols
+
+
+def neighbors(p, w, h):
+    x, y = p
+    return filter(
+        lambda p: 0 <= p[0] < w and 0 <= p[1] < h,
+        [
+            (x - 1, y - 1),
+            (x, y - 1),
+            (x + 1, y - 1),
+            (x + 1, y),
+            (x + 1, y + 1),
+            (x, y + 1),
+            (x - 1, y + 1),
+            (x - 1, y),
+        ],
+    )
+
+
+def num_bound(string, start, delta):
+    pos = start
+    l = len(string)
+    while 0 <= pos < l and string[pos].isdigit():
+        pos += delta
+    # we went one too far
+    return pos - delta
 
 
 def part_one(model):
     w, h, schematic = model
-    grid = LinearGrid(w, h, schematic)
-    digits = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
+    symbols = find_symbols(schematic)
+
     number_locations = set()
-    for i, c in enumerate(schematic):
-        if c == "." or c in digits:
-            continue
-        for p in grid.neighbors(grid.to_point(i)):
-            if not grid.in_bounds(p):
-                continue
-            if grid[p] not in digits:
-                continue
-            # scan left for the start of the number
-            while True:
-                x, y = p
-                n = (x - 1, y)
-                if grid[n] not in digits:
-                    break
-                p = n
-            number_locations.add(p)
-    total = 0
-    for p in number_locations:
-        num = 0
-        while True:
-            num = num * 10 + int(grid[p])
-            x, y = p
-            n = (x + 1, y)
-            if grid[n] not in digits:
-                break
-            p = n
-        total += num
-    return total
+    for ps in symbols.values():
+        for p in ps:
+            for x, y in neighbors(p, w, h):
+                if not schematic[y][x].isdigit():
+                    continue
+                x = num_bound(schematic[y], x, -1)
+                number_locations.add((x, y))
 
-
-def part_two(model):
-    w, h, schematic = model
-    grid = LinearGrid(w, h, schematic)
-    digits = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
     total = 0
-    for i, c in enumerate(schematic):
-        num_locs = set()
-        if c != "*":
-            continue
-        for p in grid.neighbors(grid.to_point(i)):
-            if not grid.in_bounds(p):
-                continue
-            if grid[p] not in digits:
-                continue
-            # scan left for the start of the number
-            while True:
-                x, y = p
-                n = (x - 1, y)
-                if grid[n] not in digits:
-                    break
-                p = n
-            num_locs.add(p)
-        if len(num_locs) != 2:
-            continue
-        ratio = None
-        for p in num_locs:
-            num = 0
-            while True:
-                num = num * 10 + int(grid[p])
-                x, y = p
-                n = (x + 1, y)
-                if grid[n] not in digits:
-                    break
-                p = n
-            ratio = num if ratio is None else num * ratio
-        total += ratio
+    for x, y in number_locations:
+        total += int(schematic[y][x : num_bound(schematic[y], x, 1) + 1])
     return total
 
 
@@ -85,5 +70,4 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        part_two,
     )
