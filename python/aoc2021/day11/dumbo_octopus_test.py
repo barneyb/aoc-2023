@@ -1,4 +1,5 @@
 from dumbo_octopus import *
+from util.linear_grid import unparse_chars
 
 # fmt: off
 EXAMPLE_ONE_A = """5483143223
@@ -26,6 +27,11 @@ MODEL_ONE_B = (5, 5, [1,1,1,1,1,
                       1,9,9,9,1,
                       1,1,1,1,1])
 # fmt: on
+
+
+def unparse(model):
+    w, _, os = model
+    return unparse_chars(os, w)
 
 
 def test_parse():
