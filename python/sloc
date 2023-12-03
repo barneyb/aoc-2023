@@ -8,4 +8,5 @@ pygount --suffix py \
     --folders-to-skip venv,.pytest_cache,__pycache__ \
     --names-to-skip '*_test.py,__init__.py' \
     "$@" \
-    .
+    . \
+    | cut -c 1-3,15-
