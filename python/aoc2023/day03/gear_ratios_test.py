@@ -30,5 +30,9 @@ def test_parse():
     assert parse(EXAMPLE) == MODEL
 
 
-def test_example_one():
+def test_example_1a():
     assert part_one(MODEL) == 4361
+
+
+def test_example_1b():
+    assert part_two(MODEL) == 467835
