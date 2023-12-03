@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from util import aoc
 
 
@@ -7,9 +9,6 @@ class Schematic:
         self.schematic = input.splitlines()
         self.w = len(self.schematic[0])
         self.h = len(self.schematic)
-
-    def __eq__(self, other):
-        return self.schematic == other
 
     def __str__(self):
         return "\n".join(self.schematic)
@@ -23,12 +22,10 @@ class Schematic:
         return self.schematic[y][x]
 
     def neighbors(self, p):
-        """Returns the neighbors of the given point. Corners have three, edges
-        have five, and the rest have eight.
-        """
+        """Returns the neighbors of the given point."""
         x, y = p
         return filter(
-            lambda p: p in self,
+            self.__contains__,
             [
                 (x - 1, y - 1),
                 (x, y - 1),
@@ -50,21 +47,18 @@ class Schematic:
         start = x
         while start >= 0 and line[start].isdigit():
             start -= 1
+        start = start + 1  # move back to the first digit
         end = x
         while end < len(line) and line[end].isdigit():
             end += 1
-        x = start + 1
-        return int(line[x:end]), (x, y)
+        return int(line[start:end]), (start, y)
 
     def find_symbols(self):
-        symbols = {}
+        symbols = defaultdict(list)
         for y, line in enumerate(self.schematic):
             for x, c in enumerate(line):
-                if c == "." or c.isdigit():
-                    continue
-                if c not in symbols:
-                    symbols[c] = []
-                symbols[c].append((x, y))
+                if c != "." and not c.isdigit():
+                    symbols[c].append((x, y))
         return symbols
 
     def adjacent_numbers(self, p):
@@ -75,10 +69,6 @@ class Schematic:
                 if p not in locations:
                     locations.add(p)
                     yield n
-
-
-def parse(input):
-    return Schematic(input)
 
 
 def part_one(schematic):
@@ -102,7 +92,7 @@ def part_two(schematic):
 if __name__ == "__main__":
     aoc.solve(
         __file__,
-        parse,
+        Schematic,
         part_one,
         part_two,
     )
