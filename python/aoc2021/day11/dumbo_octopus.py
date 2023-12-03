@@ -11,18 +11,6 @@ def parse(input):
     return w, len(os) // w, os
 
 
-def unparse(model):
-    w, h, os = model
-    sb = []
-    end = w - 1
-    for i, o in enumerate(os):
-        assert 0 <= o < 10
-        sb.append(str(o))
-        if i % w == end:
-            sb.append("\n")
-    return "".join(sb)
-
-
 def tick(model):
     """I move the model forward one tick, returning a tuple containing the next
     model and the number of flashes that occurred during the tick.
