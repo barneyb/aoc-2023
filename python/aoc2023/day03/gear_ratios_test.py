@@ -9,14 +9,13 @@ EXAMPLE = """467..114..
 ..592.....
 ......755.
 ...$.*....
-.664.598..
-"""
+.664.598.."""
 
 MODEL = Schematic(EXAMPLE)
 
 
-def test_parse():
-    assert parse(EXAMPLE) == MODEL
+def test_parse_and_stringify():
+    assert str(Schematic(EXAMPLE)) == EXAMPLE
 
 
 def test_find_symbols():
