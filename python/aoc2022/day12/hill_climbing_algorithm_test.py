@@ -5,25 +5,23 @@ EXAMPLE = """Sabqponm
 abcryxxl
 accszExk
 acctuvwj
-abdefghi
-"""
+abdefghi"""
 
-# dims, start, end, map
-MODEL = (8, 5), (0, 0), (5, 2), ["aabqponm",
-                                 "abcryxxl",
-                                 "accszzxk",
-                                 "acctuvwj",
-                                 "abdefghi"]
+MAP = Map(EXAMPLE)
 # fmt: on
 
 
 def test_parse():
-    assert parse(EXAMPLE) == MODEL
+    assert MAP.width == 8
+    assert MAP.height == 5
+    assert MAP.start == (0, 0)
+    assert MAP.end == (5, 2)
+    assert str(MAP) == EXAMPLE
 
 
 def test_example_one():
-    assert part_one(MODEL) == 31
+    assert part_one(MAP) == 31
 
 
 def test_example_two():
-    assert part_two(MODEL) == 29
+    assert part_two(MAP) == 29
