@@ -2,6 +2,8 @@ from collections import deque
 
 from util import aoc
 
+NO_PATH = 999_999_999
+
 
 def parse(input):
     map = input.splitlines()
@@ -61,7 +63,22 @@ def part_one(model):
             if n == end:
                 return steps
             queue.append((n, steps))
-    raise RuntimeError(f"Failed to find path from {start} to {end}")
+    return NO_PATH
+
+
+def part_two(model):
+    dims, _, end, map = model
+    best = NO_PATH
+    for y, row in enumerate(map):
+        x = -1
+        while True:
+            x = row.find("a", x + 1)
+            if x < 0:
+                break
+            steps = part_one((dims, (x, y), end, map))
+            if steps < best:
+                best = steps
+    return best
 
 
 if __name__ == "__main__":
@@ -69,4 +86,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
+        part_two,
     )
