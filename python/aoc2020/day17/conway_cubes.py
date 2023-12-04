@@ -53,9 +53,17 @@ def part_one(model, cycles=6):
     return len(state)
 
 
+def part_two(model):
+    state = set((*p, 0, 0) for p in model)
+    for _ in range(6):
+        state = tick(state)
+    return len(state)
+
+
 if __name__ == "__main__":
     aoc.solve(
         __file__,
         parse,
         part_one,
+        part_two,
     )
