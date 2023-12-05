@@ -1,3 +1,5 @@
+import functools
+
 from util import aoc
 
 
@@ -22,21 +24,23 @@ def cartesian_product(ranges):
     yield from helper((), ranges)
 
 
+@functools.cache
 def neighbors(p):
-    def helper():
-        yield from cartesian_product([range(d - 1, d + 2) for d in p])
-
-    return filter(lambda n: n != p, helper())  # sorta silly :)
+    return list(
+        filter(
+            lambda n: n != p,  # sorta silly :)
+            cartesian_product([range(d - 1, d + 2) for d in p]),
+        )
+    )
 
 
 def tick(points):
-    mins = maxes = [d for d in next(points.__iter__())]
+    to_check = set()
     for p in points:
-        mins = [min(a, b) for a, b in zip(mins, p)]
-        maxes = [max(a, b) for a, b in zip(maxes, p)]
+        to_check.update(neighbors(p))
 
     state = set()
-    for p in cartesian_product([range(mn - 1, mx + 2) for mn, mx in zip(mins, maxes)]):
+    for p in to_check:
         active_neighbors = sum(1 for n in neighbors(p) if n in points)
         if active_neighbors == 3:
             state.add(p)
