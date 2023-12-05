@@ -16,19 +16,19 @@ def parse(input):
     return result
 
 
+def points(card):
+    win, have = card
+    return sum(1 if h in win else 0 for h in have)
+
+
 def part_one(model):
-    total = 0
-    for win, have in model:
-        n = sum(1 if h in win else 0 for h in have)
-        if n > 0:
-            total += 2 ** (n - 1)
-    return total
+    return sum(2 ** (p - 1) for p in (points(card) for card in model) if p > 0)
 
 
 def part_two(model):
     copies = [1] * len(model)
-    for i, (win, have) in enumerate(model):
-        for n in range(sum(1 if h in win else 0 for h in have)):
+    for i, card in enumerate(model):
+        for n in range(points(card)):
             copies[i + n + 1] += copies[i]
     return sum(copies)
 
