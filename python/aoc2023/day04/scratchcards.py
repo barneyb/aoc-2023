@@ -2,7 +2,7 @@ import re
 
 from util import aoc
 
-RE_SPACES = re.compile("\s+")
+RE_SPACES = re.compile(r"\s+")
 
 
 def parse(input):
