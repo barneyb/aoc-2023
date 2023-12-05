@@ -25,8 +25,12 @@ def part_one(model):
     return total
 
 
-# def part_two(model):
-#    return len(model)
+def part_two(model):
+    copies = [1] * len(model)
+    for i, (win, have) in enumerate(model):
+        for n in range(sum(1 if h in win else 0 for h in have)):
+            copies[i + n + 1] += copies[i]
+    return sum(copies)
 
 
 if __name__ == "__main__":
@@ -34,5 +38,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )
