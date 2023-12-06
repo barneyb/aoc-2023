@@ -1,4 +1,4 @@
-from gear_ratios import *
+from .gear_ratios import *
 
 EXAMPLE = """467..114..
 ...*......
