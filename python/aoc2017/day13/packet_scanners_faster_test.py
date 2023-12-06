@@ -1,5 +1,5 @@
-from aoc2017.day13.packet_scanners_test import EXAMPLE_ONE, MODEL_ONE
-from packet_scanners_faster import *
+from .packet_scanners_faster import *
+from .packet_scanners_test import EXAMPLE_ONE, MODEL_ONE
 
 
 def test_parse():

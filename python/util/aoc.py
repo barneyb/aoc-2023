@@ -15,10 +15,13 @@ def entry_point(year, day, data):
     parse = lambda d: d
     if "parse" in mod_attrs:
         parse = mod.parse
-    a = mod.part_one(parse(data))
-    b = None
-    if "part_two" in mod_attrs:
-        b = mod.part_two(parse(data))
+    if "both_parts" in mod_attrs:
+        a, b = mod.both_parts(parse(data))
+    else:
+        a = mod.part_one(parse(data))
+        b = None
+        if "part_two" in mod_attrs:
+            b = mod.part_two(parse(data))
     return a, b
 
 

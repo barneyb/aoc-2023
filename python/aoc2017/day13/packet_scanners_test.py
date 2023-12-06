@@ -1,4 +1,4 @@
-from packet_scanners import *
+from .packet_scanners import *
 
 EXAMPLE_ONE = """0: 3
 1: 2

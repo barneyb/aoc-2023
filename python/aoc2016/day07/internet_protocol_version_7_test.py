@@ -1,4 +1,4 @@
-from internet_protocol_version_7 import *
+from .internet_protocol_version_7 import *
 
 
 def test_parse_addr():

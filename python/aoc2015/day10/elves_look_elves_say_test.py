@@ -1,4 +1,4 @@
-from aoc2015.day10.elves_look_elves_say import *
+from .elves_look_elves_say import *
 
 
 def test_example_one():

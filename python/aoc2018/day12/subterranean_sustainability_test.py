@@ -1,4 +1,4 @@
-from subterranean_sustainability import *
+from .subterranean_sustainability import *
 
 # The three 'die off' notes are not part of the raw example
 EXAMPLE = """initial state: #..#.#..##......###...###
