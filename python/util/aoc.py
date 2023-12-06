@@ -11,11 +11,14 @@ BLOCK = "█"
 def entry_point(year, day, data):
     mod_name = f"aoc{year}.day{day:02}"
     mod = importlib.import_module(mod_name)
+    mod_attrs = dir(mod)
     parse = lambda d: d
-    if "parse" in dir(mod):
+    if "parse" in mod_attrs:
         parse = mod.parse
     a = mod.part_one(parse(data))
-    b = mod.part_two(parse(data))
+    b = None
+    if "part_two" in mod_attrs:
+        b = mod.part_two(parse(data))
     return a, b
 
 
