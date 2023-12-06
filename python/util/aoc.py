@@ -7,6 +7,12 @@ from .tracing import format_alloc, with_alloc
 BLOCK = "█"
 
 
+def entry_point(year, day, data):
+    from aoc2023.day01.trebuchet import part_one, part_two
+
+    return part_one(data), part_two(data)
+
+
 def get_input(file):
     # This import checks the token file _during initialization_, so only import
     # when it's first used.

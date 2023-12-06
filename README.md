@@ -18,16 +18,18 @@ cd python
 python -m venv venv
 source venv/bin/activate
 export PYTHONPATH=.
-pip install -r requirements.txt
+pip install -e .
 pytest
 ```
 
 The code uses [advent-of-code-data](https://github.com/wimglenn/advent-of-code-data)
 to manage inputs. So install that, configure your token (see the second section
-of the readme), and you should be able to get _your_ answers with _my_ solvers.
+of its readme), and you should be able to get _your_ answers with _my_ solvers.
+Run a script directly, or use the `aoc` tool to select by year/day:
 
 ```
-python aoc2015/day01/not_quite_lisp.py
+python aoc2023/day01/trebuchet.py
+aoc -y 2023 -d 1
 ```
 
 ## Java Solvers
