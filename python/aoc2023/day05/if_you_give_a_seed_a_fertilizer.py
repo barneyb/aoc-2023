@@ -38,13 +38,28 @@ def linearize(mappings):
 
 
 def convert_one(window, mapping):
-    n, _ = window
+    lo, hi = window
     tgt, ms = mapping
+    result = []
     for d, s, r in ms:
-        if s <= n < s + r:
-            n = d + (n - s)
+        e = s + r
+        if hi <= s:  # this mapping starts too high
             break
-    return [(n, n + 1)]
+        if lo > e:  # next!
+            continue
+        if lo < s:  # prefix passes through untouched
+            result.append((lo, s))
+            lo = s
+        if hi <= e:  # entirely within
+            result.append((d + lo - s, d + hi - s))
+            lo = hi
+            break
+        # partial overlap
+        result.append((d + lo - s, d + e - s))
+        lo = e
+    if lo < hi:  # whatever is left
+        result.append((lo, hi))
+    return result
 
 
 def convert(windows, mapping):
