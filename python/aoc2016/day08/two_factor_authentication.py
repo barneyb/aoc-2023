@@ -1,6 +1,6 @@
 import re
 
-from screen import Screen
+from aoc2016.day08.screen import Screen
 from util import aoc
 
 RE_RECT = re.compile(r"(rect) (\d+)x(\d+)")
@@ -33,5 +33,5 @@ if __name__ == "__main__":
     aoc.solve(
         __file__,
         parse,
-        both_parts,
+        both_parts,  # todo: parse the block letters
     )

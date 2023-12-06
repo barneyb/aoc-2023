@@ -1,4 +1,4 @@
-from explosives_in_cyberspace import *
+from .explosives_in_cyberspace import *
 
 
 def test_example_1_1():

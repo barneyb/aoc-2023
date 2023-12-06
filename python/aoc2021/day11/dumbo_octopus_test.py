@@ -1,4 +1,4 @@
-from dumbo_octopus import *
+from .dumbo_octopus import *
 
 # fmt: off
 EXAMPLE_ONE_A = """5483143223

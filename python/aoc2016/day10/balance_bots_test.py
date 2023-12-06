@@ -1,4 +1,4 @@
-from balance_bots import *
+from .balance_bots import *
 
 EXAMPLE = """value 5 goes to bot 2
 bot 2 gives low to bot 1 and high to bot 0

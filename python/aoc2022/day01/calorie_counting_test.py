@@ -1,4 +1,4 @@
-from calorie_counting import *
+from .calorie_counting import *
 
 EXAMPLE_ONE = """1000
 2000

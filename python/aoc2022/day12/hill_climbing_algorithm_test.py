@@ -1,4 +1,4 @@
-from hill_climbing_algorithm import *
+from .hill_climbing_algorithm import *
 
 # fmt: off
 EXAMPLE = """Sabqponm

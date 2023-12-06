@@ -1,4 +1,4 @@
-from inverse_captcha import *
+from .inverse_captcha import *
 
 
 def test_examples_1():

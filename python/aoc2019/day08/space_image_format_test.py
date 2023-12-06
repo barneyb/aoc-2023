@@ -1,4 +1,4 @@
-from space_image_format import *
+from .space_image_format import *
 
 EXAMPLE_ONE = "123456789012"
 

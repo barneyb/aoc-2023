@@ -59,5 +59,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        functools.partial(part_two, fg=aoc.BLOCK),
+        functools.partial(part_two, fg=aoc.BLOCK),  # todo: parse the block letters
     )

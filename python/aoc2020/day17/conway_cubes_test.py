@@ -1,4 +1,4 @@
-from conway_cubes import *
+from .conway_cubes import *
 
 # fmt: off
 EXAMPLE = """.#.

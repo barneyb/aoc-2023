@@ -1,4 +1,4 @@
-from two_factor_authentication import *
+from .two_factor_authentication import *
 
 EXAMPLE = """rect 3x2
 rotate column x=1 by 1

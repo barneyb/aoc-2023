@@ -1,4 +1,4 @@
-from chronal_calibration import *
+from .chronal_calibration import *
 
 # fmt: off
 EXAMPLE = """+1

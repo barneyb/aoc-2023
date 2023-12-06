@@ -1,4 +1,4 @@
-from adapter_array import *
+from .adapter_array import *
 
 EXAMPLE_ONE = """16
 10
