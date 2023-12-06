@@ -6,14 +6,11 @@ RE_SPACES = re.compile(r"\s+")
 
 
 def parse_many(input):
-    return list(
-        zip(
-            *[
-                [int(n) for n in RE_SPACES.split(l.split(":")[1].strip())]
-                for l in input.splitlines()
-            ]
-        )
-    )
+    times, distances = [
+        [int(n) for n in RE_SPACES.split(l.split(":")[1].strip())]
+        for l in input.splitlines()
+    ]
+    return list(zip(times, distances))
 
 
 def binary_search(lo, hi, accept):
