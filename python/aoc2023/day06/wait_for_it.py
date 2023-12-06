@@ -5,7 +5,7 @@ from util import aoc
 RE_SPACES = re.compile(r"\s+")
 
 
-def parse(input):
+def parse_many(input):
     return list(
         zip(
             *[
@@ -17,28 +17,29 @@ def parse(input):
 
 
 def ways_to_win(time, dist):
-    ds = []
+    n = 0
     for t in range(time):
         if t * (time - t) > dist:
-            ds.append(t)
-    return ds
+            n += 1
+    return n
 
 
-def part_one(model):
+def part_one(input):
     total = 1
-    for t, d in model:
-        total *= len(ways_to_win(t, d))
+    for t, d in parse_many(input):
+        total *= ways_to_win(t, d)
     return total
 
 
-# def part_two(model):
-#    return len(model)
+def part_two(input):
+    t, d = [int(RE_SPACES.sub("", l.split(":")[1])) for l in input.splitlines()]
+    return ways_to_win(t, d)
 
 
 if __name__ == "__main__":
     aoc.solve(
         __file__,
-        parse,
+        None,
         part_one,
-        # part_two,
+        part_two,
     )
