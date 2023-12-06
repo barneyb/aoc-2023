@@ -20,7 +20,7 @@ def parse(input):
         first, *lines = block.splitlines()
         s, d = RE_MAP.match(first).groups()
         ms = [parse_ints(l) for l in lines]
-        mappings[s] = (d, ms)
+        mappings[s] = (d, sorted(ms, key=lambda t: t[1]))
     return seeds, mappings
 
 
@@ -33,13 +33,13 @@ def convert(n, mapping):
 
 
 def linearize(mappings):
-    type = "seed"
+    src = "seed"
     ordered = []
-    while type != "location":
+    while src != "location":
         for s in mappings:
-            if s == type:
-                type, ms = mappings[s]
-                ordered.append((type, ms))
+            if s == src:
+                src, ms = mappings[s]
+                ordered.append((src, ms))
                 break
     assert len(ordered) == len(mappings)
     return ordered
