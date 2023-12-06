@@ -16,12 +16,20 @@ def parse_many(input):
     )
 
 
+def binary_search(lo, hi, accept):
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if accept(mid):
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return lo
+
+
 def ways_to_win(time, dist):
-    n = 0
-    for t in range(time):
-        if t * (time - t) > dist:
-            n += 1
-    return n
+    mn = binary_search(0, time, lambda mid: mid * (time - mid) <= dist)
+    mx = binary_search(0, time, lambda mid: mid * (time - mid) > dist)
+    return mx - mn
 
 
 def part_one(input):
