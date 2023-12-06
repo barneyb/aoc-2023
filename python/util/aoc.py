@@ -1,3 +1,4 @@
+import importlib
 from os import path
 from re import split
 
@@ -5,6 +6,20 @@ from .timing import format_ns, with_bench, with_ns
 from .tracing import format_alloc, with_alloc
 
 BLOCK = "█"
+
+
+def entry_point(year, day, data):
+    mod_name = f"aoc{year}.day{day:02}"
+    mod = importlib.import_module(mod_name)
+    mod_attrs = dir(mod)
+    parse = lambda d: d
+    if "parse" in mod_attrs:
+        parse = mod.parse
+    a = mod.part_one(parse(data))
+    b = None
+    if "part_two" in mod_attrs:
+        b = mod.part_two(parse(data))
+    return a, b
 
 
 def get_input(file):
@@ -24,8 +39,9 @@ def _with_metric(file, run_with_metric, format_metric, parse, *parts):
         read_with_metric, run_with_metric = run_with_metric
     (input, read_m) = read_with_metric(lambda: get_input(file))
     filename = file.split("/")[-1].split(".")[0]
+    bar_len = max(len(filename) + 5, 21)
     print(f"Read    ({format_metric(read_m)}) : {len(input)} chars")
-    print(f"- {filename.replace('_', ' ')} --")
+    print(f"- {filename.replace('_', ' ')} " + ("-" * (bar_len - len(filename) - 3)))
     total_m = 0
     i = 1
     for part in parts:
@@ -51,7 +67,7 @@ def _with_metric(file, run_with_metric, format_metric, parse, *parts):
             c += 1
         i += 1
     print(f"Total   ({format_metric(total_m)})")
-    print("-" * (len(filename) + 5))
+    print("-" * bar_len)
     print(f"Grand   ({format_metric(total_m + read_m)})")
 
 

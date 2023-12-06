@@ -1,4 +1,4 @@
-from not_quite_lisp import *
+from .not_quite_lisp import *
 
 
 def test_part_one():

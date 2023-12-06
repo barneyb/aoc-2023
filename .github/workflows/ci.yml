@@ -23,7 +23,7 @@ jobs:
         working-directory: ./python
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -e .
       - name: Test Python
         working-directory: ./python
         env:
