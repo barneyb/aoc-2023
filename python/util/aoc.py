@@ -23,8 +23,9 @@ def _with_metric(file, run_with_metric, format_metric, parse, *parts):
     if type(run_with_metric) == tuple:
         read_with_metric, run_with_metric = run_with_metric
     (input, read_m) = read_with_metric(lambda: get_input(file))
+    filename = file.split("/")[-1].split(".")[0]
     print(f"Read    ({format_metric(read_m)}) : {len(input)} chars")
-    print("-" * 21)
+    print(f"- {filename.replace('_', ' ')} --")
     total_m = 0
     i = 1
     for part in parts:
@@ -50,7 +51,7 @@ def _with_metric(file, run_with_metric, format_metric, parse, *parts):
             c += 1
         i += 1
     print(f"Total   ({format_metric(total_m)})")
-    print("-" * 21)
+    print("-" * (len(filename) + 5))
     print(f"Grand   ({format_metric(total_m + read_m)})")
 
 
