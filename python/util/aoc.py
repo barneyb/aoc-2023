@@ -1,3 +1,4 @@
+import importlib
 from os import path
 from re import split
 
@@ -8,9 +9,14 @@ BLOCK = "█"
 
 
 def entry_point(year, day, data):
-    from aoc2023.day01.trebuchet import part_one, part_two
-
-    return part_one(data), part_two(data)
+    mod_name = f"aoc{year}.day{day:02}"
+    mod = importlib.import_module(mod_name)
+    parse = lambda d: d
+    if "parse" in dir(mod):
+        parse = mod.parse
+    a = mod.part_one(parse(data))
+    b = mod.part_two(parse(data))
+    return a, b
 
 
 def get_input(file):

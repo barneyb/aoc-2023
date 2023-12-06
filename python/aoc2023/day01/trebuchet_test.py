@@ -1,4 +1,4 @@
-from trebuchet import *
+from .trebuchet import *
 
 EXAMPLE_ONE = """1abc2
 pqr3stu8vwx

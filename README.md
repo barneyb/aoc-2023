@@ -28,8 +28,8 @@ of its readme), and you should be able to get _your_ answers with _my_ solvers.
 Run a script directly, or use the `aoc` tool to select by year/day:
 
 ```
-python aoc2023/day01/trebuchet.py
-aoc -y 2023 -d 1
+python aoc2015/day01/not_quite_lisp.py
+aoc -y 2015 -d 1 --no-submit
 ```
 
 ## Java Solvers
