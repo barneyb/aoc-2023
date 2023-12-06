@@ -24,14 +24,6 @@ def parse(input):
     return seeds, mappings
 
 
-def convert(n, mapping):
-    type, ms = mapping
-    for d, s, r in ms:
-        if s <= n < s + r:
-            return d + (n - s)
-    return n  # unchanged
-
-
 def linearize(mappings):
     src = "seed"
     ordered = []
@@ -45,18 +37,40 @@ def linearize(mappings):
     return ordered
 
 
-def to_location(seed, mappings):
-    return reduce(convert, mappings, seed)
+def convert_one(window, mapping):
+    n, _ = window
+    tgt, ms = mapping
+    for d, s, r in ms:
+        if s <= n < s + r:
+            n = d + (n - s)
+            break
+    return [(n, n + 1)]
+
+
+def convert(windows, mapping):
+    result = []
+    for w in windows:
+        result.extend(convert_one(w, mapping))
+    return result
+
+
+def to_locations(windows, mappings):
+    return reduce(convert, mappings, windows)
+
+
+def a_part(pairs, mappings):
+    mappings = linearize(mappings)
+    return min(m for m, _ in to_locations(pairs, mappings))
 
 
 def part_one(model):
     seeds, mappings = model
-    mappings = linearize(mappings)
-    return min(to_location(s, mappings) for s in seeds)
+    return a_part([(s, s + 1) for s in seeds], mappings)
 
 
-# def part_two(model):
-#    return len(model)
+def part_two(model):
+    seeds, mappings = model
+    return a_part([(s, s + r) for s, r in zip(seeds[::2], seeds[1::2])], mappings)
 
 
 if __name__ == "__main__":
@@ -64,5 +78,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )

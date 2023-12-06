@@ -72,26 +72,26 @@ def test_parse():
 
 def test_convert():
     seed2soil = MODEL[1]["seed"]
-    assert convert(79, seed2soil) == 81
-    assert convert(14, seed2soil) == 14
-    assert convert(55, seed2soil) == 57
+    assert convert([(79, 80)], seed2soil) == [(81, 82)]
+    assert convert([(14, 15)], seed2soil) == [(14, 15)]
+    assert convert([(55, 56)], seed2soil) == [(57, 58)]
 
 
 def test_convert_to_light():
-    assert convert(81, MODEL[1]["water"]) == 74
+    assert convert([(81, 82)], MODEL[1]["water"]) == [(74, 75)]
 
 
 def test_to_location():
     mappings = linearize(MODEL[1])
-    assert to_location(79, mappings) == 82
-    assert to_location(14, mappings) == 43
-    assert to_location(55, mappings) == 86
-    assert to_location(13, mappings) == 35
+    assert to_locations([(79, 80)], mappings) == [(82, 83)]
+    assert to_locations([(14, 15)], mappings) == [(43, 44)]
+    assert to_locations([(55, 56)], mappings) == [(86, 87)]
+    assert to_locations([(13, 14)], mappings) == [(35, 36)]
 
 
 def test_example_one():
     assert part_one(MODEL) == 35
 
 
-# def test_example_two():
-#    assert part_two(MODEL) == 3
+def test_example_two():
+    assert part_two(MODEL) == 46
