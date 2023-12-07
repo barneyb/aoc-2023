@@ -1,4 +1,4 @@
-# Advent of Code 2023
+# Advent of Code 2023 ![CI](https://github.com/barneyb/aoc-2023/actions/workflows/ci.yml/badge.svg)
 
 The yearly repo, seeded with a few solvers for random problems from prior years.
 If you don't know what [Advent of Code](https://adventofcode.com) is, you should
