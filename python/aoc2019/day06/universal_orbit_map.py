@@ -2,7 +2,7 @@ from util import aoc
 
 
 def parse(input):
-    return [(b, a) for a, b in (l.split(")") for l in input.splitlines())]
+    return build_paths((b, a) for a, b in (l.split(")") for l in input.splitlines()))
 
 
 def build_paths(model):
@@ -21,13 +21,11 @@ def build_paths(model):
     return paths
 
 
-def part_one(model):
-    paths = build_paths(model)
+def part_one(paths):
     return sum(len(p) for p in paths.values())
 
 
-def part_two(model):
-    paths = build_paths(model)
+def part_two(paths):
     you = paths["YOU"][1:]
     san = paths["SAN"][1:]
     lookup = set(san)
