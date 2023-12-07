@@ -1,7 +1,6 @@
-import functools
 from collections import Counter
 
-from util import aoc
+from util import aoc, block_print
 
 
 def parse(input, width=25, height=6):
@@ -34,7 +33,7 @@ def part_one(layers):
     return result
 
 
-def part_two(layers, bg=" ", fg="#"):
+def part_two_raw(layers, bg=" ", fg="#"):
     width = len(layers[0][0])
     height = len(layers[0])
     image = []
@@ -54,10 +53,14 @@ def part_two(layers, bg=" ", fg="#"):
     return "".join(image)
 
 
+def part_two(layers):
+    return block_print.read(part_two_raw(layers))
+
+
 if __name__ == "__main__":
     aoc.solve(
         __file__,
         parse,
         part_one,
-        functools.partial(part_two, fg=aoc.BLOCK),  # todo: parse the block letters
+        part_two,
     )
