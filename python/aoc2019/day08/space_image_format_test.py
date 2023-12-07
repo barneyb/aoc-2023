@@ -21,7 +21,7 @@ def test_example_one():
 def test_example_two():
     model = parse(EXAMPLE_TWO, 2, 2)
     assert (
-        part_two(model)
+        part_two_raw(model)
         == """ #
 # """
     )

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd "$(dirname "$0")" || exit
+
 #find aoc* -name '*.py' -not -name '*_test.py' \
 #    | sort \
 #    | xargs wc -l

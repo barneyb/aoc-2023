@@ -1,7 +1,7 @@
 import re
 
 from aoc2016.day08.screen import Screen
-from util import aoc
+from util import aoc, block_print
 
 RE_RECT = re.compile(r"(rect) (\d+)x(\d+)")
 RE_COL = re.compile(r"rotate (col)umn x=(\d+) by (-?\d+)")
@@ -26,12 +26,12 @@ def parse_line(line):
 def both_parts(instructions):
     screen = Screen(50, 6)
     screen.execute(instructions)
-    return (screen.lit_pixel_count(), screen.__str__(on=aoc.BLOCK, off=" "))
+    return screen.lit_pixel_count(), block_print.read(str(screen))
 
 
 if __name__ == "__main__":
     aoc.solve(
         __file__,
         parse,
-        both_parts,  # todo: parse the block letters
+        both_parts,
     )
