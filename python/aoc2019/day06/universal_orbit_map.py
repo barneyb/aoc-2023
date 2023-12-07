@@ -2,26 +2,38 @@ from util import aoc
 
 
 def parse(input):
-    return [tuple(l.split(")")) for l in input.splitlines()]
+    return [(b, a) for a, b in (l.split(")") for l in input.splitlines())]
 
 
-def part_one(model):
-    lookup = dict((b, c) for c, b in model)
-    cache = {"COM": 0}
+def build_paths(model):
+    lookup = dict(model)
+    paths = {"COM": []}
 
     def walk(b):
-        if b not in cache:
-            n = walk(lookup[b]) + 1
-            cache[b] = n
-        return cache[b]
+        if b not in paths:
+            p = [b]
+            p.extend(walk(lookup[b]))
+            paths[b] = p
+        return paths[b]
 
     for b in lookup.keys():
         walk(b)
-    return sum(cache.values())
+    return paths
 
 
-# def part_two(model):
-#    return len(model)
+def part_one(model):
+    paths = build_paths(model)
+    return sum(len(p) for p in paths.values())
+
+
+def part_two(model):
+    paths = build_paths(model)
+    you = paths["YOU"][1:]
+    san = paths["SAN"][1:]
+    lookup = set(san)
+    for b in you:
+        if b in lookup:
+            return you.index(b) + san.index(b)
 
 
 if __name__ == "__main__":
@@ -29,5 +41,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )
