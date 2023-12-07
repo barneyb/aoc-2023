@@ -14,9 +14,9 @@ def parse(input):
     )
 
 
-def part_one(model):
+def either_part(model, iterations):
     first, pairs, rules = model
-    for _ in range(10):
+    for _ in range(iterations):
         hist = Counter()
         for pair, n in pairs.items():
             c = rules[pair]
@@ -32,8 +32,12 @@ def part_one(model):
     return mx - mn
 
 
-# def part_two(model):
-#    return len(model)
+def part_one(model):
+    return either_part(model, 10)
+
+
+def part_two(model):
+    return either_part(model, 40)
 
 
 if __name__ == "__main__":
@@ -41,5 +45,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )
