@@ -12,5 +12,6 @@ for y in $(find aoc* -name "day*" -type d \
     aoc --timeout 15 \
         --no-submit \
         --years $y \
-        --days $ds
+        --days $ds \
+        "$@"
 done
