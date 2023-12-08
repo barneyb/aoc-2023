@@ -1,8 +1,8 @@
 import re
-from functools import reduce
 
 from util import aoc
 
+SANKEY = False
 RE_MAP = re.compile(r"(\w+)-to-(\w+) map")
 
 
@@ -62,30 +62,39 @@ def convert_one(window, mapping):
     return result
 
 
-def convert(windows, mapping):
-    result = []
-    for w in windows:
-        result.extend(convert_one(w, mapping))
+def to_locations(windows, mappings):
+    result = windows
+    src = "seed"
+    for m in mappings:
+        tgt, _ = m
+        prev = result
+        result = []
+        j = 0
+        for i, w in enumerate(prev):
+            out = convert_one(w, m)
+            result.extend(out)
+            if not SANKEY:
+                continue
+            for s, e in out:
+                print(f"['{src[0:4]} {hex(i)[2:]}', '{tgt[0:4]} {hex(j)[2:]}', {e-s}],")
+                j += 1
+        src = tgt
     return result
 
 
-def to_locations(windows, mappings):
-    return reduce(convert, mappings, windows)
-
-
-def a_part(pairs, mappings):
+def either_part(pairs, mappings):
     mappings = linearize(mappings)
     return min(m for m, _ in to_locations(pairs, mappings))
 
 
 def part_one(model):
     seeds, mappings = model
-    return a_part([(s, s + 1) for s in seeds], mappings)
+    return either_part([(s, s + 1) for s in seeds], mappings)
 
 
 def part_two(model):
     seeds, mappings = model
-    return a_part([(s, s + r) for s, r in zip(seeds[::2], seeds[1::2])], mappings)
+    return either_part([(s, s + r) for s, r in zip(seeds[::2], seeds[1::2])], mappings)
 
 
 if __name__ == "__main__":
