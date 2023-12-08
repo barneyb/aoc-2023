@@ -72,13 +72,13 @@ def test_parse():
 
 def test_convert():
     seed2soil = MODEL[1]["seed"]
-    assert convert([(79, 80)], seed2soil) == [(81, 82)]
-    assert convert([(14, 15)], seed2soil) == [(14, 15)]
-    assert convert([(55, 56)], seed2soil) == [(57, 58)]
+    assert convert_one((79, 80), seed2soil) == [(81, 82)]
+    assert convert_one((14, 15), seed2soil) == [(14, 15)]
+    assert convert_one((55, 56), seed2soil) == [(57, 58)]
 
 
 def test_convert_to_light():
-    assert convert([(81, 82)], MODEL[1]["water"]) == [(74, 75)]
+    assert convert_one((81, 82), MODEL[1]["water"]) == [(74, 75)]
 
 
 def test_to_location():
