@@ -9,7 +9,6 @@ import re
 
 from .aoc import BLOCK
 
-SPACE = " "
 COLS = 5
 ROWS = 6
 RE_PRINT = re.compile(r"[^ ]")
@@ -20,7 +19,7 @@ def read(string: str):
     periods are considered "blank"; all other characters are considered
     "marked". Leading and trailing newlines will be stripped.
     """
-    string = string.replace(".", SPACE)
+    string = string.replace(".", " ")
     rows = [RE_PRINT.sub(BLOCK, r) for r in string.strip("\n\r").splitlines()]
     assert len(rows) == ROWS, "not six rows tall"
     assert len(set(len(r) for r in rows)) == 1, "rows vary in length"
