@@ -31,10 +31,24 @@ def test_get_hand_type():
     assert get_hand_type("23456") == Hand.HIGH
 
 
+def test_get_hand_type_jokers():
+    assert get_hand_type_jokers("32T3K") == Hand.PAIR
+    assert get_hand_type_jokers("KK677") == Hand.TWO_PAIR
+    assert get_hand_type_jokers("T55J5") == Hand.FOUR
+    assert get_hand_type_jokers("KTJJT") == Hand.FOUR
+    assert get_hand_type_jokers("QQQJA") == Hand.FOUR
+
+
 def test_get_card_strengths():
     assert get_card_strengths("AKQJT") == [14, 13, 12, 11, 10]
     assert get_card_strengths("9876") == [9, 8, 7, 6]
     assert get_card_strengths("5432") == [5, 4, 3, 2]
+
+
+def test_get_card_strengths_jokers():
+    assert get_card_strengths_jokers("AKQT") == [14, 13, 12, 10]
+    assert get_card_strengths_jokers("9876") == [9, 8, 7, 6]
+    assert get_card_strengths_jokers("5432J") == [5, 4, 3, 2, 1]
 
 
 def test_get_hand_strength():
@@ -50,5 +64,5 @@ def test_example_one():
     assert part_one(MODEL) == 6440
 
 
-# def test_example_two():
-#    assert part_two(MODEL) == 3
+def test_example_two():
+    assert part_two(MODEL) == 5905

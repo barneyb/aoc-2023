@@ -44,18 +44,39 @@ def get_card_strengths(labels):
     return ["23456789TJQKA".index(l) + 2 for l in labels]
 
 
+def get_card_strengths_jokers(labels):
+    return ["J23456789T_QKA".index(l) + 1 for l in labels]
+
+
 def get_hand_strength(labels):
     return [get_hand_type(labels), *get_card_strengths(labels)]
 
 
-def part_one(model):
-    pairs = sorted((get_hand_strength(ls), b) for ls, b in model)
-    # noinspection PyTypeChecker
+def get_hand_type_jokers(labels):
+    best = get_hand_type(labels)
+    if "J" in labels:
+        cs = set(labels)
+        cs.remove("J")
+        for c in cs:
+            best = max(best, get_hand_type(labels.replace("J", c)))
+    return best
+
+
+def get_hand_strength_jokers(labels):
+    return [get_hand_type_jokers(labels), *get_card_strengths_jokers(labels)]
+
+
+def either_part(model, get_hs):
+    pairs = sorted((get_hs(ls), b) for ls, b in model)
     return sum((i + 1) * b for i, (_, b) in enumerate(pairs))
 
 
-# def part_two(model):
-#    return len(model)
+def part_one(model):
+    return either_part(model, get_hand_strength)
+
+
+def part_two(model):
+    return either_part(model, get_hand_strength_jokers)
 
 
 if __name__ == "__main__":
@@ -63,5 +84,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )
