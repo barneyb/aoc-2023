@@ -53,13 +53,12 @@ def get_hand_strength(labels):
 
 
 def get_hand_type_jokers(labels):
-    best = get_hand_type(labels)
+    natural = get_hand_type(labels)
     if "J" in labels:
         cs = set(labels)
-        cs.remove("J")
-        for c in cs:
-            best = max(best, get_hand_type(labels.replace("J", c)))
-    return best
+        if len(cs) != 1:
+            return max(get_hand_type(labels.replace("J", c)) for c in cs if c != "J")
+    return natural
 
 
 def get_hand_strength_jokers(labels):
