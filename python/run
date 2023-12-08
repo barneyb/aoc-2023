@@ -12,5 +12,6 @@ for y in $(find aoc* -name "day*" -type d \
     aoc --timeout 15 \
         --years $y \
         --days $ds \
-        "$@"
+        "$@" \
+        || (echo;echo -e "\033[31mOOPS"'!'"\033[0m";echo)
 done

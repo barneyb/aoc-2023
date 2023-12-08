@@ -12,16 +12,12 @@ def entry_point(year, day, data):
     mod_name = f"aoc{year}.day{day:02}"
     mod = importlib.import_module(mod_name)
     mod_attrs = dir(mod)
-    parse = lambda d: d
-    if "parse" in mod_attrs:
-        parse = mod.parse
+    parse = mod.parse if "parse" in mod_attrs else lambda d: d
     if "both_parts" in mod_attrs:
         a, b = mod.both_parts(parse(data))
     else:
         a = mod.part_one(parse(data))
-        b = None
-        if "part_two" in mod_attrs:
-            b = mod.part_two(parse(data))
+        b = mod.part_two(parse(data)) if "part_two" in mod_attrs else None
     return a, b
 
 
