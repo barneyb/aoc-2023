@@ -24,9 +24,9 @@ def test_add():
     assert add([1, 2], [5, 6]) == [6, 8]
 
 
-def test_get_options():
+def test_get_recipes():
     a, b, c = [[1], [10], [100]]
-    assert list(get_options(3, [a, b, c])) == [
+    assert list(get_recipes(3, [a, b, c])) == [
         [[0], [0], [300]],
         [[0], [10], [200]],
         [[0], [20], [100]],

@@ -24,30 +24,30 @@ def add(a, b):
     return [n + m for n, m in zip(a, b)]
 
 
-def get_options(tsp, ings):
+def get_recipes(tsp, ings):
     ing, *rest = ings
     if not len(rest):
         yield [multiply(tsp, ing)]
         return
     for t in range(tsp + 1):
-        for opts in get_options(tsp - t, rest):
+        for opts in get_recipes(tsp - t, rest):
             yield [multiply(t, ing)] + opts
 
 
+def either_part(ings, accept=None):
+    recipes = (reduce(add, o) for o in get_recipes(100, ings))
+    if accept:
+        recipes = filter(accept, recipes)
+    recipes = filter(lambda r: all(n > 0 for n in r), recipes)
+    return max(reduce(operator.mul, r[:4]) for r in recipes)
+
+
 def part_one(ings):
-    cookies = [reduce(add, o) for o in get_options(100, ings)]
-    scores = [reduce(operator.mul, c[:4]) for c in cookies if all(n > 0 for n in c)]
-    return max(scores)
+    return either_part(ings)
 
 
 def part_two(ings):
-    cookies = [reduce(add, o) for o in get_options(100, ings)]
-    scores = [
-        reduce(operator.mul, c[:4])
-        for c in cookies
-        if c[4] == 500 and all(n > 0 for n in c)
-    ]
-    return max(scores)
+    return either_part(ings, lambda r: r[4] == 500)
 
 
 if __name__ == "__main__":
