@@ -28,8 +28,8 @@ def part_one(seed):
     return fill_and_chksum(seed, 272)
 
 
-# def part_two(model):
-#     return len(model)
+def part_two(seed):
+    return fill_and_chksum(seed, 35651584)
 
 
 if __name__ == "__main__":
@@ -37,5 +37,5 @@ if __name__ == "__main__":
         __file__,
         None,
         part_one,
-        # part_two,
+        part_two,
     )

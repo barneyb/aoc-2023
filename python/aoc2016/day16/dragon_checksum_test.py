@@ -15,7 +15,3 @@ def test_chksum():
 
 def test_example_one():
     assert fill_and_chksum("10000", 20) == "01100"
-
-
-# def test_example_two():
-#     assert part_two(MODEL) == 1_234
