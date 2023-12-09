@@ -44,5 +44,5 @@ def test_example_one():
     assert part_one(MODEL) == 62842880
 
 
-# def test_example_two():
-#    assert part_two(MODEL) == 1_234
+def test_example_two():
+    assert part_two(MODEL) == 57600000

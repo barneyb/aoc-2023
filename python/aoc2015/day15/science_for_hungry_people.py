@@ -40,8 +40,14 @@ def part_one(ings):
     return max(scores)
 
 
-# def part_two(model):
-#    return len(model)
+def part_two(ings):
+    cookies = [reduce(add, o) for o in get_options(100, ings)]
+    scores = [
+        reduce(operator.mul, c[:4])
+        for c in cookies
+        if c[4] == 500 and all(n > 0 for n in c)
+    ]
+    return max(scores)
 
 
 if __name__ == "__main__":
@@ -49,5 +55,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )
