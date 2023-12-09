@@ -4,35 +4,32 @@ import com.barneyb.aoc.util.Answers;
 import com.barneyb.aoc.util.Input;
 import com.barneyb.aoc.util.SolveTogether;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-public class MirageMaintenance extends SolveTogether<List<List<Long>>, Long, Long> {
+public class MirageMaintenance extends SolveTogether<long[][], Long, Long> {
 
     public static void main(String[] args) {
         new MirageMaintenance().solveAndPrint();
     }
 
     @Override
-    protected List<List<Long>> buildModel(Input input) {
+    protected long[][] buildModel(Input input) {
         return input.streamLines()
                 .map(l -> Arrays.stream(l.split(" "))
-                        .map(Long::parseLong)
-                        .toList())
-                .toList();
+                        .mapToLong(Long::parseLong)
+                        .toArray())
+                .toArray(long[][]::new);
     }
 
-    private Answers<Long, Long> extrapolate(List<Long> seq) {
-        List<Long> diffs = new ArrayList<>(seq.size() - 1);
+    private Answers<Long, Long> extrapolate(long[] seq) {
+        long[] diffs = new long[seq.length - 1];
         boolean allSame = true;
-        Long prev = seq.get(0);
-        for (Long n : seq.subList(1, seq.size())) {
-            if (prev.equals(n)) {
-                diffs.add(0L);
-            } else {
+        long prev = seq[0];
+        for (int i = 0, l = seq.length - 1; i < l; i++) {
+            long n = seq[i + 1];
+            if (prev != n) {
                 allSame = false;
-                diffs.add(n - prev);
+                diffs[i] = n - prev;
                 prev = n;
             }
         }
@@ -40,14 +37,14 @@ public class MirageMaintenance extends SolveTogether<List<List<Long>>, Long, Lon
             return new Answers<>(prev, prev);
         } else {
             Answers<Long, Long> as = extrapolate(diffs);
-            return new Answers<>(seq.get(seq.size() - 1) + as.partOne(),
-                                 seq.get(0) - as.partTwo());
+            return new Answers<>(seq[seq.length - 1] + as.partOne(),
+                                 seq[0] - as.partTwo());
         }
     }
 
     @Override
-    protected Answers<Long, Long> solveTogether(List<List<Long>> lists) {
-        return lists.stream()
+    protected Answers<Long, Long> solveTogether(long[][] lists) {
+        return Arrays.stream(lists)
                 .map(this::extrapolate)
                 .reduce((a, b) -> new Answers<>(a.partOne() + b.partOne(),
                                                 a.partTwo() + b.partTwo()))
