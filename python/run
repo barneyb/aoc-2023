@@ -2,7 +2,7 @@
 
 cd "$(dirname "$0")" || exit
 
-for y in $(find aoc* -name "day*" -type d \
+time for y in $(find aoc* -name "day*" -type d \
             | cut -c 4-7 \
             | sort -unr); do
     ds=$(find aoc$y -name "__init__.py" \
