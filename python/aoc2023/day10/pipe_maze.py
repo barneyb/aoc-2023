@@ -1,3 +1,5 @@
+from collections import Counter
+
 from util import aoc
 
 
@@ -54,21 +56,54 @@ class Map:
                 raise RuntimeError(f"Unrecognized '{self[p]}' at {p}")
 
 
-def part_one(m):
+def get_path(m):
     prev = None
     curr = m.start
-    steps = 0
+    path = []
     while True:
-        steps += 1
+        path.append(curr)
         a, b = m.connected(curr)
         n = a if b == prev else b
         if n == m.start:
-            return steps // 2
+            return path
         prev, curr = curr, n
 
 
-# def part_two(model):
-#     return len(model)
+def part_one(m):
+    return len(get_path(m)) // 2
+
+
+def part_two(m):
+    pipe = set(get_path(m))
+    hist = Counter()
+    for r, line in enumerate(m.lines):
+        inside = False
+        itr = enumerate(line)
+        while True:
+            try:
+                c, p = next(itr)
+            except StopIteration:
+                break
+            if (r, c) in pipe:
+                if p in "LF":
+                    while True:
+                        _, p2 = next(itr)
+                        if p2 == "-":
+                            continue
+                        if p2 == "7":
+                            if p == "L":
+                                inside = not inside
+                        elif p2 == "J":
+                            if p == "F":
+                                inside = not inside
+                        else:
+                            raise RuntimeError(f"Unexpected '{p2}'")
+                        break
+                else:  # |
+                    inside = not inside
+            else:
+                hist[inside] += 1
+    return hist[True]
 
 
 if __name__ == "__main__":
@@ -76,5 +111,5 @@ if __name__ == "__main__":
         __file__,
         Map,
         part_one,
-        # part_two,
+        part_two,
     )
