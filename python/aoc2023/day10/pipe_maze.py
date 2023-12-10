@@ -1,5 +1,3 @@
-from collections import Counter
-
 from util import aoc
 
 
@@ -13,15 +11,13 @@ class Map:
             if c < 0:
                 continue
             self.start = (r, c)
-            n = (r - 1, c)
-            n = n in self and self[n] in "|7F"
-            e = (r, c + 1)
-            e = e in self and self[e] in "-J7"
-            s = (r + 1, c)
-            s = s in self and self[s] in "|JL"
-            w = (r, c - 1)
-            w = w in self and self[w] in "-LF"
-            if n:
+
+            def conn(p, chars):
+                return p in self and self[p] in chars
+
+            e = conn((r, c + 1), "-J7")
+            s = conn((r + 1, c), "|JL")
+            if conn((r - 1, c), "|7F"):
                 c = "L" if e else "|" if s else "J"
             elif e:
                 c = "F" if s else "-"
@@ -52,8 +48,6 @@ class Map:
                 return [(r, c - 1), (r + 1, c)]
             case "F":
                 return [(r, c + 1), (r + 1, c)]
-            case _:
-                raise RuntimeError(f"Unrecognized '{self[p]}' at {p}")
 
 
 def get_path(m):
@@ -75,7 +69,7 @@ def part_one(m):
 
 def part_two(m):
     pipe = set(get_path(m))
-    hist = Counter()
+    count = 0
     for r, line in enumerate(m.lines):
         inside = False
         itr = enumerate(line)
@@ -90,20 +84,14 @@ def part_two(m):
                         _, p2 = next(itr)
                         if p2 == "-":
                             continue
-                        if p2 == "7":
-                            if p == "L":
-                                inside = not inside
-                        elif p2 == "J":
-                            if p == "F":
-                                inside = not inside
-                        else:
-                            raise RuntimeError(f"Unexpected '{p2}'")
+                        if (p2 == "7" and p == "L") or (p2 == "J" and p == "F"):
+                            inside = not inside
                         break
                 else:  # |
                     inside = not inside
-            else:
-                hist[inside] += 1
-    return hist[True]
+            elif inside:
+                count += 1
+    return count
 
 
 if __name__ == "__main__":
