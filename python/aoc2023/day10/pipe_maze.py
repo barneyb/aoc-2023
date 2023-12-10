@@ -33,6 +33,11 @@ class Map:
         r, c = p
         return 0 <= r < self.rows and 0 <= c < self.cols
 
+    def points(self):
+        for r in range(self.rows):
+            for c in range(self.cols):
+                yield (r, c), self.lines[r][c]
+
     def connected(self, p):
         r, c = p
         match self[p]:
@@ -67,9 +72,8 @@ def part_one(m):
     return len(get_path(m)) // 2
 
 
-def part_two(m):
-    pipe = set(get_path(m))
-    count = 0
+def get_inside(m, pipe):
+    result = []
     for r, line in enumerate(m.lines):
         inside = False
         itr = enumerate(line)
@@ -90,8 +94,13 @@ def part_two(m):
                 else:  # |
                     inside = not inside
             elif inside:
-                count += 1
-    return count
+                result.append((r, c))
+    return result
+
+
+def part_two(m):
+    pipe = set(get_path(m))
+    return len(get_inside(m, pipe))
 
 
 if __name__ == "__main__":
