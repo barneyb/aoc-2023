@@ -2,6 +2,17 @@
 
 cd "$(dirname "$0")" || exit
 
+function doit() {
+    aoc --timeout 15 \
+            "$@" \
+            || (echo;echo -e "\033[31mOOPS"'!'"\033[0m";echo)
+}
+
+if [ "$1" != "" ]; then
+    doit "$@"
+    exit
+fi
+
 time for y in $(find aoc* -name "day*" -type d \
             | cut -c 4-7 \
             | sort -unr); do
@@ -10,9 +21,5 @@ time for y in $(find aoc* -name "day*" -type d \
         | cut -d / -f 2 \
         | cut -c 4- \
         | sort -nr)
-    aoc --timeout 15 \
-        --years $y \
-        --days $ds \
-        "$@" \
-        || (echo;echo -e "\033[31mOOPS"'!'"\033[0m";echo)
+    doit --years $y --days $ds
 done
