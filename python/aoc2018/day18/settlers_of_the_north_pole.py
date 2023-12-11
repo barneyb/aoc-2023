@@ -46,9 +46,7 @@ def tick(model):
     return w, h, curr
 
 
-def part_one(model):
-    for _ in range(10):
-        model = tick(model)
+def get_resource_value(model):
     _, _, lines = model
     hist = Counter()
     for l in lines:
@@ -56,8 +54,29 @@ def part_one(model):
     return hist["|"] * hist["#"]
 
 
-# def part_two(model):
-#     return len(model)
+def part_one(model, minutes=10):
+    for _ in range(minutes):
+        model = tick(model)
+    return get_resource_value(model)
+
+
+def part_two(model, minutes=1_000_000_000):
+    history = {}
+    i = 0
+    while True:
+        model = tick(model)
+        value = get_resource_value(model)
+        if value in history:
+            j, prev = history[value]
+            if prev == model:
+                cycle_len = i - j
+                full_cycles = (minutes - i) // cycle_len
+                extra_ticks = minutes - (full_cycles * cycle_len) - i - 1
+                for _ in range(extra_ticks):
+                    model = tick(model)
+                return get_resource_value(model)
+        history[value] = (i, model)
+        i += 1
 
 
 if __name__ == "__main__":
@@ -65,5 +84,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )
