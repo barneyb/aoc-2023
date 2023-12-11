@@ -20,46 +20,30 @@ def fill(draw, p, color):
     draw.rectangle((x, y, x + PITCH - 1, y + PITCH - 1), color)
 
 
+def tall(draw, x, y, color):
+    draw.rectangle((x, y, x + PX - 1, y + 3 * PX - 1), color)
+
+
+def wide(draw, x, y, color):
+    draw.rectangle((x, y, x + 3 * PX - 1, y + PX - 1), color)
+
+
 def lay(draw, p, sym, color):
     r, c = p
     x = c * PITCH
     y = r * PITCH
     if sym in "|LJ":  # top
-        draw.rectangle(
-            ((x + PX, y), (x + 4 * PX - 1, y + PX - 1)),
-            color,
-        )
-        draw.rectangle(
-            ((x + 2 * PX, y), (x + 3 * PX - 1, y + 3 * PX - 1)),
-            color,
-        )
+        wide(draw, x + PX, y, color)
+        tall(draw, x + 2 * PX, y, color)
     if sym in "|F7":  # bottom
-        draw.rectangle(
-            ((x + PX, y + 4 * PX), (x + 4 * PX - 1, y + 5 * PX - 1)),
-            color,
-        )
-        draw.rectangle(
-            ((x + 2 * PX, y + 2 * PX), (x + 3 * PX - 1, y + 5 * PX - 1)),
-            color,
-        )
+        wide(draw, x + PX, y + 4 * PX, color)
+        tall(draw, x + 2 * PX, y + 2 * PX, color)
     if sym in "-J7":  # left
-        draw.rectangle(
-            ((x, y + PX), (x + PX - 1, y + 4 * PX - 1)),
-            color,
-        )
-        draw.rectangle(
-            ((x, y + 2 * PX), (x + 3 * PX - 1, y + 3 * PX - 1)),
-            color,
-        )
+        wide(draw, x, y + 2 * PX, color)
+        tall(draw, x, y + 1 * PX, color)
     if sym in "-FL":  # right
-        draw.rectangle(
-            ((x + 4 * PX, y + PX), (x + 5 * PX - 1, y + 4 * PX - 1)),
-            color,
-        )
-        draw.rectangle(
-            ((x + 2 * PX, y + 2 * PX), (x + 5 * PX - 1, y + 3 * PX - 1)),
-            color,
-        )
+        wide(draw, x + 2 * PX, y + 2 * PX, color)
+        tall(draw, x + 4 * PX, y + 1 * PX, color)
 
 
 if __name__ == "__main__":
