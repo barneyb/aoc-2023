@@ -14,8 +14,16 @@ def part_one(step_size, iterations=2017):
     return ns[idx + 1]
 
 
-# def part_two(model):
-#     return len(model)
+def part_two(step_size, iterations=50_000_000):
+    l = 1
+    idx = 0
+    az = 0
+    for i in range(1, iterations):
+        idx = (idx + step_size) % l + 1
+        if idx == 1:
+            az = i
+        l += 1
+    return az
 
 
 if __name__ == "__main__":
@@ -23,5 +31,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )

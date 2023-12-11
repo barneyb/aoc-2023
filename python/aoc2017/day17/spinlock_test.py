@@ -6,5 +6,5 @@ def test_part_one():
     assert part_one(3) == 638
 
 
-# def test_part_two():
-#     assert part_two(MODEL) == 1_234
+def test_part_two():
+    assert part_two(3, 8) == 5
