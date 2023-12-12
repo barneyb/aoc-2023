@@ -13,27 +13,16 @@ EXAMPLE = """\
 .......#..
 #...#.....
 """
-
-MODEL = [(4, 0),
-         (9, 1),
-         (0, 2),
-         (8, 5),
-         (1, 6),
-         (12, 7),
-         (9, 10),
-         (0, 11),
-         (5, 11),
-         ]
 # fmt: on
 
-
-def test_parse():
-    assert parse(EXAMPLE) == MODEL
+MODEL = parse(EXAMPLE)
 
 
 def test_part_one():
     assert part_one(MODEL) == 374
 
 
-# def test_part_two():
-#     assert part_two(MODEL) == 1_234
+def test_other_factors():
+    assert either_part(MODEL, 2) == 374
+    assert either_part(MODEL, 10) == 1030
+    assert either_part(MODEL, 100) == 8410
