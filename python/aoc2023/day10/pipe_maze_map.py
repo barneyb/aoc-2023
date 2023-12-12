@@ -6,9 +6,7 @@ from util import aoc
 GROUND_IN = "#000099"
 GROUND_OUT = "#006600"
 GROUND_LOOP = "#990000"
-PIPE_IN = "#9999FF"
-PIPE_OUT = "#99FF99"
-PIPE_LOOP = "#FF9999"
+PIPE = "#9999aa"
 PX = 1
 PITCH = 5 * PX
 
@@ -49,7 +47,8 @@ def lay(draw, p, sym, color):
 if __name__ == "__main__":
     data = aoc.get_input(__file__)
     m = maze.Map(data)
-    pipe = set(maze.get_path(m))
+    path = maze.get_path(m)
+    pipe = set(path)
     inside = maze.get_inside(m, pipe)
 
     im = Image.new(mode="RGB", size=(m.cols * PITCH, m.rows * PITCH), color=GROUND_OUT)
@@ -57,13 +56,14 @@ if __name__ == "__main__":
     for p, c in m.points():
         if p in pipe:
             fill(draw, p, GROUND_LOOP)
-            lay(draw, p, c, PIPE_LOOP)
+            lay(draw, p, c, PIPE)
         elif p in inside:
             fill(draw, p, GROUND_IN)
             if c != ".":
-                lay(draw, p, c, PIPE_IN)
+                lay(draw, p, c, PIPE)
         elif c != ".":
-            lay(draw, p, c, PIPE_OUT)
+            lay(draw, p, c, PIPE)
     fill(draw, m.start, "#ffff00")
+    fill(draw, path[len(path) // 2], "#ff9900")
 
     im.show()
