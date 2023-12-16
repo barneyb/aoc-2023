@@ -10,7 +10,7 @@ class Dir(Enum):
     SOUTH = 2
     WEST = 3
 
-    def trbl(self, p):
+    def slash(self, p):
         x, y = p
         match self:
             case Dir.NORTH:
@@ -22,7 +22,7 @@ class Dir(Enum):
             case Dir.WEST:
                 return (x, y + 1), Dir.SOUTH
 
-    def tlbr(self, p):
+    def backslash(self, p):
         x, y = p
         match self:
             case Dir.NORTH:
@@ -34,7 +34,7 @@ class Dir(Enum):
             case Dir.WEST:
                 return (x, y - 1), Dir.NORTH
 
-    def cont(self, p):
+    def thru(self, p):
         x, y = p
         match self:
             case Dir.NORTH:
@@ -57,7 +57,7 @@ def parse(input):
     return len(lines[0]), len(lines), layout
 
 
-def part_one(model):
+def count_energized(model, beam):
     def in_bounds(p):
         x, y = p
         return 0 <= x < width and 0 <= y < height
@@ -66,7 +66,7 @@ def part_one(model):
     visited = set()
     energized = set()
     queue = deque()
-    queue.append(((0, 0), Dir.EAST))
+    queue.append(beam)
     while len(queue):
         curr = queue.pop()
         p, heading = curr
@@ -77,21 +77,21 @@ def part_one(model):
         visited.add(curr)
         energized.add(p)
         if p not in layout:
-            queue.append(heading.cont(p))
+            queue.append(heading.thru(p))
             continue
         match layout[p]:
             case "/":
-                queue.append(heading.trbl(p))
+                queue.append(heading.slash(p))
             case "\\":
-                queue.append(heading.tlbr(p))
-            case "|" if heading in [Dir.NORTH, Dir.SOUTH]:
-                queue.append(heading.cont(p))
+                queue.append(heading.backslash(p))
+            case "|" if heading in [Dir.NORTH, Dir.SOUTH]:  # through
+                queue.append(heading.thru(p))
             case "|":  # split
                 x, y = p
                 queue.append(((x, y - 1), Dir.NORTH))
                 queue.append(((x, y + 1), Dir.SOUTH))
-            case "-" if heading in [Dir.EAST, Dir.WEST]:
-                queue.append(heading.cont(p))
+            case "-" if heading in [Dir.EAST, Dir.WEST]:  # through
+                queue.append(heading.thru(p))
             case "-":  # split
                 x, y = p
                 queue.append(((x + 1, y), Dir.EAST))
@@ -99,8 +99,26 @@ def part_one(model):
     return len(energized)
 
 
-# def part_two(model):
-#     return len(model)
+def part_one(model):
+    return count_energized(model, ((0, 0), Dir.EAST))
+
+
+def part_two(model):
+    w, h, l = model
+    best = -1
+    for x in range(w):
+        best = max(
+            best,
+            count_energized(model, ((x, 0), Dir.SOUTH)),
+            count_energized(model, ((x, h - 1), Dir.NORTH)),
+        )
+    for y in range(h):
+        best = max(
+            best,
+            count_energized(model, ((0, y), Dir.EAST)),
+            count_energized(model, ((w - 1, y), Dir.WEST)),
+        )
+    return best
 
 
 if __name__ == "__main__":
@@ -108,5 +126,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )
