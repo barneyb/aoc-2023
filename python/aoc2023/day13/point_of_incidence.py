@@ -31,8 +31,9 @@ def horiz_line(patt, *, smudges=0):
             return len(l)
         if l == r:
             return 0
-        return sum(1 for a, b in zip(l, r) if a != b)
+        return sum(1 for a, b in zip(l, r) if a != b) if smudged else 99999
 
+    smudged = smudges > 0
     prev = None
     for i, line in enumerate(patt):
         ss = smudges_to_reflect(line, prev)
