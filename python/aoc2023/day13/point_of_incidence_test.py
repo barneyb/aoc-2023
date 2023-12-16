@@ -70,9 +70,19 @@ def test_horiz_line():
     assert horiz_line(MODEL[1]) == 4
 
 
+def test_vert_line_smudged():
+    assert vert_line(MODEL[0], smudges=1) == -1
+    assert vert_line(MODEL[1], smudges=1) == -1
+
+
+def test_horiz_line_smudged():
+    assert horiz_line(MODEL[0], smudges=1) == 3
+    assert horiz_line(MODEL[1], smudges=1) == 1
+
+
 def test_part_one():
     assert part_one(MODEL) == 405
 
 
-# def test_part_two():
-#     assert part_two(MODEL) == 1_234
+def test_part_two():
+    assert part_two(MODEL) == 400
