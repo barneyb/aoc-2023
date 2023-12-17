@@ -8,18 +8,21 @@ function doit() {
             || (echo;echo -e "\033[31mOOPS"'!'"\033[0m";echo)
 }
 
-if [ "$1" != "" ]; then
+if [ "$1" = "--all" ] || [ "$1" = "-a" ]; then
+    for y in $(find aoc* -name "day*" -type d \
+                | cut -c 4-7 \
+                | sort -unr); do
+        ds=$(find aoc$y -name "__init__.py" \
+            | grep '/day' \
+            | cut -d / -f 2 \
+            | cut -c 4- \
+            | sort -nr)
+        doit --years $y --days $ds
+    done
+elif [ "$1" != "" ]; then
     doit "$@"
     exit
+else
+    # shellcheck disable=SC2046
+    doit $(date -v+3H +' -y 20%y -d %d')
 fi
-
-time for y in $(find aoc* -name "day*" -type d \
-            | cut -c 4-7 \
-            | sort -unr); do
-    ds=$(find aoc$y -name "__init__.py" \
-        | grep '/day' \
-        | cut -d / -f 2 \
-        | cut -c 4- \
-        | sort -nr)
-    doit --years $y --days $ds
-done
