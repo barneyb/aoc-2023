@@ -1,7 +1,7 @@
 from .clumsy_crucible import *
 
 # fmt: off
-EXAMPLE = """\
+EXAMPLE_ONE = """\
 2413432311323
 3215453535623
 3255245654254
@@ -17,7 +17,15 @@ EXAMPLE = """\
 4322674655533
 """
 
-PARSE_EXAMPLE="""\
+EXAMPLE_TWO = """\
+111111111111
+555599995551
+555599995551
+555599995551
+555599999991
+"""
+
+PARSE_EXAMPLE = """\
 2413
 3215
 """
@@ -26,7 +34,8 @@ PARSE_MODEL = (4, 2, [[2, 4, 1, 3],
                       [3, 2, 1, 5],
                       ])
 # fmt: on
-MODEL = parse(EXAMPLE)
+MODEL_ONE = parse(EXAMPLE_ONE)
+MODEL_TWO = parse(EXAMPLE_TWO)
 
 
 def test_parse():
@@ -34,8 +43,10 @@ def test_parse():
 
 
 def test_part_one():
-    assert part_one(MODEL) == 102
+    assert part_one(MODEL_ONE) == 102
+    assert part_one(MODEL_TWO) == 47
 
 
-# def test_part_two():
-#     assert part_two(MODEL) == 1_234
+def test_part_two():
+    assert part_two(MODEL_ONE) == 94
+    assert part_two(MODEL_TWO) == 71
