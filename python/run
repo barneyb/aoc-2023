@@ -3,7 +3,7 @@
 cd "$(dirname "$0")" || exit
 
 function doit() {
-    aoc --timeout 15 \
+    aoc --timeout 30 \
             "$@" \
             || (echo;echo -e "\033[31mOOPS"'!'"\033[0m";echo)
 }
