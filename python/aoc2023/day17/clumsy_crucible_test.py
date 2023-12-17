@@ -34,12 +34,20 @@ PARSE_MODEL = (4, 2, [[2, 4, 1, 3],
                       [3, 2, 1, 5],
                       ])
 # fmt: on
-MODEL_ONE = parse(EXAMPLE_ONE)
-MODEL_TWO = parse(EXAMPLE_TWO)
+MODEL_ONE = Map(EXAMPLE_ONE)
+MODEL_TWO = Map(EXAMPLE_TWO)
 
 
 def test_parse():
-    assert parse(PARSE_EXAMPLE) == PARSE_MODEL
+    m = Map(PARSE_EXAMPLE)
+    assert m.width == 4
+    assert m.height == 2
+    assert m.start == (0, 0)
+    assert m.goal == (3, 1)
+    assert m.layout == [
+        [2, 4, 1, 3],
+        [3, 2, 1, 5],
+    ]
 
 
 def test_part_one():
