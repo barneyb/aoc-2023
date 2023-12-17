@@ -9,8 +9,7 @@ class Map:
         lines = input.splitlines()
         self.width = len(lines[0])
         self.height = len(lines)
-        self.layout = [[int(c) for c in l] for l in lines]
-        self.start = (0, 0)
+        self.grid = [[int(c) for c in l] for l in lines]
         self.goal = (self.width - 1, self.height - 1)
 
     def __contains__(self, p):
@@ -19,17 +18,18 @@ class Map:
 
     def __getitem__(self, p):
         x, y = p
-        return self.layout[y][x]
+        return self.grid[y][x]
 
     def heat_loss(self, p1, p2):
         x1, y1 = p1
         x2, y2 = p2
         if x1 == x2:
             ys = range(y1 + 1, y2 + 1) if y1 < y2 else range(y2, y1)
-            return sum(self[x1, y] for y in ys)
-        else:
-            xs = range(x1 + 1, x2 + 1) if x1 < x2 else range(x2, x1)
-            return sum(self[x, y1] for x in xs)
+            return sum(self.grid[y][x1] for y in ys)
+        line = self.grid[y1]
+        if x1 < x2:
+            return line[x2] if x2 == x1 + 1 else sum(line[x1 + 1 : x2 + 1])
+        return line[x2] if x1 == x2 + 1 else sum(line[x2:x1])
 
 
 def move(pos, d, n=1):
@@ -51,15 +51,16 @@ def either_part(map: Map, allowed_moves):
     """
     best = math.inf
     visited = set()
-    pq = [(0, map.start, ())]
+    pq = [(0, (0, 0), ())]
     while len(pq):
         hl, pos, path = heappop(pq)
-        if hl >= best or (pos, path) in visited:
+        v = (pos, path)
+        if hl >= best or v in visited:
             continue
         if pos == map.goal:
             best = hl
             continue
-        visited.add((pos, path))
+        visited.add(v)
         for p, np in allowed_moves(pos, path):
             if (p, np) not in visited:
                 heappush(pq, (hl + map.heat_loss(pos, p), p, np))
@@ -92,21 +93,16 @@ def part_two(map: Map):
     def allowed_moves(pos, path):
         if not len(path):
             return [(move(pos, d, 4), (d,) * 4) for d in (1, 2)]
-        run_len = 0
-        of = path[-1]
-        for d in reversed(path):
-            if d != of:
-                break
-            run_len += 1
+        heading = path[-1]
         steps = []
-        if of % 2 == 1:  # running east-west
+        if len(path) < 10 or any(d != heading for d in path):
+            steps.append((heading, 1))
+        if heading % 2 == 1:  # running east-west
             steps.append((0, 4))
             steps.append((2, 4))
-        if of % 2 == 0:  # running north-south
+        if heading % 2 == 0:  # running north-south
             steps.append((1, 4))
             steps.append((3, 4))
-        if run_len < 10:  # can keep going
-            steps.append((of, 1))
         return [
             (m, path[n - 10 :] + (d,) * n)
             for m, d, n in [(move(pos, d, n), d, n) for d, n in steps]

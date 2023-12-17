@@ -42,9 +42,8 @@ def test_parse():
     m = Map(PARSE_EXAMPLE)
     assert m.width == 4
     assert m.height == 2
-    assert m.start == (0, 0)
     assert m.goal == (3, 1)
-    assert m.layout == [
+    assert m.grid == [
         [2, 4, 1, 3],
         [3, 2, 1, 5],
     ]
