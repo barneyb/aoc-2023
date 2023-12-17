@@ -1,4 +1,4 @@
-from collections import deque
+from collections import Counter, deque
 from enum import Enum
 
 from util import aoc
@@ -21,7 +21,7 @@ def parse(input):
     return len(lines[0]), len(lines), layout
 
 
-def count_energized(model, beam):
+def energized(model, beam):
     def thru():
         match heading:
             case Dir.NORTH:
@@ -34,16 +34,18 @@ def count_energized(model, beam):
                 return (x - 1, y), heading
 
     width, height, layout = model
-    visited, energized = set(), set()
+    visited, energized = set(), Counter()
     queue = deque([beam])
     while len(queue):
         curr = queue.pop()
         p, heading = curr
         x, y = p
-        if curr in visited or not (0 <= x < width and 0 <= y < height):
+        if not (0 <= x < width and 0 <= y < height):
+            continue
+        energized[p] += 1
+        if curr in visited:
             continue
         visited.add(curr)
-        energized.add(p)
         if p not in layout:  # an open square
             queue.append(thru())
             continue
@@ -78,23 +80,25 @@ def count_energized(model, beam):
             case "-":  # split
                 queue.append(((x + 1, y), Dir.EAST))
                 queue.append(((x - 1, y), Dir.WEST))
-    return len(energized)
+    return energized
 
 
 def part_one(model):
-    return count_energized(model, ((0, 0), Dir.EAST))
+    return len(energized(model, ((0, 0), Dir.EAST)))
+
+
+def every_source(model):
+    width, height, _ = model
+    for x in range(width):
+        yield energized(model, ((x, 0), Dir.SOUTH))
+        yield energized(model, ((x, height - 1), Dir.NORTH))
+    for y in range(height):
+        yield energized(model, ((0, y), Dir.EAST))
+        yield energized(model, ((width - 1, y), Dir.WEST))
 
 
 def part_two(model):
-    width, height, _ = model
-    best = -1
-    for x in range(width):
-        best = max(best, count_energized(model, ((x, 0), Dir.SOUTH)))
-        best = max(best, count_energized(model, ((x, height - 1), Dir.NORTH)))
-    for y in range(height):
-        best = max(best, count_energized(model, ((0, y), Dir.EAST)))
-        best = max(best, count_energized(model, ((width - 1, y), Dir.WEST)))
-    return best
+    return max(len(es) for es in every_source(model))
 
 
 if __name__ == "__main__":
