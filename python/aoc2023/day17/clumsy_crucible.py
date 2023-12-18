@@ -53,17 +53,17 @@ def either_part(map: Map, allowed_moves):
     visited = set()
     pq = [(0, (0, 0), ())]
     while len(pq):
-        hl, pos, path = heappop(pq)
+        loss, pos, path = heappop(pq)
         v = (pos, path)
-        if hl >= best or v in visited:
+        if loss >= best or v in visited:
             continue
         if pos == map.goal:
-            best = hl
+            best = loss
             continue
         visited.add(v)
         for p, np in allowed_moves(pos, path):
             if (p, np) not in visited:
-                heappush(pq, (hl + map.heat_loss(pos, p), p, np))
+                heappush(pq, (loss + map.heat_loss(pos, p), p, np))
 
     return best
 

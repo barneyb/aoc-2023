@@ -49,11 +49,17 @@ def test_parse():
     ]
 
 
-def test_part_one():
+def test_part_one1():
     assert part_one(MODEL_ONE) == 102
+
+
+def test_part_one2():
     assert part_one(MODEL_TWO) == 47
 
 
-def test_part_two():
+def test_part_two1():
     assert part_two(MODEL_ONE) == 94
+
+
+def test_part_two2():
     assert part_two(MODEL_TWO) == 71
