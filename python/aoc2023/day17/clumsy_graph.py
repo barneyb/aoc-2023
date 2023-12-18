@@ -69,33 +69,35 @@ def part_one(graph):
 
 
 def part_two(graph):
-    def extend(n, l, np, d):
-        steps = 4 if not len(np) or any(p != d for p in np[-4:]) else 1
-        for _ in range(1, steps):
+    def extend(n, l, path, d):
+        for _ in range(1, 4):
             for a, b, c in graph[n]:
                 if d == c:
                     n = a
                     l += b
                     break
             else:
-                raise NotEnoughRoom
-        return n, l, np[steps - 10 :] + (d,) * steps
+                return
+        yield n, l, path[-6:] + (d,) * 4
 
     def allowed_moves(pos, path):
         for n, l, d in graph[pos]:
-            heading = path[-1] if len(path) else d
-            if (d + 2) % 4 == heading:
-                continue  # no reverse
+            heading = d
+            if len(path):
+                heading = path[-1]
+                if (d + 2) % 4 == heading:
+                    continue  # no reverse
+            turning = d != heading
             if n == graph.goal:
-                if d != heading or any(p != heading for p in path[-3:]):
+                if turning or any(p != heading for p in path[-3:]):
                     continue
-            if len(path) == 10 and d == heading:
+            if len(path) == 10 and not turning:
                 if all(p == heading for p in path):
                     continue  # no more than 10
-            try:
-                yield extend(n, l, path, d)
-            except NotEnoughRoom:
-                pass
+            if turning:  # or any(p != d for p in path[-4:]):
+                yield from extend(n, l, path, d)
+            else:
+                yield n, l, path[-9:] + (d,)
 
     return either_part(graph, allowed_moves)
 
