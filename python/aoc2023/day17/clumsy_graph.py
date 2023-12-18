@@ -4,6 +4,10 @@ from heapq import heappop, heappush
 from util import aoc
 
 
+class NotEnoughRoom(RuntimeError):
+    pass
+
+
 class Graph:
     def __init__(self, input):
         lines = input.splitlines()
@@ -34,7 +38,7 @@ class Graph:
         return self.nodes[n][1]
 
 
-def either_part(G, path_len, accept):
+def either_part(G, allowed_moves):
     pq = [(0, G.start, ())]
     visited = set()
     best = math.inf
@@ -47,10 +51,7 @@ def either_part(G, path_len, accept):
             best = loss
             continue
         visited.add(v)
-        for n, l, d in G.edges(pos):
-            if not accept(path, d, n):
-                continue
-            np = path[1 - path_len :] + (d,)
+        for n, l, np in allowed_moves(pos, path):
             if (n, np) not in visited:
                 heappush(pq, (loss + l, n, np))
     return best
@@ -64,25 +65,47 @@ def part_one(G):
             return False  # no four in a row
         return True
 
-    return either_part(G, 3, accept)
+    def allowed_moves(pos, path):
+        for n, l, d in G.edges(pos):
+            if accept(path, d, n):
+                yield n, l, path[-2:] + (d,)
+
+    return either_part(G, allowed_moves)
 
 
 def part_two(G):
-    def accept(path, d, n):
-        if not len(path):
-            return True
-        heading = path[-1]
-        if (d + 2) % 4 == heading:
-            return False  # no reverse
-        if n == G.goal:
-            return d == heading and all(p == heading for p in path[-3:])
-        if len(path) < 4 or any(p != heading for p in path[-4:]):
-            return d == heading  # at least four
-        if len(path) == 10 and d == heading:
-            return any(p != heading for p in path)  # no more than 10
-        return True
+    def extend(n, l, np):
+        d = np[-1]
+        while any(p != d for p in np[-4:]):
+            found = False
+            for a, b, c in G.edges(n):
+                if d == c:
+                    found = True
+                    n = a
+                    l += b
+                    np = np[-9:] + (d,)
+                    break
+            if not found:
+                raise NotEnoughRoom
+        return n, l, np
 
-    return either_part(G, 10, accept)
+    def allowed_moves(pos, path):
+        for n, l, d in G.edges(pos):
+            heading = path[-1] if len(path) else d
+            if (d + 2) % 4 == heading:
+                continue  # no reverse
+            if n == G.goal:
+                if d != heading or any(p != heading for p in path[-3:]):
+                    continue
+            if len(path) == 10 and d == heading:
+                if all(p == heading for p in path):
+                    continue  # no more than 10
+            try:
+                yield extend(n, l, path[-9:] + (d,))
+            except NotEnoughRoom:
+                pass
+
+    return either_part(G, allowed_moves)
 
 
 if __name__ == "__main__":
