@@ -31,6 +31,7 @@ class Graph:
         self.start = 0
         self.goal = width * height - 1
         self.nodes = [es for _, es in pairs]
+        self[self.goal].clear()  # no leaving the goal!
 
     def __getitem__(self, n):
         return self.nodes[n]
@@ -68,20 +69,17 @@ def part_one(graph):
 
 
 def part_two(graph):
-    def extend(n, l, np):
-        d = np[-1]
-        while any(p != d for p in np[-4:]):
-            found = False
+    def extend(n, l, np, d):
+        steps = 4 if not len(np) or any(p != d for p in np[-4:]) else 1
+        for _ in range(1, steps):
             for a, b, c in graph[n]:
                 if d == c:
-                    found = True
                     n = a
                     l += b
-                    np = np[-9:] + (d,)
                     break
-            if not found:
+            else:
                 raise NotEnoughRoom
-        return n, l, np
+        return n, l, np[steps - 10 :] + (d,) * steps
 
     def allowed_moves(pos, path):
         for n, l, d in graph[pos]:
@@ -95,7 +93,7 @@ def part_two(graph):
                 if all(p == heading for p in path):
                     continue  # no more than 10
             try:
-                yield extend(n, l, path[-9:] + (d,))
+                yield extend(n, l, path, d)
             except NotEnoughRoom:
                 pass
 
