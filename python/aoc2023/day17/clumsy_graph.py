@@ -58,17 +58,13 @@ def either_part(G, allowed_moves):
 
 
 def part_one(G):
-    def accept(path, d, n):
-        if len(path) and (d + 2) % 4 == path[-1]:
-            return False  # no reverse
-        if len(path) == 3 and all(p == d for p in path):
-            return False  # no four in a row
-        return True
-
     def allowed_moves(pos, path):
         for n, l, d in G.edges(pos):
-            if accept(path, d, n):
-                yield n, l, path[-2:] + (d,)
+            if len(path) and (d + 2) % 4 == path[-1]:
+                continue  # no reverse
+            if len(path) == 3 and all(p == d for p in path):
+                continue  # no four in a row
+            yield n, l, path[-2:] + (d,)
 
     return either_part(G, allowed_moves)
 
