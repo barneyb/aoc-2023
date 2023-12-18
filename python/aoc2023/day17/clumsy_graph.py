@@ -11,14 +11,13 @@ class Graph:
         width = len(lines[0])
         self.start = 0
         self.goal = width * height - 1
-        self.nodes = [None for _ in range(self.goal + 1)]
-        for y, line in enumerate(lines):
-            for x, c in enumerate(line):
-                self.nodes[y * width + x] = (x, y, int(c), [])
+        self.nodes = [
+            (int(c), []) for y, line in enumerate(lines) for x, c in enumerate(line)
+        ]
 
         def add_edges(i, j, d):
-            _, _, ic, ia = self.nodes[i]
-            _, _, jc, ja = self.nodes[j]
+            ic, ia = self.nodes[i]
+            jc, ja = self.nodes[j]
             ia.append((j, jc, d))
             ja.append((i, ic, (d + 2) % 4))
             pass
@@ -32,7 +31,7 @@ class Graph:
                     add_edges(i, y * width + x - 1, 3)
 
     def edges(self, n):
-        return self.nodes[n][3]
+        return self.nodes[n][1]
 
 
 def either_part(G, path_len, accept):
