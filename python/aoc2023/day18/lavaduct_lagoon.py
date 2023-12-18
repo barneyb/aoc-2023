@@ -3,13 +3,13 @@ from util import aoc
 
 def parse_dir(c):
     match c:
-        case "U":
+        case "U" | "3":
             return 0
-        case "R":
+        case "R" | "0":
             return 1
-        case "D":
+        case "D" | "1":
             return 2
-        case "L":
+        case "L" | "2":
             return 3
 
 
@@ -93,8 +93,17 @@ def part_one(plan):
     return len(trench) + len(lagoon)
 
 
-# def part_two(model):
-#     return len(model)
+def parse_color(c):
+    dist = int(c[1:-1], 16)
+    return parse_dir(c[-1]), dist
+
+
+def reparse(plan):
+    return [parse_color(c) for _, _, c in plan]
+
+
+def part_two(plan):
+    return len(reparse(plan))
 
 
 if __name__ == "__main__":
@@ -102,5 +111,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )
