@@ -1,3 +1,3 @@
-from .clumsy_crucible import *
+from .clumsy_graph import *
 
-parse = Map
+parse = Graph
