@@ -1,3 +1,5 @@
+from collections import deque
+
 from util import aoc
 
 
@@ -33,64 +35,44 @@ def move(p, d, n=1):
             return x - n, y
 
 
-def cut_trench(plan):
-    curr = (0, 0)
-    trench = {curr: "#FF8000"}
-    for d, n, c in plan:
-        for _ in range(n):
-            curr = move(curr, d)
-            trench[curr] = c
-    return trench
-
-
-def bounds(trench):
+def get_bounds(plan):
+    x, y = 0, 0
     x1, y1 = 0, 0
     x2, y2 = 0, 0
-    for x, y in trench:
+    corners = []
+    prev_dirs = deque([plan[-1][0]], maxlen=2)
+    for d, n in plan:
+        if len(prev_dirs) == 2 and prev_dirs[0] != d:  # a 180
+            pd = prev_dirs[1]
+            if (pd + 1) % 4 == d:  # right
+                x, y = move((x, y), pd, 1)
+            else:  # left
+                x, y = move((x, y), pd, -1)
+        prev_dirs.append(d)
+        corners.append((x, y))
+        x, y = move((x, y), d, n)
         x1, y1 = min(x1, x), min(y1, y)
         x2, y2 = max(x2, x), max(y2, y)
-    return (x1, y1), (x2, y2)
+    return (x1, y1), (x2, y2), corners
 
 
-def find_point_inside(lo, hi, trench):
-    y = (lo[1] + hi[1]) // 2
-    inside = False
-    x = lo[0]
-    while x <= hi[0]:
-        if not inside and (x, y) in trench:
-            inside = True
-        if inside and (x, y) not in trench:
-            break
-        x += 1
-    return x, y
+def get_rules(corners):
+    (x1, _), (x2, _) = corners[0:2]
+    if x1 == x2:  # rotate so horiz first
+        first, *corners = corners
+        corners.append(first)
+    rules = []
+    for i in range(0, len(corners), 2):
+        a, b = corners[i : i + 2]
+        (x1, y), (x2, _) = a, b
+        rules.append((y, x1, x2))
+    return rules
 
 
-def dig_out_lagoon(trench, start):
-    def enqueue(p):
-        if p not in lagoon and p not in trench:
-            queue.append(p)
-
-    lagoon = set()
-    queue = [start]
-    while len(queue):
-        p = queue.pop()
-        if p in lagoon:
-            continue
-        lagoon.add(p)
-        x, y = p
-        enqueue((x, y - 1))
-        enqueue((x + 1, y))
-        enqueue((x, y + 1))
-        enqueue((x - 1, y))
-    return lagoon
-
-
-def part_one(plan):
-    trench = cut_trench(plan)
-    lo, hi = bounds(trench)
-    p = find_point_inside(lo, hi, trench)
-    lagoon = dig_out_lagoon(trench, p)
-    return len(trench) + len(lagoon)
+def part_one(model):
+    plan = [(d, n) for d, n, _ in model]
+    _, _, corners = get_bounds(plan)
+    return get_rules(corners)
 
 
 def parse_color(c):
@@ -98,12 +80,12 @@ def parse_color(c):
     return parse_dir(c[-1]), dist
 
 
-def reparse(plan):
-    return [parse_color(c) for _, _, c in plan]
+def reparse(model):
+    return [parse_color(c) for _, _, c in model]
 
 
-def part_two(plan):
-    return len(reparse(plan))
+def part_two(model):
+    pass
 
 
 if __name__ == "__main__":
