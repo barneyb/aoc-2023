@@ -2,6 +2,7 @@ import math
 from heapq import heappop, heappush
 
 from util import aoc
+from util.geom_2d import move
 
 
 class Map:
@@ -30,19 +31,6 @@ class Map:
         if x1 < x2:
             return line[x2] if x2 == x1 + 1 else sum(line[x1 + 1 : x2 + 1])
         return line[x2] if x1 == x2 + 1 else sum(line[x2:x1])
-
-
-def move(pos, d, n=1):
-    x, y = pos
-    match d:
-        case 0:
-            return x, y - n
-        case 1:
-            return x + n, y
-        case 2:
-            return x, y + n
-        case 3:
-            return x - n, y
 
 
 def either_part(map: Map, allowed_moves):
