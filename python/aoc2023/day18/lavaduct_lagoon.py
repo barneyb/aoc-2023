@@ -35,10 +35,8 @@ def move(p, d, n=1):
             return x - n, y
 
 
-def get_bounds(plan):
+def get_corners(plan):
     x, y = 0, 0
-    x1, y1 = 0, 0
-    x2, y2 = 0, 0
     corners = []
     prev_dirs = deque([plan[-1][0]], maxlen=2)
     for d, n in plan:
@@ -51,12 +49,11 @@ def get_bounds(plan):
         prev_dirs.append(d)
         corners.append((x, y))
         x, y = move((x, y), d, n)
-        x1, y1 = min(x1, x), min(y1, y)
-        x2, y2 = max(x2, x), max(y2, y)
-    return (x1, y1), (x2, y2), corners
+    return corners
 
 
 def get_rules(corners):
+    """Returns the horizontal rules in the loop as (y, start_x, end_x) tuples."""
     (x1, _), (x2, _) = corners[0:2]
     if x1 == x2:  # rotate so horiz first
         first, *corners = corners
@@ -73,29 +70,26 @@ def get_rules(corners):
 
 
 def overlap(q, r):
+    """Given two start:end tuples, return a tuple containing their overlap"""
     if r < q:
         q, r = r, q
     qs, qe = q
     rs, re = r
-    if qe <= rs:
-        return qs, qs  # no overlap
-    if re < qe:
-        return rs, re
-    return rs, qe
+    if qe <= rs:  # no overlap
+        return qs, qs
+    return rs, re if re < qe else qe
 
 
 def either_part(plan):
-    _, _, corners = get_bounds(plan)
     area = 0
     blocks = []  # x-ranges w/ known top, but no bottom yet
-    for ry, rs, re in get_rules(corners):
+    for ry, rs, re in get_rules(get_corners(plan)):
         next_blocks = []
         covered_pieces = []
         for by, bs, be in blocks:
             os, oe = overlap((bs, be), (rs, re))
-            if os < oe:  # woo!
+            if os < oe:  # something terminated!
                 area += (oe - os) * (ry - by)
-                # print(f"({os, by}) to ({oe, ry}) for {(oe - os) * (ry - by)}: {area}")
                 covered_pieces.append((os, oe))
                 if bs < os:
                     next_blocks.append((by, bs, min(be, os)))
@@ -112,7 +106,6 @@ def either_part(plan):
         if x < re:
             next_blocks.append((ry, x, re))
         blocks = next_blocks
-    # assert len(blocks) == 0
     return area
 
 
@@ -121,8 +114,7 @@ def part_one(model):
 
 
 def parse_color(c):
-    dist = int(c[1:-1], 16)
-    return parse_dir(c[-1]), dist
+    return parse_dir(c[-1]), int(c[1:-1], 16)
 
 
 def reparse(model):

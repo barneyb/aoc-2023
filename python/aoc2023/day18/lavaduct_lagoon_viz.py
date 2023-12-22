@@ -8,6 +8,16 @@ LAGOON = "#FF8000"
 TICK = "#999999"
 RULE = "#CCCCCC"
 
+
+def get_bounds(corners):
+    x1, y1 = 0, 0
+    x2, y2 = 0, 0
+    for x, y in corners:
+        x1, y1 = min(x1, x), min(y1, y)
+        x2, y2 = max(x2, x), max(y2, y)
+    return (x1, y1), (x2, y2)
+
+
 if __name__ == "__main__":
     from aoc2023.day18.lavaduct_lagoon_test import EXAMPLE
 
@@ -21,7 +31,8 @@ if __name__ == "__main__":
     plan = [(d, n) for d, n, _ in plan]
     # plan = ll.reparse(plan)
 
-    lo, hi, corners = ll.get_bounds(plan)
+    corners = ll.get_corners(plan)
+    lo, hi = get_bounds(corners)
     dx, dy = lo
     dx, dy = -dx + 1, -dy + 1
     width = hi[0] - lo[0] + 1
