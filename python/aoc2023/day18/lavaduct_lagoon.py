@@ -65,14 +65,59 @@ def get_rules(corners):
     for i in range(0, len(corners), 2):
         a, b = corners[i : i + 2]
         (x1, y), (x2, _) = a, b
+        if x2 < x1:
+            x2, x1 = x1, x2
         rules.append((y, x1, x2))
+    rules.sort()
     return rules
 
 
-def part_one(model):
-    plan = [(d, n) for d, n, _ in model]
+def overlap(q, r):
+    if r < q:
+        q, r = r, q
+    qs, qe = q
+    rs, re = r
+    if qe <= rs:
+        return qs, qs  # no overlap
+    if re < qe:
+        return rs, re
+    return rs, qe
+
+
+def either_part(plan):
     _, _, corners = get_bounds(plan)
-    return get_rules(corners)
+    area = 0
+    blocks = []  # x-ranges w/ known top, but no bottom yet
+    for ry, rs, re in get_rules(corners):
+        next_blocks = []
+        covered_pieces = []
+        for by, bs, be in blocks:
+            os, oe = overlap((bs, be), (rs, re))
+            if os < oe:  # woo!
+                area += (oe - os) * (ry - by)
+                # print(f"({os, by}) to ({oe, ry}) for {(oe - os) * (ry - by)}: {area}")
+                covered_pieces.append((os, oe))
+                if bs < os:
+                    next_blocks.append((by, bs, min(be, os)))
+                if be > oe:
+                    next_blocks.append((by, max(bs, oe), be))
+            else:
+                next_blocks.append((by, bs, be))
+        covered_pieces.sort()
+        x = rs
+        for s, e in covered_pieces:
+            if x < s:
+                next_blocks.append((ry, x, s))
+            x = e
+        if x < re:
+            next_blocks.append((ry, x, re))
+        blocks = next_blocks
+    # assert len(blocks) == 0
+    return area
+
+
+def part_one(model):
+    return either_part([(d, n) for d, n, _ in model])
 
 
 def parse_color(c):
@@ -85,7 +130,7 @@ def reparse(model):
 
 
 def part_two(model):
-    pass
+    return either_part(reparse(model))
 
 
 if __name__ == "__main__":
