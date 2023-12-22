@@ -1,6 +1,7 @@
 from collections import deque
 
 from util import aoc
+from util.geom_2d import move
 
 
 def parse_dir(c):
@@ -20,19 +21,6 @@ def parse(input):
         (parse_dir(d), int(n), c[1:-1])
         for d, n, c in [l.split() for l in input.splitlines()]
     ]
-
-
-def move(p, d, n=1):
-    x, y = p
-    match d:
-        case 0:
-            return x, y - n
-        case 1:
-            return x + n, y
-        case 2:
-            return x, y + n
-        case 3:
-            return x - n, y
 
 
 def get_corners(plan):
