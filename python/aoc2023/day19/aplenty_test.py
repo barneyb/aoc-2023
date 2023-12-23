@@ -27,7 +27,7 @@ def test_parse_workflow():
         "px",
         [
             ("a", "<", 2006, "qkq"),
-            ("m", ">", 2090, "A"),
+            ("m", "≥", 2091, "A"),
         ],
         "rfg",
     )
@@ -59,5 +59,32 @@ def test_part_one():
     assert part_one(MODEL) == 19114
 
 
-# def test_part_two():
-#     assert part_two(MODEL) == 1_234
+def test_eval_many():
+    def check(ps, expected):
+        assert list(eval_many(workflow, ps)) == expected
+
+    workflow = [("a", "≥", 6, "hit")], "thru"
+    check({"a": (1, 5)}, [("thru", {"a": (1, 5)})])
+    check({"a": (1, 6)}, [("thru", {"a": (1, 6)})])
+    check({"a": (1, 7)}, [("hit", {"a": (6, 7)}), ("thru", {"a": (1, 6)})])
+    check({"a": (4, 9)}, [("hit", {"a": (6, 9)}), ("thru", {"a": (4, 6)})])
+    check({"a": (5, 9)}, [("hit", {"a": (6, 9)}), ("thru", {"a": (5, 6)})])
+    check({"a": (6, 9)}, [("hit", {"a": (6, 9)})])
+
+    workflow = [("a", "<", 5, "hit")], "thru"
+    check({"a": (1, 5)}, [("hit", {"a": (1, 5)})])
+    check({"a": (1, 6)}, [("hit", {"a": (1, 5)}), ("thru", {"a": (5, 6)})])
+    check({"a": (4, 9)}, [("hit", {"a": (4, 5)}), ("thru", {"a": (5, 9)})])
+    check({"a": (5, 9)}, [("thru", {"a": (5, 9)})])
+    check({"a": (6, 9)}, [("thru", {"a": (6, 9)})])
+
+
+def test_count_parts():
+    assert count_parts({"x": (0, 1), "y": (0, 1)}) == 1
+    assert count_parts({"x": (0, 1), "y": (0, 5)}) == 5
+    assert count_parts({"x": (0, 5), "y": (0, 1)}) == 5
+    assert count_parts({"x": (5, 10), "y": (3, 6)}) == 15
+
+
+def test_part_two():
+    assert part_two(MODEL) == 167409079868000
