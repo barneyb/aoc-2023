@@ -74,7 +74,24 @@ def part_one(modules):
 
 
 def part_two(modules):
-    return None
+    print("digraph {")
+    print(f"  {'{'} rank=source; broadcaster; _ff; _c {'}'}")
+    for n, (t, _, _) in sorted(modules.items()):
+        if n == "broadcaster":
+            print(f"  broadcaster [color=red, shape=box]")
+            print(f"  rx [color=red, shape=box]")
+            print(
+                f'  _ff [label="flip-flop", shape=diamond, color=green, fontcolor=green]'
+            )
+            print(
+                f'  _c [label="conjunction", shape=house, color=green, fontcolor=green]'
+            )
+        else:
+            print(f"  {n} [shape={'diamond' if t == '%' else 'house'}]")
+    for n, (t, rs, _) in modules.items():
+        for r in rs:
+            print(f"  {n} -> {r}")
+    print("}")
 
 
 if __name__ == "__main__":
@@ -82,5 +99,5 @@ if __name__ == "__main__":
         __file__,
         parse,
         part_one,
-        # part_two,
+        part_two,
     )
