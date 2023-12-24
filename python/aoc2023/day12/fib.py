@@ -1,0 +1,97 @@
+import functools
+
+N = 17
+# fib(17) =  1597 iteratively
+# fib(17) =  1597 naively
+# fib(17) = (1597, 5167) in 5167 naive calls
+# fib(17) = (1597, 5167) in   18 @cache calls
+# fib(17) = (1597, 5167) in   18 memoized calls (15 memo hits)
+
+
+###
+# Elementary iterative impl.
+###
+def fib(n):
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+
+
+print(f"fib({N}) =  {fib(N)} iteratively")
+
+
+###
+# Naive recursive impl.
+###
+def fib(n):
+    if n < 2:
+        return n
+    else:
+        return fib(n - 2) + fib(n - 1)
+
+
+print(f"fib({N}) =  {fib(N)} naively")
+
+
+###
+# Naive recursive impl, returning a 2-tuple of the Fibonacci number and the
+# count of calls made. I.e., same algorithm as above, just with instrumentation.
+###
+def fib(n):
+    global calls
+    calls += 1
+    if n < 2:
+        return n, 1
+    else:
+        a, c1 = fib(n - 2)
+        b, c2 = fib(n - 1)
+        return a + b, 1 + c1 + c2
+
+
+calls = 0
+print(f"fib({N}) = {fib(N)} in {calls:4} naive calls")
+
+
+###
+# using @functools.cache to memoize the same instrumented behavior.
+###
+@functools.cache
+def fib_cache(n):
+    global calls
+    calls += 1
+    if n < 2:
+        return n, 1
+    else:
+        a, c1 = fib_cache(n - 2)
+        b, c2 = fib_cache(n - 1)
+        return a + b, 1 + c1 + c2
+
+
+calls = 0
+print(f"fib({N}) = {fib_cache(N)} in {calls:4} @cache calls")
+
+
+###
+# custom memoization decorator/higher-order function applied to the naive
+# recursive impl. This is exactly equivalent to @functools.cache, though not as
+# robust. E.g., it doesn't handle keyword args.
+###
+def memoize(func):
+    def memoized(*args):
+        global memo_hits
+        args = tuple(args)
+        if args in memo:
+            memo_hits += 1
+        else:
+            memo[args] = func(*args)
+        return memo[args]
+
+    memo = {}
+    return memoized
+
+
+fib = memoize(fib)  # "decorate" the naive implementation
+calls = 0
+memo_hits = 0
+print(f"fib({N}) = {fib(N)} in {calls:4} memoized calls ({memo_hits} memo hits)")
