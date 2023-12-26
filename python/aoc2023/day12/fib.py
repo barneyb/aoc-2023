@@ -73,17 +73,18 @@ print(f"fib({N}) = {fib_cache(N)} in {calls:4} @cache calls")
 
 
 ###
-# custom memoization decorator/higher-order function applied to the naive
+# custom memoization higher-order function/decorator applied to the naive
 # recursive impl. This is exactly equivalent to @functools.cache, though not as
 # robust. E.g., it doesn't handle keyword args.
 ###
 def memoize(func):
     def memoized(*args):
-        global memo_hits
+        global calls, memo_hits
         args = tuple(args)
         if args in memo:
             memo_hits += 1
         else:
+            calls += 1
             memo[args] = func(*args)
         return memo[args]
 
@@ -91,7 +92,26 @@ def memoize(func):
     return memoized
 
 
-fib = memoize(fib)  # "decorate" the naive implementation
+def fib(n):  # the non-instrumented naive implementation
+    return n if n < 2 else fib(n - 2) + fib(n - 1)
+
+
+fib = memoize(fib)  # apply the higher-order function, replacing the naive impl
 calls = 0
 memo_hits = 0
-print(f"fib({N}) = {fib(N)} in {calls:4} memoized calls ({memo_hits} memo hits)")
+print(f"fib({N}) =  {fib(N)} in {calls:4} memoized calls (plus {memo_hits} memo hits)")
+
+
+###
+# Reuse the custom memoize function via the decorator syntax, instead of an
+# invocation. Rather more concise, and prevents accidental non-memoized use,
+# because it's part of the definition of 'fib'.
+###
+@memoize  # use decorator syntax (which looks like a Java annotation, but isn't)
+def fib(n):
+    return n if n < 2 else fib(n - 2) + fib(n - 1)
+
+
+calls = 0
+memo_hits = 0
+print(f"fib({N}) =  {fib(N)} in {calls:4} memoized calls (plus {memo_hits} memo hits)")
