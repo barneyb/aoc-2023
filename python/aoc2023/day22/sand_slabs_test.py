@@ -34,5 +34,5 @@ def test_part_one():
     assert part_one(MODEL) == 5
 
 
-# def test_part_two():
-#     assert part_two(MODEL) == 1_234
+def test_part_two():
+    assert part_two(MODEL) == 7
