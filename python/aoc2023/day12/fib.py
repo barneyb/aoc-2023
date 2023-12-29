@@ -2,10 +2,12 @@ import functools
 
 N = 17
 # fib(17) =  1597 iteratively
+# fib(17) =  1597 iteratively (array)
 # fib(17) =  1597 naively
 # fib(17) = (1597, 5167) in 5167 naive calls
 # fib(17) = (1597, 5167) in   18 @cache calls
-# fib(17) = (1597, 5167) in   18 memoized calls (15 memo hits)
+# fib(17) =  1597 in   18 memoized calls (plus 15 memo hits)
+# fib(17) =  1597 in   18 memoized calls (plus 15 memo hits)
 
 
 ###
@@ -19,6 +21,20 @@ def fib(n):
 
 
 print(f"fib({N}) =  {fib(N)} iteratively")
+
+
+###
+# Array-based iterative impl, in the style of Levenshtein's matrix.
+###
+def fib(n):
+    ns = [0] * (n + 1)  # ns = new int[n + 1];
+    ns[1] = 1
+    for i in range(2, n + 1):
+        ns[i] = ns[i - 2] + ns[i - 1]
+    return ns[n]
+
+
+print(f"fib({N}) =  {fib(N)} iteratively (array)")
 
 
 ###
