@@ -9,6 +9,9 @@ BLOCK = "█"
 
 
 def entry_point(year, day, data):
+    def first_of(val):
+        return val[0] if type(val) == tuple else val
+
     mod_name = f"aoc{year}.day{day:02}"
     mod = importlib.import_module(mod_name)
     mod_attrs = dir(mod)
@@ -18,7 +21,7 @@ def entry_point(year, day, data):
     else:
         a = mod.part_one(parse(data))
         b = mod.part_two(parse(data)) if "part_two" in mod_attrs else None
-    return a, b
+    return first_of(a), first_of(b)
 
 
 def get_input(file):
