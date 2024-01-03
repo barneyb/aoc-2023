@@ -113,6 +113,22 @@ def either_part(trails):
     return hikes[trails.goal]
 
 
+def graph_viz(trails, start, goal):
+    edges = {}
+    print("graph {")
+    print(f"  {'{'} rank=source; {start} {'}'}")
+    print(f"  {'{'} rank=sink; {goal} {'}'}")
+    print(f"  {start} [color=red, shape=box]")
+    print(f"  {goal} [color=red, shape=box]")
+    for u in trails:
+        for v, d in trails[u]:
+            e = (u, v) if u < v else (v, u)
+            if e not in edges or edges[e] != d:
+                edges[e] = d
+                print(f"  {u} -- {v} [label={d}]")
+    print("}")
+
+
 def part_one(input):
     return either_part(SlipperyTrails(input))
 
