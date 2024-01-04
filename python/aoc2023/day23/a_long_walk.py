@@ -1,3 +1,4 @@
+import math
 from collections import Counter, deque
 
 from util import aoc
@@ -69,22 +70,6 @@ class SlipperyTrails(Trails):
         return adj
 
 
-def longest_hikes(trails, start, goals):
-    queue = deque()
-    queue.append((start, {}, 0))
-    longest = Counter()
-    while queue:
-        p, visited, dist = queue.pop()
-        if dist > longest[p]:
-            longest[p] = dist
-        if p in goals and dist > 0:
-            continue
-        visited = set(visited)
-        visited.add(p)
-        queue.extend((n, visited, dist + d) for n, d in trails[p] if n not in visited)
-    return {g: longest[g] for g in goals if g in longest and g != start}
-
-
 def find_forks(trails):
     forks = []
     visited = set()
@@ -102,15 +87,44 @@ def find_forks(trails):
     return forks
 
 
+def multi_bfs(trails, start, goals):
+    queue = deque()
+    queue.append((start, 0))
+    bests = Counter()
+    visited = set()
+    while queue:
+        p, dist = queue.popleft()
+        if p in visited:
+            continue
+        visited.add(p)
+        if dist > bests[p]:
+            bests[p] = dist
+        if p in goals and dist > 0:
+            continue
+        queue.extend((n, dist + d) for n, d in trails[p] if n not in visited)
+    return {g: bests[g] for g in goals if g in bests and g != start}
+
+
+def dfs(trails, u, goal, visited):
+    if u == goal:
+        return 0
+    visited.add(u)
+    best = -math.inf
+    for v, w in trails[u]:
+        if v not in visited:
+            best = max(best, w + dfs(trails, v, goal, visited))
+    visited.remove(u)
+    return best
+
+
 def either_part(trails):
     forks = set(find_forks(trails))
     forks.add(trails.start)
     forks.add(trails.goal)
     compressed = {}
     for f in forks:
-        compressed[f] = [p for p in longest_hikes(trails, f, forks).items()]
-    hikes = longest_hikes(compressed, trails.start, {trails.goal})
-    return hikes[trails.goal]
+        compressed[f] = [p for p in multi_bfs(trails, f, forks).items()]
+    return dfs(compressed, trails.start, trails.goal, set())
 
 
 def graph_viz(trails, start, goal):
