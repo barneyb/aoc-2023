@@ -21,4 +21,4 @@ dependencies = [
 ]
 
 [project.entry-points."adventofcode.user"]
-barneyb = "util.aoc:entry_point"
+me = "util.aoc:entry_point"
