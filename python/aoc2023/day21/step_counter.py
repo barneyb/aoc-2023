@@ -1,5 +1,3 @@
-from collections import Counter, deque
-
 from util import aoc
 
 
@@ -49,67 +47,25 @@ def part_one(garden, steps=64):
 
 
 def part_two(garden, steps=26_501_365):
-    locs = {garden.start: {(0, 0)}}
-    saturation_count = None
-    saturation = deque(maxlen=5)
-    target = None
-    other = None
-    stable_gardens = {}  # step the garden reached stable target
-    for step in range(steps):
+    locs = set()
+    px, py = garden.start
+    locs.add((px, py, 0, 0))
+    for _ in range(steps):
         prev = locs
-        locs = {}
-        for p, gdns in prev.items():
-            for lc in garden.neighbors(p):
-                gs = gdns
-                nx, ny = lc
+        locs = set()
+        for px, py, gx, gy in prev:
+            for nx, ny in garden.neighbors((px, py)):
                 if nx < 0:
-                    nx += garden.width
-                    gs = [(x - 1, y) for x, y in gs]
+                    locs.add((nx + garden.width, ny, gx - 1, gy))
                 elif nx >= garden.width:
-                    nx -= garden.width
-                    gs = [(x + 1, y) for x, y in gs]
+                    locs.add((nx - garden.width, ny, gx + 1, gy))
                 elif ny < 0:
-                    ny += garden.height
-                    gs = [(x, y - 1) for x, y in gs]
+                    locs.add((nx, ny + garden.height, gx, gy - 1))
                 elif ny >= garden.height:
-                    ny -= garden.height
-                    gs = [(x, y + 1) for x, y in gs]
-                lc = (nx, ny)
-                if lc not in locs:
-                    locs[lc] = set()
-                locs[lc].update(
-                    (g for g in gs if g not in stable_gardens) if other else gs
-                )
-        if not saturation_count:
-            saturation.append(len(locs))
-            if len(saturation) >= 4:
-                sat = saturation[0]
-                if all(st == sat for st in saturation):
-                    saturation_count = sat
-                    del saturation
-        hist = Counter()
-        for gs in locs.values():
-            for g in gs:
-                hist[g] += 1
-        if saturation_count and (not target or not other):
-            if target is None:
-                target = hist[(0, 0)]
-                stable_gardens[(0, 0)] = step
-            else:
-                other = hist[(0, 0)]
-        for g, c in hist.items():
-            if c == target:
-                stable_gardens[g] = step
-
-    total = 0
-    for gs in locs.values():
-        for g in gs:
-            if not other or g not in stable_gardens:
-                total += 1
-    if other:
-        for g in stable_gardens:
-            total += other if (step - stable_gardens[g]) % 2 else target
-    return total
+                    locs.add((nx, ny - garden.height, gx, gy + 1))
+                else:
+                    locs.add((nx, ny, gx, gy))
+    return len(locs)
 
 
 if __name__ == "__main__":

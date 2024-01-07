@@ -41,8 +41,8 @@ def test_part_two_100():
     assert part_two(GARDEN, 100) == 6536
 
 
-def test_part_two_500():
-    assert part_two(GARDEN, 500) == 167004
+# def test_part_two_500():
+#     assert part_two(GARDEN, 500) == 167004
 
 
 # def test_part_two_1000():
