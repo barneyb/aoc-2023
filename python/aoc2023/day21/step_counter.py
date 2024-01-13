@@ -128,15 +128,6 @@ def part_two(garden, total_steps=26_501_365):
     return sum(len(ls) for ls in locs_by_garden.values())
 
 
-# after 393 steps across 37 gardens
-#            3                         327
-#         4  3  5                  262 196 262
-#      4  4  3  5  5           262 131  65 131 262
-#   1  1  1     0  0  0    327 196  65      65 196 327
-#      6  6  2  7  7           262 131  65 131 262
-#         6  2  7                  262 196 262
-#            2                         327
-
 if __name__ == "__main__":
     aoc.solve(
         __file__,
