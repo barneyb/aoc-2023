@@ -38,7 +38,14 @@ def test_part_two_50():
 
 
 def test_part_two_100():
+    print()
     assert part_two(GARDEN, 100) == 6536
+    # assert part_two(GARDEN, 101) == 6684
+
+
+def test_part_two_200():
+    print()
+    assert part_two(GARDEN, 200) == 26538
 
 
 # def test_part_two_500():
