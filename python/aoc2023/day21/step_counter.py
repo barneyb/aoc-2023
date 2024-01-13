@@ -48,7 +48,62 @@ def part_one(garden, total_steps=64):
     return len(locs)
 
 
+def naive_answer(locs_by_garden):
+    return sum(len(ls) for ls in locs_by_garden.values())
+
+
+def print_maps(step, locs_by_garden, extractors_by_name):
+    x1, y1 = 0, 0
+    x2, y2 = 0, 0
+    for x, y in locs_by_garden:
+        x1, y1 = min(x1, x), min(y1, y)
+        x2, y2 = max(x2, x), max(y2, y)
+
+    # noinspection PyUnboundLocalVariable
+    sb = [
+        f"after {step} steps: {len(locs_by_garden)} gardens w/ {naive_answer(locs_by_garden)} positions"
+    ]
+    for y in range(y1, y2 + 1):
+        sb.append("\n")
+        for ex in extractors_by_name.values():
+            for x in range(x1, x2 + 1):
+                sb.append(f"{ex((x, y)):>4}")
+            sb.append("    ")
+    sb.append("\n")
+    for n in extractors_by_name:
+        sb.append(" ")
+        sb.append(n.center((x2 - x1 + 1) * 4))
+        sb.append("   ")
+    print("".join(sb))
+
+
 def part_two(garden, total_steps=26_501_365):
+    def do_step(curr):
+        result = defaultdict(set)
+        for gx, gy in curr:
+            for p in curr[gx, gy]:
+                for nx, ny in garden.neighbors(p):
+                    if nx < 0:
+                        result[gx - 1, gy].add((nx + garden.width, ny))
+                    elif nx >= garden.width:
+                        result[gx + 1, gy].add((nx - garden.width, ny))
+                    elif ny < 0:
+                        result[gx, gy - 1].add((nx, ny + garden.height))
+                    elif ny >= garden.height:
+                        result[gx, gy + 1].add((nx, ny - garden.height))
+                    else:
+                        result[gx, gy].add((nx, ny))
+        return result
+
+    extractors = {
+        "pos": lambda g: len(locs_by_garden[g]) if g in locs_by_garden else ".",
+        "typ": lambda g: state_by_garden[g][1] if g in state_by_garden else ".",
+        "trn": lambda g: state_by_garden[g][0] if g in state_by_garden else ".",
+        "cyc": lambda g: "#"
+        if g in state_by_garden and flip_flops[state_by_garden[g][1]]
+        else ".",
+    }
+    prev = {}
     locs_by_garden = defaultdict(set)
     locs_by_garden[0, 0].add(garden.start)
     # locations progressions, indexed by start_traces
@@ -62,36 +117,6 @@ def part_two(garden, total_steps=26_501_365):
     # starting step and trace index for each garden
     state_by_garden = {}
     for step in range(total_steps):
-        prev = locs_by_garden
-        locs_by_garden = defaultdict(set)
-        for gx, gy in prev:
-            for p in prev[gx, gy]:
-                for nx, ny in garden.neighbors(p):
-                    if nx < 0:
-                        locs_by_garden[gx - 1, gy].add((nx + garden.width, ny))
-                    elif nx >= garden.width:
-                        locs_by_garden[gx + 1, gy].add((nx - garden.width, ny))
-                    elif ny < 0:
-                        locs_by_garden[gx, gy - 1].add((nx, ny + garden.height))
-                    elif ny >= garden.height:
-                        locs_by_garden[gx, gy + 1].add((nx, ny - garden.height))
-                    else:
-                        locs_by_garden[gx, gy].add((nx, ny))
-        for g in tracking_garden_traces:
-            idx = tracking_garden_traces[g]
-            if flip_flops[idx]:
-                continue
-            trace = traces[idx]
-            trace.append(len(locs_by_garden[g]))
-            if trace[-2:] == trace[-4:-2]:
-                print(f"{step}: Cycle! {g} {trace[-2:]} at {len(trace)}")
-                flip_flops[idx] = (len(trace), trace[-1], trace[-2])
-                traces[idx] = None
-            del trace
-        # if flip_flops and all(flip_flops):
-        #     del traces
-        #     del start_traces
-        #     break
         for g in locs_by_garden:
             if g in prev:
                 continue
@@ -105,27 +130,22 @@ def part_two(garden, total_steps=26_501_365):
                 start_traces[start] = idx
                 tracking_garden_traces[g] = idx
             state_by_garden[g] = (step, idx)
+        print_maps(step, locs_by_garden, extractors)
+        prev = locs_by_garden
+        locs_by_garden = do_step(prev)
+        for g in tracking_garden_traces:
+            idx = tracking_garden_traces[g]
+            if flip_flops[idx]:
+                continue
+            trace = traces[idx]
+            trace.append(len(locs_by_garden[g]))
+            if trace[-2:] == trace[-4:-2]:
+                flip_flops[idx] = len(trace), trace[-1], trace[-2]
+            del trace
 
-    x1, y1 = 0, 0
-    x2, y2 = 0, 0
-    for x, y in state_by_garden:
-        x1, y1 = min(x1, x), min(y1, y)
-        x2, y2 = max(x2, x), max(y2, y)
-
-    # noinspection PyUnboundLocalVariable
-    sb = [f"after {step} steps across {len(locs_by_garden)} gardens"]
-    for y in range(y1, y2 + 1):
-        sb.append("\n")
-        for x in range(x1, x2 + 1):
-            g = x, y
-            sb.append(f"{state_by_garden[g][1] if g in state_by_garden else '':3}")
-        sb.append("    ")
-        for x in range(x1, x2 + 1):
-            g = x, y
-            sb.append(f"{state_by_garden[g][0] if g in state_by_garden else '':4}")
-    print("".join(sb))
-
-    return sum(len(ls) for ls in locs_by_garden.values())
+    # Didn't run far enough to establish a pattern to compute from, so just
+    # count 'em up!
+    return naive_answer(locs_by_garden)
 
 
 if __name__ == "__main__":
