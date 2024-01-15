@@ -61,15 +61,26 @@ def print_maps(step, locs_by_garden, extractors_by_name):
 
     # noinspection PyUnboundLocalVariable
     sb = [
-        f"after {step} steps: {len(locs_by_garden)} gardens w/ {naive_answer(locs_by_garden)} positions"
+        f"after {step} steps: {len(locs_by_garden)} gardens w/ {naive_answer(locs_by_garden)} positions\n "
     ]
+    for _ in extractors_by_name:
+        for x in range(x1, x2 + 1):
+            sb.append(f"{'│' if x == 0 else '':>4}")
+        sb.append("    ")
     for y in range(y1, y2 + 1):
         sb.append("\n")
         for ex in extractors_by_name.values():
+            sb.append("─" if y == 0 else " ")
             for x in range(x1, x2 + 1):
                 sb.append(f"{ex((x, y)):>4}")
-            sb.append("    ")
-    sb.append("\n")
+            sb.append("   ")
+        sb.append("─" if y == 0 else " ")
+    sb.append("\n ")
+    for _ in extractors_by_name:
+        for x in range(x1, x2 + 1):
+            sb.append(f"{'│' if x == 0 else '':>4}")
+        sb.append("    ")
+    sb.append("\n ")
     for n in extractors_by_name:
         sb.append(" ")
         sb.append(n.center((x2 - x1 + 1) * 4))
@@ -96,12 +107,14 @@ def part_two(garden, total_steps=26_501_365):
         return result
 
     extractors = {
-        "pos": lambda g: len(locs_by_garden[g]) if g in locs_by_garden else ".",
-        "typ": lambda g: state_by_garden[g][1] if g in state_by_garden else ".",
-        "trn": lambda g: state_by_garden[g][0] if g in state_by_garden else ".",
-        "cyc": lambda g: "#"
-        if g in state_by_garden and flip_flops[state_by_garden[g][1]]
-        else ".",
+        "cnt": lambda g: len(locs_by_garden[g]) if g in locs_by_garden else "",
+        "type": lambda g: chr(ord("A") + state_by_garden[g][1])
+        if g in state_by_garden
+        else "",
+        "turn": lambda g: state_by_garden[g][0] if g in state_by_garden else "",
+        # "cyc": lambda g: "X"
+        # if g in state_by_garden and flip_flops[state_by_garden[g][1]]
+        # else "",
     }
     prev = {}
     locs_by_garden = defaultdict(set)
@@ -142,6 +155,7 @@ def part_two(garden, total_steps=26_501_365):
             if trace[-2:] == trace[-4:-2]:
                 flip_flops[idx] = len(trace), trace[-1], trace[-2]
             del trace
+    print_maps(step + 1, locs_by_garden, extractors)
 
     # Didn't run far enough to establish a pattern to compute from, so just
     # count 'em up!
