@@ -2,9 +2,17 @@ from .step_counter import *
 
 # fmt: off
 EXAMPLE = """\
-so
-many
-lines
+...........
+.....###.#.
+.###.##..#.
+..#.#...#..
+....#.#....
+.##..S####.
+.##..#...#.
+.......##..
+.##.#.####.
+.##..##.##.
+...........
 """
 
 MODEL = ["so", 
@@ -15,7 +23,9 @@ MODEL = ["so",
 
 
 def test_parse():
-    assert parse(EXAMPLE) == MODEL
+    start, graph = parse(EXAMPLE)
+    assert start == 60
+    assert graph[start] == [59, 49]
 
 
 def test_part_one():
