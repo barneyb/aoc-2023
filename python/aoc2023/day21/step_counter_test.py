@@ -1,6 +1,5 @@
 from .step_counter import *
 
-# fmt: off
 EXAMPLE = """\
 ...........
 .....###.#.
@@ -15,12 +14,6 @@ EXAMPLE = """\
 ...........
 """
 
-MODEL = ["so", 
-         "many", 
-         "lines",
-        ]
-# fmt: on
-
 
 def test_parse():
     start, graph = parse(EXAMPLE)
@@ -29,7 +22,7 @@ def test_parse():
 
 
 def test_part_one():
-    assert part_one(MODEL) == 7_654
+    assert part_one(parse(EXAMPLE), 6) == 16
 
 
 # def test_part_two():

@@ -27,13 +27,15 @@ def parse(input):
     return start, graph
 
 
-def part_one(model):
+def part_one(model, steps=64):
     start, graph = model
-    return (
-        len(graph),
-        sum(1 for adj in graph if adj is not None),
-        sum(len(adj) for adj in graph if adj),
-    )
+    reached = {start}
+    for _ in range(steps):
+        prev = reached
+        reached = set()
+        for n in prev:
+            reached.update(graph[n])
+    return len(reached)
 
 
 # def part_two(model):
