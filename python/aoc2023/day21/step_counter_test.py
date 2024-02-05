@@ -17,13 +17,13 @@ EXAMPLE = """\
 EXAMPLE_TWO = """\
 ...........
 ..#...##.#.
-.###..#..#.
+.#.#..#..#.
 ..#.#...#..
 ....#.#....
 .....S.....
 .##......#.
 ....#..##..
-.##.#.####.
+.##.#...##.
 .##...#.##.
 ...........
 """
@@ -60,7 +60,30 @@ def test_get_corners():
 
 
 def test_part_two_6():
-    assert part_two(MODEL_TWO, 6) == 36
+    print()
+    # assert part_two(MODEL_TWO, 0) == 1
+    # assert part_two(MODEL_TWO, 1) == 4
+    # assert part_two(MODEL_TWO, 2) == 7
+    # assert part_two(MODEL_TWO, 3) == 14
+    # assert part_two(MODEL_TWO, 4) == 19
+    # assert part_two(MODEL_TWO, 5) == 26  # N=0
+    # assert part_two(MODEL_TWO, 6) == 38
+    # assert part_two(MODEL_TWO, 7) == 47
+    # assert part_two(MODEL_TWO, 8) == 63
+    assert part_two(MODEL_TWO, 16) == 215  # N=1
+    assert part_two(MODEL_TWO, 27) == 586  # N=2
+    # assert part_two(MODEL_TWO, 33) == 853
+    assert part_two(MODEL_TWO, 38) == 1139  # N=3
+
+
+def test_triangle():
+    assert triangle(0) == 0
+    assert triangle(1) == 1
+    assert triangle(2) == 3
+    assert triangle(3) == 6
+    assert triangle(4) == 10
+    assert triangle(5) == 15
+    assert triangle(6) == 21
 
 
 def test_part_two_10():
