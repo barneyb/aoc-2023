@@ -40,6 +40,10 @@ def test_parse():
 
 
 def test_part_one():
+    assert part_one(MODEL, 0) == 1
+    assert part_one(MODEL, 1) == 2
+    assert part_one(MODEL, 2) == 4
+    assert part_one(MODEL, 3) == 6
     assert part_one(MODEL, 6) == 16
 
 
@@ -59,21 +63,47 @@ def test_get_corners():
     assert sw == 110
 
 
-def test_part_two_6():
-    print()
-    # assert part_two(MODEL_TWO, 0) == 1
-    # assert part_two(MODEL_TWO, 1) == 4
-    # assert part_two(MODEL_TWO, 2) == 7
-    # assert part_two(MODEL_TWO, 3) == 14
-    # assert part_two(MODEL_TWO, 4) == 19
-    # assert part_two(MODEL_TWO, 5) == 26  # N=0
-    # assert part_two(MODEL_TWO, 6) == 38
-    # assert part_two(MODEL_TWO, 7) == 47
-    # assert part_two(MODEL_TWO, 8) == 63
-    assert part_two(MODEL_TWO, 16) == 215  # N=1
-    assert part_two(MODEL_TWO, 27) == 586  # N=2
-    # assert part_two(MODEL_TWO, 33) == 853
-    assert part_two(MODEL_TWO, 38) == 1139  # N=3
+def test_part_two_simulate():
+    # sb = []
+    # for y in range(11):
+    #     sb.append("\n")
+    #     for x in range(11):
+    #         sb.append(f"{(y*11+x):>4}")
+    # print("".join(sb))
+    assert part_two_simulate(MODEL, 0) == 1
+    assert part_two_simulate(MODEL, 1) == 2
+    assert part_two_simulate(MODEL, 2) == 4
+    assert part_two_simulate(MODEL, 3) == 6
+    assert part_two_simulate(MODEL, 5) == 13
+    assert part_two_simulate(MODEL, 6) == 16
+    assert part_two_simulate(MODEL, 10) == 50
+    assert part_two_simulate(MODEL, 50) == 1594
+    assert part_two_simulate(MODEL, 100) == 6536
+    # assert part_two_simulate(MODEL, 200) == 26538
+    # assert part_two_simulate(MODEL, 500) == 167004
+    # assert part_two_simulate(MODEL, 1000) == 668697
+    # assert part_two_simulate(MODEL, 5000) == 16733044
+    assert part_two_simulate(MODEL_TWO, 0) == 1
+    assert part_two_simulate(MODEL_TWO, 1) == 4
+    assert part_two_simulate(MODEL_TWO, 2) == 7
+    assert part_two_simulate(MODEL_TWO, 3) == 14
+    assert part_two_simulate(MODEL_TWO, 5) == 26
+    assert part_two_simulate(MODEL_TWO, 6) == 38
+    assert part_two_simulate(MODEL_TWO, 10) == 90
+    assert part_two_simulate(MODEL_TWO, 50) == 1954
+    assert part_two_simulate(MODEL_TWO, 100) == 7627
+    # assert part_two_simulate(MODEL_TWO, 200) == 30265
+
+
+# def test_part_two():
+#     print()
+#     _, _, width = MODEL_TWO
+#     half = width // 2
+#     for n in range(1, 4):
+#         steps = width * n + half
+#         sim = part_two_simulate(MODEL_TWO, steps)
+#         calc = part_two_calc(MODEL_TWO, steps)
+#         assert sim == calc, f"failed at N={n}"
 
 
 def test_triangle():
@@ -84,22 +114,3 @@ def test_triangle():
     assert triangle(4) == 10
     assert triangle(5) == 15
     assert triangle(6) == 21
-
-
-def test_part_two_10():
-    assert part_two(MODEL_TWO, 10) == 88
-
-
-def test_part_two_50():
-    assert part_two(MODEL_TWO, 50) == 1904
-
-
-def test_part_two_100():
-    print()
-    assert part_two(MODEL_TWO, 100) == 7465
-    assert part_two(MODEL_TWO, 101) == 7594
-
-
-def test_part_two_200():
-    print()
-    assert part_two(MODEL_TWO, 200) == 29599
