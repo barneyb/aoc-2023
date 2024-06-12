@@ -6,6 +6,10 @@ package com.barneyb.aoc.geom;
  */
 public record Point(long x, long y) {
 
+    public static Point of(long x, long y) {
+        return new Point(x, y);
+    }
+
     public static final Point ORIGIN = new Point(0, 0);
 
     public static Point parse(String str) {
@@ -20,7 +24,7 @@ public record Point(long x, long y) {
 
     public long manhattanDistance(Point other) {
         return Math.abs(x - other.x)
-                + Math.abs(y - other.y);
+               + Math.abs(y - other.y);
     }
 
     public Point move(Dir dir) {
