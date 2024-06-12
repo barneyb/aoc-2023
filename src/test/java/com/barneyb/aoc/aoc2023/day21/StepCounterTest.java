@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StepCounterTest {
 
-    private static final String EXAMPLE_ONE =
+    private static final String EXAMPLE =
             """
             ...........
             .....###.#.
@@ -28,7 +28,7 @@ class StepCounterTest {
     @Test
     void parsing() {
         StepCounter solver = new StepCounter();
-        StepCounter.Model model = solver.buildModel(Input.of(EXAMPLE_ONE));
+        Model model = solver.buildModel(Input.of(EXAMPLE));
         assertEquals(List.of(Point.of(5, 4),
                              Point.of(4, 5)),
                      model.graph().adjacent(model.start()));
@@ -46,11 +46,24 @@ class StepCounterTest {
     @Test
     void examplesOne() {
         StepCounter solver = new StepCounter();
-        StepCounter.Model model = solver.buildModel(Input.of(EXAMPLE_ONE));
+        Model model = solver.buildModel(Input.of(EXAMPLE));
         assertEquals(2, solver.solvePartOne(model, 1));
         assertEquals(4, solver.solvePartOne(model, 2));
         assertEquals(6, solver.solvePartOne(model, 3));
         assertEquals(16, solver.solvePartOne(model, 6));
+    }
+
+    @Test
+    void examplesTwo() {
+        StepCounter solver = new StepCounter();
+        Model model = solver.buildModel(Input.of(EXAMPLE));
+        assertEquals(16, solver.solvePartTwo(model, 6));
+        assertEquals(50, solver.solvePartTwo(model, 10));
+        assertEquals(1594, solver.solvePartTwo(model, 50));
+        assertEquals(6536, solver.solvePartTwo(model, 100));
+        assertEquals(167004, solver.solvePartTwo(model, 500));
+        assertEquals(668697, solver.solvePartTwo(model, 1000));
+        assertEquals(16733044, solver.solvePartTwo(model, 5000));
     }
 
 }
