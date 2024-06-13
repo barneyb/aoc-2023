@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Collections.emptyList;
 
@@ -29,7 +30,7 @@ public class Digraph<V> {
         return adjacent.size();
     }
 
-    public Iterable<V> vertices() {
+    public Set<V> vertices() {
         return adjacent.keySet();
     }
 
