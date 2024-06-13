@@ -1,13 +1,15 @@
 package com.barneyb.aoc.aoc2023.day21;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-class Stats<T> {
+public class Stats<T> {
 
     T center;
     T north;

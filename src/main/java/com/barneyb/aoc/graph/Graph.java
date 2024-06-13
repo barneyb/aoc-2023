@@ -1,5 +1,7 @@
 package com.barneyb.aoc.graph;
 
+import java.util.Set;
+
 public class Graph<V> {
 
     private final Digraph<V> delegate = new Digraph<>();
@@ -16,7 +18,7 @@ public class Graph<V> {
         return delegate.size();
     }
 
-    public Iterable<V> vertices() {
+    public Set<V> vertices() {
         return delegate.vertices();
     }
 

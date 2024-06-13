@@ -4,7 +4,7 @@ import com.barneyb.aoc.geom.Point;
 import com.barneyb.aoc.graph.Graph;
 import com.barneyb.aoc.util.Input;
 
-public record Model(Point start, int width, int height, Graph<Point> graph) {
+public record Model(Point start, int half, int max, Graph<Point> graph) {
 
     private static final char START = 'S';
     private static final char ROCK = '#';
@@ -33,13 +33,34 @@ public record Model(Point start, int width, int height, Graph<Point> graph) {
             y++;
             lineNorth = line;
         }
+        assert x == y : "Non-square garden?!";
         assert x % 2 == 1 : "Width isn't odd?!";
-        assert y % 2 == 1 : "Height isn't odd?!";
-        return new Model(start, x, y, graph);
+        int max = x - 1;
+        int half = max / 2;
+        assert Point.of(half, half).equals(start);
+        return new Model(start, half, max, graph);
+    }
+
+    public Stats<Point> points() {
+        return new Stats<>(
+                Point.of(half, half),
+                Point.of(half, 0),
+                Point.of(half, max),
+                Point.of(max, half),
+                Point.of(0, half),
+                Point.of(max, 0),
+                Point.of(0, 0),
+                Point.of(max, max),
+                Point.of(0, max)
+        );
+    }
+
+    int dim() {
+        return max + 1;
     }
 
     Model startAt(Point start) {
-        return new Model(start, width, height, graph);
+        return new Model(start, half, max, graph);
     }
 
 }
