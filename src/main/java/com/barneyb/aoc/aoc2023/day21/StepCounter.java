@@ -32,9 +32,7 @@ public class StepCounter extends SolveEachPart<Model, Long, Long> {
             trace.add(curr);
             // are we done?
             var l = trace.size();
-            if (l > 5
-                && trace.get(l - 1).equals(trace.get(l - 3))
-                && trace.get(l - 1).equals(trace.get(l - 5))) {
+            if (l > model.dim() && trace.get(l - 1).equals(trace.get(l - 3))) {
                 break;
             }
             curr = tick(model, curr);
@@ -53,7 +51,7 @@ public class StepCounter extends SolveEachPart<Model, Long, Long> {
 
     @Override
     protected Long solvePartTwo(Model model) {
-        return solvePartTwo(model, 26501365);
+        return solvePartTwo(model, 26_501_365);
     }
 
     protected Long solvePartTwo(Model model, int steps) {
@@ -113,27 +111,6 @@ public class StepCounter extends SolveEachPart<Model, Long, Long> {
             steps -= period;
         }
         return result;
-//        if (steps < 0) return 0;
-//        int period = model.dim();
-//        int fulls = steps / period;
-//        if (fulls == 0) {
-//            return doPartial(steps, trace);
-//        }
-//        var frontier = doPartial(steps % period, trace);
-//        var even = fulls / 2;
-//        var odd = fulls - even;
-//        long per_even = doPartial(steps + 1, trace);
-//        var all_even = even * per_even;
-//        long per_odd = doPartial(steps, trace);
-//        var all_odd = odd * per_odd;
-//        var result = frontier + all_even + all_odd;
-//        System.out.printf("[CARDINAL] fulls: %d, frontier: %d, even: %d*%d=%d, odd: %d*%d=%d, total: %d%n",
-//                          fulls,
-//                          frontier,
-//                          even, per_even, all_even,
-//                          odd, per_odd, all_odd,
-//                          result);
-//        return result;
     }
 
     private long doQuadrant(Model model, int steps, List<Set<Point>> trace) {
@@ -146,39 +123,6 @@ public class StepCounter extends SolveEachPart<Model, Long, Long> {
             count += 1;
         }
         return result;
-//        if (steps < 0) return 0;
-//        int period = model.dim();
-//        int fulls = steps / period;
-//        if (fulls == 0) {
-//            return doPartial(steps, trace);
-//        }
-//        int frontier = fulls + 1;
-//        var even = qeven(fulls);
-//        var odd = qeven(fulls - 1);
-//        long per_frontier = doPartial(steps % period, trace);
-//        var all_frontier = frontier * per_frontier;
-//        long per_even = doPartial(steps, trace);
-//        var all_even = even * per_even;
-//        long per_odd = doPartial(steps, trace);
-//        var all_odd = odd * per_odd;
-//        var result = all_frontier + all_even + all_odd;
-//        System.out.printf("[QUADRANT] fulls: %d, frontier: %d*%d=%d, even: %d*%d=%d, odd: %d*%d=%d, total: %d%n",
-//                          fulls,
-//                          frontier, per_frontier, all_frontier,
-//                          even, per_even, all_even,
-//                          odd, per_odd, all_odd,
-//                          result);
-//        return result;
-    }
-
-    private long qeven(long x) {
-        var h = x / 2;
-        var hprime = x - h;
-        return triangle(h) + triangle(hprime);
-    }
-
-    private long triangle(long x) {
-        return x * (x + 1) / 2;
     }
 
     @Override

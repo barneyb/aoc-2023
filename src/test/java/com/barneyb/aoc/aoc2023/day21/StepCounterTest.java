@@ -126,7 +126,7 @@ class StepCounterTest {
     }
 
     @Test
-    void examplesTwo() {
+    void canBeExpanded() {
         StepCounter solver = new StepCounter();
         Model model = solver.buildModel(Input.of(CAN_BE_EXPANDED));
         assertEquals(1, solver.solvePartTwo(model, 0));
@@ -161,6 +161,7 @@ class StepCounterTest {
         assertEquals(1865, solver.solvePartTwo(model, 50));
     }
 
+    @SuppressWarnings("unused")
     private void draw(int steps) {
         draw(steps, CAN_BE_EXPANDED, false);
     }
@@ -196,6 +197,14 @@ class StepCounterTest {
     private static void bar(String lbl, int width) {
         String prefix = "-- " + lbl + " --";
         System.out.println(prefix + "-".repeat(Math.max(0, width - prefix.length())));
+    }
+
+    @Test
+    void realInput() {
+        StepCounter solver = new StepCounter();
+        Model m = solver.buildModel(Input.of(StepCounter.class));
+        assertEquals(3_788L, solver.solvePartOne(m));
+        assertEquals(631_357_596_621_921L, solver.solvePartTwo(m));
     }
 
     @Test
