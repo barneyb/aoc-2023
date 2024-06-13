@@ -10,8 +10,8 @@ public record Point(long x, long y) {
 
     public static Point parse(String str) {
         var coords = str.split(",");
-        return new Point(Long.parseLong(coords[0]),
-                         Long.parseLong(coords[1]));
+        return new Point(Long.parseLong(coords[0].trim()),
+                         Long.parseLong(coords[1].trim()));
     }
 
     public long manhattanDistance() {
@@ -20,7 +20,7 @@ public record Point(long x, long y) {
 
     public long manhattanDistance(Point other) {
         return Math.abs(x - other.x)
-                + Math.abs(y - other.y);
+               + Math.abs(y - other.y);
     }
 
     public Point move(Dir dir) {
