@@ -15,4 +15,12 @@ public record Point3(long x, long y, long z) {
         return new Point(x, y);
     }
 
+    public Point xz() {
+        return new Point(x, z);
+    }
+
+    public Point yz() {
+        return new Point(y, z);
+    }
+
 }

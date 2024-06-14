@@ -27,20 +27,19 @@ public class NeverTellMeTheOdds extends SolvePartOne<List<Hailstone>, Long> {
                 .toList();
     }
 
+    private record Eq(Point pos, Point vel, Line l) {
+
+        Eq(Hailstone s) {
+            this(s.pos().xy(), s.vel().xy(), s.xy());
+        }
+
+    }
+
     public Long solvePartOne(List<Hailstone> hailstones, long min, long max) {
-        record Eq(Point p, Point v, double m, double b) {}
         var equations = new Eq[hailstones.size()];
         for (int i = 0; i < hailstones.size(); i++) {
             var s = hailstones.get(i);
-            double m = (double) s.vel().y() / s.vel().x();
-            double tIntercept = (double) -s.pos().x() / s.vel().x();
-            var b = s.pos().y() + tIntercept * s.vel().y();
-            equations[i] = new Eq(
-                    s.pos().xy(),
-                    s.vel().xy(),
-                    m,
-                    b
-            );
+            equations[i] = new Eq(s);
         }
 
         long count = 0;
@@ -48,43 +47,17 @@ public class NeverTellMeTheOdds extends SolvePartOne<List<Hailstone>, Long> {
             var a = equations[i];
             for (int j = i + 1; j < equations.length; j++) {
                 var b = equations[j];
-//                System.out.println(a);
-//                System.out.println(b);
-                var denom = a.m - b.m;
-                if (denom == 0) {
-                    // parallel
-//                    System.out.println("Hailstones' paths are parallel; they never intersect.");
-//                    System.out.println();
-                    continue;
-                }
-                var x = (b.b - a.b) / denom;
-                var y = b.m * x + b.b;
-                var t1 = (x - a.p.x()) / a.v.x();
-                var t2 = (x - b.p.x()) / b.v.x();
-                if (t1 < 0) {
-//                    if (t2 < 0) {
-//                        System.out.printf("Hailstones' paths crossed in the past for both hailstones (t=%f/%f).%n",
-//                                          t1,
-//                                          t2);
-//                    } else {
-//                        System.out.printf("Hailstones' paths crossed in the past for hailstone A (t=%f/%f).%n", t1, t2);
-//                    }
-                } else if (t2 < 0) {
-//                    System.out.printf("Hailstones' paths crossed in the past for hailstone B (t=%f/%f).%n", t1, t2);
-                } else if (min <= x && x <= max && min <= y && y <= max) {
-//                    System.out.printf(
-//                            "Hailstones' paths will cross inside the test area (at x=%f, y=%f, t=%f/%f).%n",
-//                            x,
-//                            y,
-//                            t1,
-//                            t2);
-                    count += 1;
-//                } else {
-//                    System.out.printf("Hailstones' paths will cross outside the test area (at x=%f, y=%f, t=%f/%f).%n",
-//                                      x,
-//                                      y, t1, t2);
-                }
-//                System.out.println();
+                var denom = a.l().m() - b.l().m();
+                if (denom == 0) continue; // parallel
+                var x = (b.l().b() - a.l().b()) / denom;
+                if (x < min || x > max) continue;
+                var y = b.l().m() * x + b.l().b();
+                if (y < min || y > max) continue;
+                var t1 = (x - a.pos().x()) / a.vel().x();
+                if (t1 < 0) continue;
+                var t2 = (x - b.pos().x()) / b.vel().x();
+                if (t2 < 0) continue;
+                count += 1;
             }
         }
         return count;
