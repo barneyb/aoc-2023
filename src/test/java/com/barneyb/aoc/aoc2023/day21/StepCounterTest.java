@@ -3,6 +3,8 @@ package com.barneyb.aoc.aoc2023.day21;
 import com.barneyb.aoc.geom.Point;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -314,6 +316,36 @@ class StepCounterTest {
         assertEquals(1210, trace.get(40).size());
         assertEquals(1532, trace.get(45).size());
         assertEquals(1865, trace.get(50).size());
+    }
+
+    @ParameterizedTest
+    @CsvSource(textBlock = """
+                           0,   0
+                           1,   1
+                           2,   3
+                           3,   6
+                           4,   10
+                           5,   15
+                           6,   21
+                           7,   28
+                           """)
+    void triangleNumbers(long n, long tri) {
+        assertEquals(tri, StepCounter.triangle(n));
+    }
+
+    @ParameterizedTest
+    @CsvSource(textBlock = """
+                           0,   0
+                           1,   1
+                           2,   2
+                           3,   4
+                           4,   6
+                           5,   9
+                           6,   12
+                           7,   16
+                           """)
+    void halftoneTriangleNumbers(long n, long htTri) {
+        assertEquals(htTri, StepCounter.halftone_triangle(n));
     }
 
 }

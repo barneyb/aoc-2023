@@ -106,7 +106,16 @@ public class StepCounter extends SolveEachPart<Model, Long, Long> {
     private long doCardinal(Model model, int steps, List<Set<Point>> trace) {
         int period = model.dim();
         long result = 0;
-        while (steps >= 0) { // todo: this is sorta silly; use multiplication
+        int cycles = steps / (period << 1);
+        if (cycles > 1) {
+            cycles -= 1; // last cycle is special
+            int l = trace.size();
+            int odds = trace.get(l - 1).size();
+            int evens = trace.get(l - 2).size();
+            result += (long) cycles * (odds + evens);
+            steps -= cycles * period << 1;
+        }
+        while (steps >= 0) {
             result += doPartial(steps, trace);
             steps -= period;
         }
@@ -117,12 +126,36 @@ public class StepCounter extends SolveEachPart<Model, Long, Long> {
         int period = model.dim();
         long result = 0;
         int count = 1;
-        while (steps >= 0) { // todo: this is sorta silly; use multiplication
+        int cycles = steps / (period << 1);
+        if (cycles > 1) {
+            cycles -= 1; // last cycle is special
+            var fulls = cycles * 2;
+            int l = trace.size();
+            int odds = trace.get(l - 1).size();
+            int evens = trace.get(l - 2).size();
+            long no = halftone_triangle(fulls - steps % 2);
+            long ne = halftone_triangle(fulls - (steps - 1) % 2);
+            result += no * odds
+                      + ne * evens;
+            steps -= fulls * period;
+            count += fulls;
+        }
+        while (steps >= 0) {
             result += count * doPartial(steps, trace);
             steps -= period;
             count += 1;
         }
         return result;
+    }
+
+    static long triangle(long n) {
+        return n * (n + 1) / 2;
+    }
+
+    static long halftone_triangle(long n) {
+        var h = n / 2;
+        var hprime = n - h;
+        return triangle(h) + triangle(hprime);
     }
 
     @Override
