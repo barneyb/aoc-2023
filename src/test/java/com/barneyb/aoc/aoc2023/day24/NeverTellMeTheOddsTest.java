@@ -3,6 +3,8 @@ package com.barneyb.aoc.aoc2023.day24;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NeverTellMeTheOddsTest {
@@ -28,6 +30,18 @@ class NeverTellMeTheOddsTest {
         var solver = new NeverTellMeTheOdds();
         var model = solver.buildModel(Input.of(NeverTellMeTheOddsTest.class));
         assertEquals(18651, solver.solvePartOne(model));
+        //todo assertEquals(-1, solver.solvePartTwo(model));
+    }
+
+    @Test
+    void playing() {
+        var solver = new NeverTellMeTheOdds();
+        var model = solver.buildModel(Input.of(EXAMPLE));
+//        var model = solver.buildModel(Input.of(NeverTellMeTheOddsTest.class));
+        var vels = model.stream()
+                .map(Hailstone::vel)
+                .collect(Collectors.toSet());
+        solver.solvePartTwo(model);
     }
 
 }
