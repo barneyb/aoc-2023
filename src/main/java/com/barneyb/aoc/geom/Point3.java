@@ -31,6 +31,10 @@ public record Point3(long x, long y, long z) {
         return Point3.of(x * l, y * l, z * l);
     }
 
+    public Point3 divide(long l) {
+        return Point3.of(x / l, y / l, z / l);
+    }
+
     public Point3 add(Point3 p) {
         return Point3.of(x + p.x, y + p.y, z + p.z);
     }

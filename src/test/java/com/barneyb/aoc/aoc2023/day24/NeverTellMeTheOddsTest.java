@@ -36,11 +36,19 @@ class NeverTellMeTheOddsTest {
     @Test
     void playing() {
         var solver = new NeverTellMeTheOdds();
-        var model = solver.buildModel(Input.of(EXAMPLE));
-//        var model = solver.buildModel(Input.of(NeverTellMeTheOddsTest.class));
+//        var model = solver.buildModel(Input.of(EXAMPLE));
+        var model = solver.buildModel(Input.of(NeverTellMeTheOdds.class));
         var vels = model.stream()
                 .map(Hailstone::vel)
+                .map(v -> {
+                    var f = Factors.gcd(Factors.gcd(Math.abs(v.x()), Math.abs(v.y())), Math.abs(v.z()));
+                    if (f > 1) {
+                        v = v.divide(f);
+                    }
+                    return v;
+                })
                 .collect(Collectors.toSet());
+        assertEquals(model.size(), vels.size());
         solver.solvePartTwo(model);
     }
 

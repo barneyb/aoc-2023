@@ -2,6 +2,16 @@ package com.barneyb.aoc.aoc2023.day24;
 
 public record Ratio(long num, long denom) {
 
+    public Ratio {
+        if (denom < 0) {
+            num = -num;
+            denom = -denom;
+        }
+        if (num == 0) {
+            denom = 1;
+        }
+    }
+
     public static final Ratio ZERO = Ratio.of(0);
     public static final Ratio ONE = Ratio.of(1);
 
@@ -66,7 +76,6 @@ public record Ratio(long num, long denom) {
 
     public Ratio reduce() {
         var gcd = Factors.gcd(num, denom);
-        if (denom < 0) gcd = -gcd;
         return of(num / gcd, denom / gcd);
     }
 
