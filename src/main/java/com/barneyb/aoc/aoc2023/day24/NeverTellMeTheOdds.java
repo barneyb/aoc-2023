@@ -4,40 +4,24 @@ import com.barneyb.aoc.geom.Point;
 import com.barneyb.aoc.geom.Point3;
 import com.barneyb.aoc.util.Input;
 import com.barneyb.aoc.util.SolveEachPart;
+import com.google.ortools.Loader;
+import com.google.ortools.sat.CpModel;
+import com.google.ortools.sat.CpSolver;
+import com.google.ortools.sat.CpSolverStatus;
+import com.google.ortools.sat.IntVar;
+import com.google.ortools.sat.LinearArgument;
+import com.google.ortools.sat.LinearExpr;
 
 import java.util.List;
 
 public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Long> {
 
-    public static void main(String[] args) {
-//        new NeverTellMeTheOdds().solveAndPrint();
+    static {
+        Loader.loadNativeLibraries();
+    }
 
-        var a = new Hailstone(Point3.of(19, 13, 30),
-                              Point3.of(-2, 1, -2));
-        var b = new Hailstone(Point3.of(18, 19, 22),
-                              Point3.of(-1, -1, -2));
-        var c = new Hailstone(Point3.of(20, 25, 34),
-                              Point3.of(-2, -2, -4));
-        var d = new Hailstone(Point3.of(12, 31, 28),
-                              Point3.of(-1, -2, -1));
-        var e = new Hailstone(Point3.of(20, 19, 15),
-                              Point3.of(1, -5, -3));
-        var rock = new Hailstone(Point3.of(24, 13, 10),
-                                 Point3.of(-3, 1, 2));
-//        System.out.println(Plane.of(a.pos(),
-//                                    d.pos(),
-//                                    a.pos().add(a.vel().multiply(5))));
-        Plane p;
-        p = Plane.of(b.pos(),
-                     c.pos(),
-                     b.pos().add(b.vel().multiply(5)));
-        System.out.println(p);
-        System.out.println(p.contains(rock.pos()));
-//        p = Plane.of(b.pos(),
-//                     c.pos(),
-//                     c.pos().add(b.vel().multiply(4)));
-//        System.out.println(p);
-//        System.out.println(p.contains(rock.pos()));
+    public static void main(String[] args) {
+        new NeverTellMeTheOdds().solveAndPrint();
     }
 
     @Override
@@ -45,57 +29,60 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
         return solvePartOne(hailstones, 200_000_000_000_000L, 400_000_000_000_000L);
     }
 
+    private int count = 0;
+    private final long lo = Long.MIN_VALUE >> 14;
+    private final long hi = Long.MAX_VALUE >> 14;
+
+    private String name(String prefix) {
+        return prefix + count++;
+    }
+
+    private void doit(CpModel model, IntVar p, IntVar v, IntVar t, long pos, long vel) {
+        // i = -v
+        var i = model.newIntVar(lo, hi, name("i"));
+        model.addMultiplicationEquality(i, v, LinearExpr.constant(-1));
+        // j = -2 + i
+        var j = model.newIntVar(lo, hi, name("j"));
+        model.addEquality(j, LinearExpr.sum(new LinearArgument[]{ LinearExpr.constant(vel), i }));
+        // k = j * t
+        var k = model.newIntVar(lo, hi, name("k"));
+        model.addMultiplicationEquality(k, j, t);
+        // p = k + 19
+        model.addEquality(p, LinearExpr.sum(new LinearArgument[]{ k, LinearExpr.constant(pos) }));
+    }
+
     @Override
     protected Long solvePartTwo(List<Hailstone> hailstones) {
-        /*
-equal YZ slope:
-226614096902854, 205663209347485, 250203858638726 @ 46, 21, -16
-339871829605604, 301592523784752, 287903705946757 @ -73, 21, -16
-
-2, 2, 2 @ 4, 2, -1
-3, 3, 2 @ -3, 2, -1
-         */
-        var equations = new Eq[hailstones.size()];
-        for (int i = 0; i < hailstones.size(); i++) {
-            var s = hailstones.get(i);
-            equations[i] = new Eq(i, s.pos().xy(), s.vel().xy(), s.xy());
+        var model = new CpModel();
+        var x = model.newIntVar(lo, hi, "x");
+        var y = model.newIntVar(lo, hi, "y");
+        var z = model.newIntVar(lo, hi, "z");
+        var a = model.newIntVar(lo, hi, "a");
+        var b = model.newIntVar(lo, hi, "b");
+        var c = model.newIntVar(lo, hi, "c");
+        for (var h : hailstones) {
+            var t = model.newIntVar(0, hi, name("t"));
+            doit(model, x, a, t, h.pos().x(), h.vel().x());
+            doit(model, y, b, t, h.pos().y(), h.vel().y());
+            doit(model, z, c, t, h.pos().z(), h.vel().z());
         }
-        for (int i = 0; i < equations.length; i++) {
-            var a = equations[i];
-            for (int j = i + 1; j < equations.length; j++) {
-                var b = equations[j];
-                if (a.l().m() == b.l().m()) {
-                    System.out.printf("X-Y PARALLEL @ %f: %s and %s%n", b.l().m(), a.i, b.i);
-                }
-            }
+        CpSolver solver = new CpSolver();
+        CpSolverStatus status = solver.solve(model);
+        if (status == CpSolverStatus.OPTIMAL || status == CpSolverStatus.FEASIBLE) {
+            System.out.printf("[%3.0f ms]", solver.wallTime() * 1000);
+            System.out.print(" x = " + solver.value(x));
+            System.out.print(", y = " + solver.value(y));
+            System.out.print(", z = " + solver.value(z));
+            System.out.print(", a = " + solver.value(a));
+            System.out.print(", b = " + solver.value(b));
+            System.out.print(", c = " + solver.value(c));
+            System.out.println();
+            return solver.value(x)
+                   + solver.value(y)
+                   + solver.value(z);
+        } else {
+            throw new RuntimeException("No solution found: " + status);
         }
-        for (int i = 0; i < hailstones.size(); i++) {
-            var s = hailstones.get(i);
-            equations[i] = new Eq(i, s.pos().xz(), s.vel().xz(), s.xz());
-        }
-        for (int i = 0; i < equations.length; i++) {
-            var a = equations[i];
-            for (int j = i + 1; j < equations.length; j++) {
-                var b = equations[j];
-                if (a.l().m() == b.l().m()) {
-                    System.out.printf("X-Z PARALLEL @ %f: %s and %s%n", b.l().m(), a.i, b.i);
-                }
-            }
-        }
-        for (int i = 0; i < hailstones.size(); i++) {
-            var s = hailstones.get(i);
-            equations[i] = new Eq(i, s.pos().yz(), s.vel().yz(), s.yz());
-        }
-        for (int i = 0; i < equations.length; i++) {
-            var a = equations[i];
-            for (int j = i + 1; j < equations.length; j++) {
-                var b = equations[j];
-                if (a.l().m() == b.l().m()) {
-                    System.out.printf("Y-Z PARALLEL @ %f: %s and %s%n", b.l().m(), a.i, b.i);
-                }
-            }
-        }
-        return 0L;
     }
 
     @Override
