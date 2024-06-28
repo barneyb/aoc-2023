@@ -12,6 +12,7 @@ import com.google.ortools.sat.IntVar;
 import com.google.ortools.sat.LinearArgument;
 import com.google.ortools.sat.LinearExpr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Long> {
@@ -54,14 +55,17 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
     @Override
     protected Long solvePartTwo(List<Hailstone> hailstones) {
         var model = new CpModel();
+        var ts = new ArrayList<IntVar>(hailstones.size());
         var x = model.newIntVar(lo, hi, "x");
         var y = model.newIntVar(lo, hi, "y");
         var z = model.newIntVar(lo, hi, "z");
         var a = model.newIntVar(lo, hi, "a");
         var b = model.newIntVar(lo, hi, "b");
         var c = model.newIntVar(lo, hi, "c");
-        for (var h : hailstones) {
-            var t = model.newIntVar(0, hi, name("t"));
+        for (int i = 0; i < hailstones.size(); i++) {
+            var h = hailstones.get(i);
+            var t = model.newIntVar(0, hi, "t" + i);
+            ts.add(t);
             doit(model, x, a, t, h.pos().x(), h.vel().x());
             doit(model, y, b, t, h.pos().y(), h.vel().y());
             doit(model, z, c, t, h.pos().z(), h.vel().z());
@@ -76,6 +80,9 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
             System.out.print(", a = " + solver.value(a));
             System.out.print(", b = " + solver.value(b));
             System.out.print(", c = " + solver.value(c));
+            for (var t : ts) {
+                System.out.printf(", %s = %d", t.getName(), solver.value(t));
+            }
             System.out.println();
             return solver.value(x)
                    + solver.value(y)
