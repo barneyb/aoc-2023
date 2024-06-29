@@ -23,6 +23,7 @@ elif [ "$1" != "" ]; then
     doit "$@"
     exit
 else
-    # shellcheck disable=SC2046
-    doit $(date -v+3H +' -y 20%y -d %d')
+    # doit $(date -v+3H +' -y 20%y -d %d')
+    echo "AoC's over; there is no current day. Try '$0 -y 2023 -d 7' or '$0 --all')"
+    exit 1
 fi

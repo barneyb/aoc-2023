@@ -32,7 +32,7 @@ jobs:
       - name: No Dirtiness, Python!
         run: git diff --exit-code
       - name: Black Check
-        uses: psf/black@stable
+        uses: psf/black@23.12.1
       - name: SLOC
         working-directory: ./python
         run: ./sloc

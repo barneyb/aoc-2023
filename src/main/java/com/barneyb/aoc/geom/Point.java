@@ -6,6 +6,10 @@ package com.barneyb.aoc.geom;
  */
 public record Point(long x, long y) {
 
+    public static Point of(long x, long y) {
+        return new Point(x, y);
+    }
+
     public static final Point ORIGIN = new Point(0, 0);
 
     public static Point parse(String str) {
