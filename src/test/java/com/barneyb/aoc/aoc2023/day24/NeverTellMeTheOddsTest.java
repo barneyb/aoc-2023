@@ -35,7 +35,14 @@ class NeverTellMeTheOddsTest {
         var solver = new NeverTellMeTheOdds();
         var model = solver.buildModel(Input.of(NeverTellMeTheOddsTest.class));
         assertEquals(18_651, solver.solvePartOne(model));
-        // hit the last hailstone at t=1_029_733_593_764
+        //  x  = 200_027_938_836_082
+        //  y  = 127_127_087_242_193
+        //  z  = 219_339_468_239_370
+        // dx =                  133
+        // dy =                  278
+        // dz =                   85
+        //  t =       57_633_470_621 (first)
+        //  t =    1_029_733_593_764 (last)
         assertEquals(546_494_494_317_645L, solver.solvePartTwo(model));
     }
 
