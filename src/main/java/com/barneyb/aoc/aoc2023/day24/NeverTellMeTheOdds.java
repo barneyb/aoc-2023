@@ -11,6 +11,7 @@ import com.google.ortools.sat.CpSolverSolutionCallback;
 import com.google.ortools.sat.CpSolverStatus;
 import com.google.ortools.sat.IntVar;
 import com.google.ortools.sat.LinearExpr;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,11 +99,8 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
     private static class SolutionCallback extends CpSolverSolutionCallback {
 
         private final Storm storm;
+        @Getter
         private final Set<Long> solutions = new HashSet<>();
-
-        public Set<Long> getSolutions() {
-            return solutions;
-        }
 
         SolutionCallback(Storm storm) {
             this.storm = storm;
@@ -138,7 +136,9 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
         var model = new CpModel();
         var storm = new Storm(hailstones, model);
         CpSolver solver = new CpSolver();
-//        solver.getParameters().setEnumerateAllSolutions(true);
+        solver.getParameters().setEnumerateAllSolutions(false);
+        solver.getParameters().setMaxMemoryInMb(32);
+        solver.getParameters().setMaxTimeInSeconds(15.0);
         SolutionCallback cb = new SolutionCallback(storm);
         CpSolverStatus status = solver.solve(model, cb);
         if (cb.getSolutions().isEmpty()) {
