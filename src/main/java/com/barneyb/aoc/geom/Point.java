@@ -14,8 +14,8 @@ public record Point(long x, long y) {
 
     public static Point parse(String str) {
         var coords = str.split(",");
-        return new Point(Long.parseLong(coords[0]),
-                         Long.parseLong(coords[1]));
+        return new Point(Long.parseLong(coords[0].trim()),
+                         Long.parseLong(coords[1].trim()));
     }
 
     public long manhattanDistance() {
