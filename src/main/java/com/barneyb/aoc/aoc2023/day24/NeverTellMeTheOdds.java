@@ -13,6 +13,7 @@ import com.google.ortools.sat.IntVar;
 import com.google.ortools.sat.LinearExpr;
 import lombok.Getter;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,10 +23,6 @@ import java.util.Set;
 
 public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Long> {
 
-    static {
-        Loader.loadNativeLibraries();
-    }
-
     public static void main(String[] args) {
         new NeverTellMeTheOdds().solveAndPrint();
     }
@@ -33,6 +30,79 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
     @Override
     protected Long solvePartOne(List<Hailstone> hailstones) {
         return solvePartOne(hailstones, 200_000_000_000_000L, 400_000_000_000_000L);
+    }
+
+    private record Vec(BigInteger x, BigInteger y, BigInteger z) {
+
+        public static Vec of(BigInteger x, BigInteger y, BigInteger z) {
+            return new Vec(x, y, z);
+        }
+
+        public static Vec of(Point3 p) {
+            return Vec.of(new BigInteger("" + p.x(), 10),
+                          new BigInteger("" + p.y(), 10),
+                          new BigInteger("" + p.z(), 10));
+        }
+
+        public Vec multiply(BigInteger l) {
+            return Vec.of(x.multiply(l),
+                          y.multiply(l),
+                          z.multiply(l));
+        }
+
+        public Vec divide(BigInteger l) {
+            return Vec.of(x.divide(l),
+                          y.divide(l),
+                          z.divide(l));
+        }
+
+        public Vec add(Vec p) {
+            return Vec.of(x.add(p.x),
+                          y.add(p.y),
+                          z.add(p.z));
+        }
+
+        public Vec subtract(Vec p) {
+            return Vec.of(x.subtract(p.x),
+                          y.subtract(p.y),
+                          z.subtract(p.z));
+        }
+
+        public BigInteger dot(Vec p) {
+            return x.multiply(p.x)
+                    .add(y.multiply(p.y))
+                    .add(z.multiply(p.z));
+        }
+
+        public Vec cross(Vec p) {
+            return Vec.of(y.multiply(p.z).subtract(z.multiply(p.y)),
+                          z.multiply(p.x).subtract(x.multiply(p.z)),
+                          x.multiply(p.y).subtract(y.multiply(p.x)));
+        }
+
+    }
+
+    public long computePartTwo(List<Hailstone> model) {
+        Hailstone a = model.get(0),
+                b = model.get(1),
+                c = model.get(4);
+        var position_0 = Vec.of(a.pos());
+        var velocity_0 = Vec.of(a.vel());
+        var position_1 = Vec.of(b.pos());
+        var velocity_1 = Vec.of(b.vel());
+        var position_2 = Vec.of(c.pos());
+        var velocity_2 = Vec.of(c.vel());
+        var p1 = position_1.subtract(position_0);
+        var v1 = velocity_1.subtract(velocity_0);
+        var p2 = position_2.subtract(position_0);
+        var v2 = velocity_2.subtract(velocity_0);
+        var t1 = p1.cross(p2).dot(v2).negate().divide(v1.cross(p2).dot(v2));
+        var t2 = p1.cross(p2).dot(v1).negate().divide(p1.cross(v2).dot(v1));
+        var c1 = position_1.add(velocity_1.multiply(t1));
+        var c2 = position_2.add(velocity_2.multiply(t2));
+        var v = c2.subtract(c1).divide(t2.subtract(t1));
+        var p = c1.subtract(v.multiply(t1));
+        return p.x().add(p.y().add(p.z())).longValue();
     }
 
     private static class Storm {
@@ -133,6 +203,7 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
     }
 
     protected Long solvePartTwo(List<Hailstone> hailstones) {
+        Loader.loadNativeLibraries();
         var model = new CpModel();
         var storm = new Storm(hailstones, model);
         CpSolver solver = new CpSolver();
