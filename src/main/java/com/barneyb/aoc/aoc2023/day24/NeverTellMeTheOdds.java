@@ -32,6 +32,11 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
         return solvePartOne(hailstones, 200_000_000_000_000L, 400_000_000_000_000L);
     }
 
+    @Override
+    protected Long solvePartTwo(List<Hailstone> hailstones) {
+        return computePartTwo(hailstones);
+    }
+
     private record Vec(BigInteger x, BigInteger y, BigInteger z) {
 
         public static Vec of(BigInteger x, BigInteger y, BigInteger z) {
@@ -80,12 +85,26 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
                           x.multiply(p.y).subtract(y.multiply(p.x)));
         }
 
+        public BigInteger manhattan() {
+            return x.add(y).add(z);
+        }
+
     }
 
     public long computePartTwo(List<Hailstone> model) {
+        /*
+         https://www.reddit.com/r/adventofcode/comments/18pnycy/comment/kxqjg33/
+
+         A little linear algebra makes part 2 very straightforward. You don't even
+         need to solve a system of equations. It helps to view everything relative
+         to hailstone 0. Let position_x and velocity_x be the position and velocity
+         of hailstone x.
+        */
         Hailstone a = model.get(0),
                 b = model.get(1),
                 c = model.get(4);
+
+        //Stones 1 and 2, relative to stone 0:
         var position_0 = Vec.of(a.pos());
         var velocity_0 = Vec.of(a.vel());
         var position_1 = Vec.of(b.pos());
@@ -96,13 +115,60 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
         var v1 = velocity_1.subtract(velocity_0);
         var p2 = position_2.subtract(position_0);
         var v2 = velocity_2.subtract(velocity_0);
+        /*
+         NB: 'x' means "cross product" and '*' means "dot product". There is no
+         variable named 'x' anywhere (the first field of the various vectors is
+         never referenced directly).
+
+         Hailstone 0 is always at the origin, thus its collision is at 0. Since
+         all three collisions must form a straight line, the above two collision
+         vectors must be collinear, and their cross product will be 0:
+
+           (p1 + t1 * v1) x (p2 + t2 * v2) = 0
+
+         Cross product is distributive with vector addition and compatible with
+         scalar multiplication, so the above can be expanded:
+
+           (p1 x p2) + t1 * (v1 x p2) + t2 * (p1 x v2) + t1 * t2 * (v1 x v2) = 0
+
+         This is starting to look like a useful linear equation, except for that
+         t1 * t2 term. Let's try to get rid of it. Dot product and cross product
+         interact in a useful way. For arbitrary vectors a and b:
+
+           (a x b) * a = (a x b) * b = 0.
+
+         We can use this property to get rid of the t1 * t2 term. Let's take the
+         dot product with v2. Note that dot product is also distributive with
+         vector addition and compatible with scalar multiplication. The dot
+         product zeros out both the t2 and t1*t2 terms, leaving a simple linear
+         equation for t1:
+
+           (p1 x p2) * v2 + t1 * (v1 x p2) * v2 = 0
+           t1 = -((p1 x p2) * v2) / ((v1 x p2) * v2)
+
+         If we use v1 instead of v2 for the dot product, we get this instead:
+
+           (p1 x p2) * v1 + t2 * (p1 x v2) * v1 = 0
+           t2 = -((p1 x p2) * v1) / ((p1 x v2) * v1)
+         */
         var t1 = p1.cross(p2).dot(v2).negate().divide(v1.cross(p2).dot(v2));
         var t2 = p1.cross(p2).dot(v1).negate().divide(p1.cross(v2).dot(v1));
+        /*
+         Once we have t1 and t2 we can compute the locations (in absolute
+         coordinates) of the two collisions...
+         */
         var c1 = position_1.add(velocity_1.multiply(t1));
         var c2 = position_2.add(velocity_2.multiply(t2));
+        /*
+         ...and work backwards to find the velocity and then initial position of
+         the rock.
+         */
         var v = c2.subtract(c1).divide(t2.subtract(t1));
         var p = c1.subtract(v.multiply(t1));
-        return p.x().add(p.y().add(p.z())).longValue();
+        /*
+         Add up the individual coordinates of the position for the answer:
+         */
+        return p.manhattan().longValue();
     }
 
     private static class Storm {
@@ -202,7 +268,7 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
 
     }
 
-    protected Long solvePartTwo(List<Hailstone> hailstones) {
+    protected Long constraintPartTwo(List<Hailstone> hailstones) {
         Loader.loadNativeLibraries();
         var model = new CpModel();
         var storm = new Storm(hailstones, model);
