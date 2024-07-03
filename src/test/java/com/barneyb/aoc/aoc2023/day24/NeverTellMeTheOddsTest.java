@@ -24,17 +24,17 @@ class NeverTellMeTheOddsTest {
     }
 
     @Test
-    void exampleTwo_solver() {
+    void exampleTwo_constraint() {
         var solver = new NeverTellMeTheOdds();
         var model = solver.buildModel(Input.of(EXAMPLE));
-        assertEquals(47, solver.solvePartTwo(model));
+        assertEquals(47, solver.constraintPartTwo(model));
     }
 
     @Test
     void exampleTwo_compute() {
         var solver = new NeverTellMeTheOdds();
         var model = solver.buildModel(Input.of(EXAMPLE));
-        assertEquals(47, solver.computePartTwo(model));
+        assertEquals(47, solver.solvePartTwo(model));
     }
 
     @Test
