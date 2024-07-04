@@ -28,13 +28,13 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
     }
 
     @Override
-    protected Long solvePartOne(List<Hailstone> hailstones) {
-        return solvePartOne(hailstones, 200_000_000_000_000L, 400_000_000_000_000L);
+    protected Long solvePartOne(List<Hailstone> hailstorm) {
+        return solvePartOne(hailstorm, 200_000_000_000_000L, 400_000_000_000_000L);
     }
 
     @Override
-    protected Long solvePartTwo(List<Hailstone> hailstones) {
-        return computePartTwo(hailstones);
+    protected Long solvePartTwo(List<Hailstone> hailstorm) {
+        return computePartTwo(hailstorm);
     }
 
     private record Vec(BigInteger x, BigInteger y, BigInteger z) {
@@ -43,7 +43,7 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
             return new Vec(x, y, z);
         }
 
-        public static Vec of(Point3 p) {
+        public static Vec from(Point3 p) {
             return Vec.of(new BigInteger("" + p.x(), 10),
                           new BigInteger("" + p.y(), 10),
                           new BigInteger("" + p.z(), 10));
@@ -91,7 +91,7 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
 
     }
 
-    public long computePartTwo(List<Hailstone> model) {
+    public long computePartTwo(List<Hailstone> hailstorm) {
         /*
          https://www.reddit.com/r/adventofcode/comments/18pnycy/comment/kxqjg33/
 
@@ -100,25 +100,31 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
          to hailstone 0. Let position_x and velocity_x be the position and velocity
          of hailstone x.
         */
-        Hailstone a = model.get(0),
-                b = model.get(1),
-                c = model.get(4);
-
+        var itr = hailstorm.iterator();
+        Hailstone zero = itr.next(),
+                one = itr.next(),
+                two = itr.next();
+        var position_0 = Vec.from(zero.pos());
+        var velocity_0 = Vec.from(zero.vel());
+        var position_1 = Vec.from(one.pos());
+        var velocity_1 = Vec.from(one.vel());
+        var position_2 = Vec.from(two.pos());
+        var velocity_2 = Vec.from(two.vel());
         //Stones 1 and 2, relative to stone 0:
-        var position_0 = Vec.of(a.pos());
-        var velocity_0 = Vec.of(a.vel());
-        var position_1 = Vec.of(b.pos());
-        var velocity_1 = Vec.of(b.vel());
-        var position_2 = Vec.of(c.pos());
-        var velocity_2 = Vec.of(c.vel());
         var p1 = position_1.subtract(position_0);
         var v1 = velocity_1.subtract(velocity_0);
         var p2 = position_2.subtract(position_0);
         var v2 = velocity_2.subtract(velocity_0);
         /*
-         NB: 'x' means "cross product" and '*' means "dot product". There is no
-         variable named 'x' anywhere (the first field of the various vectors is
-         never referenced directly).
+         NB: 'x' means "cross product" and '*' means "dot product" or "scalar
+         multiplication". There is no variable named 'x' anywhere (the first
+         field of the various vectors is never referenced directly).
+
+         Let t1 and t2 be the times that the rock collides with hailstones 1 and
+         2 respectively. Viewed from hailstone 0, the two collisions are thus at:
+
+           p1 + t1 * v1
+           p2 + t2 * v2
 
          Hailstone 0 is always at the origin, thus its collision is at 0. Since
          all three collisions must form a straight line, the above two collision
@@ -144,14 +150,19 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
          equation for t1:
 
            (p1 x p2) * v2 + t1 * (v1 x p2) * v2 = 0
-           t1 = -((p1 x p2) * v2) / ((v1 x p2) * v2)
-
+                -((p1 x p2) * v2)
+           t1 = -----------------
+                 ((v1 x p2) * v2)
+         */
+        var t1 = p1.cross(p2).dot(v2).negate().divide(v1.cross(p2).dot(v2));
+        /*
          If we use v1 instead of v2 for the dot product, we get this instead:
 
            (p1 x p2) * v1 + t2 * (p1 x v2) * v1 = 0
-           t2 = -((p1 x p2) * v1) / ((p1 x v2) * v1)
+                -((p1 x p2) * v1)
+           t2 = -----------------
+                 ((p1 x v2) * v1)
          */
-        var t1 = p1.cross(p2).dot(v2).negate().divide(v1.cross(p2).dot(v2));
         var t2 = p1.cross(p2).dot(v1).negate().divide(p1.cross(v2).dot(v1));
         /*
          Once we have t1 and t2 we can compute the locations (in absolute
@@ -160,10 +171,12 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
         var c1 = position_1.add(velocity_1.multiply(t1));
         var c2 = position_2.add(velocity_2.multiply(t2));
         /*
-         ...and work backwards to find the velocity and then initial position of
-         the rock.
+         ...and work backwards to find the velocity...
          */
         var v = c2.subtract(c1).divide(t2.subtract(t1));
+        /*
+         ...and then initial position of the rock.
+         */
         var p = c1.subtract(v.multiply(t1));
         /*
          Add up the individual coordinates of the position for the answer:
@@ -176,12 +189,12 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
         private final long lo, hi;
         private final Map<String, Integer> counts = new HashMap<>();
         final List<IntVar> ofNote;
-        final IntVar x, y, z, a, b, c;
+        final IntVar x, y, z, dx, dy, dz;
 
-        Storm(List<Hailstone> hailstones, CpModel model) {
+        Storm(List<Hailstone> hailstorm, CpModel model) {
             long lo = Long.MAX_VALUE;
             long hi = Long.MIN_VALUE;
-            for (var h : hailstones) {
+            for (var h : hailstorm) {
                 var x = h.pos().x();
                 var y = h.pos().y();
                 var z = h.pos().z();
@@ -191,19 +204,19 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
             this.lo = lo = Math.min(Long.MIN_VALUE >> 13, lo);
             this.hi = hi = Math.min(Long.MAX_VALUE >> 13, hi);
 
-            ofNote = new ArrayList<>(hailstones.size() + 6);
+            ofNote = new ArrayList<>(hailstorm.size() + 6);
             ofNote.add(x = model.newIntVar(lo, hi, "x"));
             ofNote.add(y = model.newIntVar(lo, hi, "y"));
             ofNote.add(z = model.newIntVar(lo, hi, "z"));
-            ofNote.add(a = model.newIntVar(lo, hi, "a"));
-            ofNote.add(b = model.newIntVar(lo, hi, "b"));
-            ofNote.add(c = model.newIntVar(lo, hi, "c"));
-            for (Hailstone h : hailstones) {
+            ofNote.add(dx = model.newIntVar(lo, hi, "dx"));
+            ofNote.add(dy = model.newIntVar(lo, hi, "dy"));
+            ofNote.add(dz = model.newIntVar(lo, hi, "dz"));
+            for (Hailstone h : hailstorm) {
                 var t = model.newIntVar(0, hi - lo, name("t"));
                 ofNote.add(t);
-                addStoneDimension(model, x, a, t, h.pos().x(), h.vel().x());
-                addStoneDimension(model, y, b, t, h.pos().y(), h.vel().y());
-                addStoneDimension(model, z, c, t, h.pos().z(), h.vel().z());
+                addDimensionConstraint(model, x, dx, t, h.pos().x(), h.vel().x());
+                addDimensionConstraint(model, y, dy, t, h.pos().y(), h.vel().y());
+                addDimensionConstraint(model, z, dz, t, h.pos().z(), h.vel().z());
             }
             ofNote.forEach(v -> model.addHint(v, 0));
         }
@@ -215,7 +228,7 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
                                                    : (i + 1));
         }
 
-        private void addStoneDimension(CpModel model, IntVar p, IntVar v, IntVar t, long pos, long vel) {
+        private void addDimensionConstraint(CpModel model, IntVar p, IntVar v, IntVar t, long pos, long vel) {
             // p = (vel + -v) * t + pos
             // i = -v
             var i = model.newIntVar(lo, hi, name("i"));
@@ -253,13 +266,7 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
             System.out.println(solutions.size() == 1
                                        ? "Found solution!"
                                        : "Found another solution!");
-            System.out.printf("[%3.0f ms]", wallTime() * 1000);
-            System.out.print(" x = " + value(storm.x));
-            System.out.print(", y = " + value(storm.y));
-            System.out.print(", z = " + value(storm.z));
-            System.out.print(", a = " + value(storm.a));
-            System.out.print(", b = " + value(storm.b));
-            System.out.print(", c = " + value(storm.c));
+            System.out.printf("in %3.0f ms", wallTime() * 1000);
             for (var t : storm.ofNote) {
                 System.out.printf(", %s = %d", t.getName(), value(t));
             }
@@ -268,10 +275,10 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
 
     }
 
-    protected Long constraintPartTwo(List<Hailstone> hailstones) {
+    protected Long constraintPartTwo(List<Hailstone> hailstorm) {
         Loader.loadNativeLibraries();
         var model = new CpModel();
-        var storm = new Storm(hailstones, model);
+        var storm = new Storm(hailstorm, model);
         CpSolver solver = new CpSolver();
         solver.getParameters().setEnumerateAllSolutions(false);
         solver.getParameters().setMaxMemoryInMb(32);
@@ -295,10 +302,10 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
 
     private record Eq(int i, Point pos, Point vel, Line l) {}
 
-    public Long solvePartOne(List<Hailstone> hailstones, long min, long max) {
-        var equations = new Eq[hailstones.size()];
-        for (int i = 0; i < hailstones.size(); i++) {
-            var s = hailstones.get(i);
+    public Long solvePartOne(List<Hailstone> hailstorm, long min, long max) {
+        var equations = new Eq[hailstorm.size()];
+        for (int i = 0; i < hailstorm.size(); i++) {
+            var s = hailstorm.get(i);
             equations[i] = new Eq(i, s.pos().xy(), s.vel().xy(), s.xy());
         }
 
