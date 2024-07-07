@@ -44,9 +44,9 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
         }
 
         public static Vec from(Point3 p) {
-            return Vec.of(new BigInteger("" + p.x(), 10),
-                          new BigInteger("" + p.y(), 10),
-                          new BigInteger("" + p.z(), 10));
+            return Vec.of(BigInteger.valueOf(p.x()),
+                          BigInteger.valueOf(p.y()),
+                          BigInteger.valueOf(p.z()));
         }
 
         public Vec multiply(BigInteger l) {
