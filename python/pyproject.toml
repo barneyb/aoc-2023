@@ -22,3 +22,8 @@ dependencies = [
 
 [project.entry-points."adventofcode.user"]
 me = "util.aoc:entry_point"
+
+[project.entry-points."barneyb_aoc_all.support"]
+python23 = "util.aoc_all:support"
+[project.entry-points."barneyb_aoc_all.solve"]
+python23 = "util.aoc_all:solve"
