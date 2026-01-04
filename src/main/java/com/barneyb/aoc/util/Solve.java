@@ -1,5 +1,7 @@
 package com.barneyb.aoc.util;
 
+import lombok.Setter;
+
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
@@ -14,6 +16,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 abstract class Solve<Model> {
+
+    @Setter
+    private String inputString;
 
     protected abstract Model buildModel(Input input);
 
@@ -95,8 +100,20 @@ abstract class Solve<Model> {
         });
     }
 
+    public final Answers<String, String> getAnswers() {
+        Model model = buildModel(getInput());
+        List<Object> ans = new ArrayList<>();
+        solve(model, a -> ans.add(a.result));
+        while (ans.size() < 2) ans.add(null);
+        return new Answers<>(ans.get(0),
+                             ans.get(1))
+                .stringify();
+    }
+
     Input getInput() {
-        return Input.of(getClass());
+        return inputString != null
+                ? Input.of(inputString)
+                : Input.of(getClass());
     }
 
     private String part(int i) {

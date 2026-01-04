@@ -25,5 +25,7 @@ me = "util.aoc:entry_point"
 
 [project.entry-points."barneyb_aoc_all.support"]
 python23 = "util.aoc_all:support"
+java23 = "util.aoc_all:support_java"
 [project.entry-points."barneyb_aoc_all.solve"]
 python23 = "util.aoc_all:solve"
+java23 = "util.aoc_all:solve_java"
