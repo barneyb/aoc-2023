@@ -34,11 +34,16 @@ def java_dir():
     return os.path.join(os.path.dirname(__file__), "..", "..")
 
 
+def java_env():
+    return {"JAVA_VERSION": "17"}
+
+
 def support_java():
     # mvn exec:java --quiet -Dexec.args="support"
     proc = subprocess.run(
-        ["mvn", "exec:java", "--quiet", "-Dexec.args=support"],
+        ["./mvnw", "compile", "exec:java", "--quiet", "-Dexec.args=support"],
         cwd=java_dir(),
+        env=java_env(),
         capture_output=True,
         text=True,
     )
@@ -60,12 +65,13 @@ def solve_java(year, day, data):
         # mvn exec:java --quiet -Dexec.args="solve 2015 1"
         proc = subprocess.run(
             [
-                "mvn",
+                "./mvnw",
                 "exec:java",
                 "--quiet",
                 f"-Dexec.args=solve {year} {day} {fp.name}",
             ],
             cwd=java_dir(),
+            env=java_env(),
             input=data,
             capture_output=True,
             text=True,
