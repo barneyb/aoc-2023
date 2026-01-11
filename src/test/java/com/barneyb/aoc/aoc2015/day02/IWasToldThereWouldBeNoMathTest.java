@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2015.day02;
 
+import com.barneyb.aoc.NotInCI;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -29,6 +30,7 @@ class IWasToldThereWouldBeNoMathTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new IWasToldThereWouldBeNoMath().test(1598415, 3812909);
     }

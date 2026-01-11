@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2021.day05;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.geom.Line;
 import com.barneyb.aoc.geom.Point;
 import com.barneyb.aoc.util.Answers;
@@ -43,6 +44,7 @@ class HydrothermalVentureTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new HydrothermalVenture().test(7644, 18627);
     }

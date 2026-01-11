@@ -159,6 +159,11 @@ public class StepCounter extends SolveEachPart<Model, Long, Long> {
     }
 
     @Override
+    protected Input getInput() {
+        return super.getInput();
+    }
+
+    @Override
     protected Model buildModel(Input input) {
         return Model.from(input);
     }

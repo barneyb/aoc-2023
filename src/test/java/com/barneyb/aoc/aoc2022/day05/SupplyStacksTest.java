@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2022.day05;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ class SupplyStacksTest {
             [N] [C]   \s
             [Z] [M] [P]
              1   2   3\s
-                        
+            
             move 1 from 2 to 1
             move 3 from 1 to 3
             move 2 from 2 to 1
@@ -49,6 +50,7 @@ class SupplyStacksTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new SupplyStacks().test("PTWLTDSJV", "WZMFVGGZP");
     }

@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2019.day05;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.aoc2019.day02.Intcode;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SunnyWithAChanceOfAsteroidsTest {
 
     @Test
+    @NotInCI
     void realWorld() {
         new SunnyWithAChanceOfAsteroids()
                 .test(13978427, 11189491);

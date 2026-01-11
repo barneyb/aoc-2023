@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2023.day21;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.geom.Point;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
@@ -202,9 +203,10 @@ class StepCounterTest {
     }
 
     @Test
+    @NotInCI
     void realInput() {
         StepCounter solver = new StepCounter();
-        Model m = solver.buildModel(Input.of(StepCounter.class));
+        Model m = solver.buildModel(solver.getInput());
         assertEquals(3_788L, solver.solvePartOne(m));
         assertEquals(631_357_596_621_921L, solver.solvePartTwo(m));
     }

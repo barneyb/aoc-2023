@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2016.day04;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,7 @@ class SecurityThroughObscurityTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new SecurityThroughObscurity().test(361724, 482);
     }

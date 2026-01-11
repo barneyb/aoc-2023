@@ -3,11 +3,8 @@ package com.barneyb.aoc.util;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -42,7 +39,7 @@ public class AocAll {
                     throw new RuntimeException("'solve' expects three additional args (year, day, input_filename");
                 var d = new Day(Integer.parseInt(args[1]),
                                 Integer.parseInt(args[2]));
-                var info = aa.solve(d, () -> readInput(args[3]));
+                var info = aa.solve(d, new TempFileInputSupplier(args[3]));
                 var ans = info.result();
                 printRow("a", ans.partOne());
                 printRow("b", ans.partTwo());
@@ -50,11 +47,6 @@ public class AocAll {
             }
             default -> throw new RuntimeException("Unrecognized '" + args[0] + "' command");
         }
-    }
-
-    @SneakyThrows
-    private static InputStream readInput(String path) {
-        return new FileInputStream(path);
     }
 
     private static void printRow(String key, Object value) {
@@ -109,7 +101,7 @@ public class AocAll {
     }
 
     @SneakyThrows
-    Solve.Info<Answers<?, ?>> solve(Day d, Supplier<InputStream> inputSource) {
+    Solve.Info<Answers<?, ?>> solve(Day d, InputSupplier inputSupplier) {
         @SuppressWarnings("rawtypes")
         List<Class<? extends Solve>> types = streamSolverTypes(String.format(
                 "com.barneyb.aoc.aoc%4d.day%02d",
@@ -128,7 +120,7 @@ public class AocAll {
         Solve<?> solver = types.get(0)
                 .getDeclaredConstructor()
                 .newInstance();
-        solver.setInputSource(inputSource);
+        solver.setInputSupplier(inputSupplier);
         return solver.getAnswers();
     }
 

@@ -2,7 +2,6 @@ package com.barneyb.aoc.util;
 
 import lombok.Setter;
 
-import java.io.InputStream;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
@@ -20,12 +19,15 @@ import java.util.function.Supplier;
 abstract class Solve<Model> {
 
     @Setter
-    private Supplier<InputStream> inputSource;
+    private InputSupplier inputSupplier = new AocdInputSupplier();
 
     protected abstract Model buildModel(Input input);
 
     abstract void solve(Model model,
                         Consumer<Info<?>> doneWithPart);
+
+    abstract void test(Model model,
+                       Consumer<Object> solutionConsumer);
 
     record Info<T>(T result,
                    long nanos,
@@ -92,6 +94,7 @@ abstract class Solve<Model> {
     }
 
     public final void solveAndPrint() {
+        inputSupplier.prepare(this);
         Info<Model> model = workInfo(() -> buildModel(getInput()));
         System.out.println("Load Data");
         System.out.println(info(model));
@@ -103,6 +106,7 @@ abstract class Solve<Model> {
     }
 
     public final Info<Answers<?,?>> getAnswers() {
+        inputSupplier.prepare(this);
         Info<Model> model = workInfo(() -> buildModel(getInput()));
         AtomicLong nanos = new AtomicLong(model.nanos());
         List<Object> ans = new ArrayList<>();
@@ -117,10 +121,9 @@ abstract class Solve<Model> {
                           Mem.empty());
     }
 
-    Input getInput() {
-        return inputSource != null
-                ? new Input(inputSource.get())
-                : Input.of(getClass());
+    protected Input getInput() {
+        inputSupplier.prepare(this);
+        return inputSupplier.get();
     }
 
     private String part(int i) {
@@ -165,6 +168,7 @@ abstract class Solve<Model> {
     }
 
     public void test(Object... expected) {
+        inputSupplier.prepare(this);
         List<Object> actual = new ArrayList<>();
         System.out.printf("      parts: %d%n",
                           expected.length);
@@ -189,8 +193,5 @@ abstract class Solve<Model> {
                     a));
         }
     }
-
-    abstract void test(Model model,
-                       Consumer<Object> solutionConsumer);
 
 }

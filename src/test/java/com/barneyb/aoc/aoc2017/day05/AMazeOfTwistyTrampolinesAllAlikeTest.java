@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2017.day05;
 
+import com.barneyb.aoc.NotInCI;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +22,7 @@ class AMazeOfTwistyTrampolinesAllAlikeTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new AMazeOfTwistyTrampolinesAllAlike().test(375042, 28707598);
     }

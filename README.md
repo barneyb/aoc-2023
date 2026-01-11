@@ -34,18 +34,19 @@ aoc -y 2015 -d 1 --no-submit
 
 ## Java Solvers
 
-I have opted to package the puzzle input files as classpath resources, rather
-that loading them from the filesystem at runtime. This is almost entirely to
-facilitate easy use of the real puzzles as integration tests, since part of what
+You'll need Java 17 or better. Most solvers have a `main` method, or you can run
+them through Maven:
+
+```
+% ./mvnw exec:java --quiet -Dexec.args="solve 2015 1 path/to/your/input.txt"
+a,123
+b,4567
+nanos,581000
+```
+
+Java _also_ uses [advent-of-code-data](https://github.com/wimglenn/advent-of-code-data) to manage inputs, and **_some tests are
+hard-coded with my answers_**. These tests can be disabled with setting `CI=true` in your environment. This is
+entirely to facilitate the real puzzles as integration tests, since part of what
 I think is fun is evolving the _set_ of solvers through the yearly puzzle space.
-2019 required it - via the Intcode virtual machine - but there are simpler
+2019 required it - the Intcode virtual machine - but there are simpler
 primitives present in every year. 2D mazes, anyone?
-
-The `Input(year,day)` constructor is the only thing aware of this, so trivial to
-refactor if you have different needs/wants. I didn't bother.
-
-To run, ensure you have Java 17 or better and then:
-
-```
-./mvnw test
-```
