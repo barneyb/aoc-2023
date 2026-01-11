@@ -3,10 +3,8 @@ package com.barneyb.aoc.util;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.StringWriter;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -41,36 +39,26 @@ public class AocAll {
                     throw new RuntimeException("'solve' expects three additional args (year, day, input_filename");
                 var d = new Day(Integer.parseInt(args[1]),
                                 Integer.parseInt(args[2]));
-                var ans = aa.solve(d, readInput(args[3]));
-                printAnswer("a", ans.partOne());
-                printAnswer("b", ans.partTwo());
+                var info = aa.solve(d, new TempFileInputSupplier(args[3]));
+                var ans = info.result();
+                printRow("a", ans.partOne());
+                printRow("b", ans.partTwo());
+                printRow("nanos", info.nanos());
             }
-            default -> {
-                throw new RuntimeException(String.format(
-                        "Unrecognized '%s' command",
-                        args[0]));
-            }
+            default -> throw new RuntimeException("Unrecognized '" + args[0] + "' command");
         }
     }
 
-    @SneakyThrows
-    private static String readInput(String path) {
-        StringWriter sw = new StringWriter();
-        try (var in = new BufferedReader(new FileReader(path))) {
-            in.transferTo(sw);
-        }
-        return sw.toString();
-    }
-
-    private static void printAnswer(String part, String ans) {
-        if (ans == null || ans.isBlank()) {
-            System.out.println(part + ',');
-        } else if (ans.contains("\n")
-                   || ans.contains(",")
-                   || ans.contains("\"")) {
-            System.out.println(part + ",\"" + ans.replace("\"", "\"\"") + '"');
+    private static void printRow(String key, Object value) {
+        String s = Objects.toString(value);
+        if (s == null || s.isBlank()) {
+            System.out.println(key + ',');
+        } else if (s.contains("\n")
+                   || s.contains(",")
+                   || s.contains("\"")) {
+            System.out.println(key + ",\"" + s.replace("\"", "\"\"") + '"');
         } else {
-            System.out.println(part + ',' + ans);
+            System.out.println(key + ',' + s);
         }
     }
 
@@ -113,7 +101,7 @@ public class AocAll {
     }
 
     @SneakyThrows
-    public Answers<String, String> solve(Day d, String inputString) {
+    Solve.Info<Answers<?, ?>> solve(Day d, InputSupplier inputSupplier) {
         @SuppressWarnings("rawtypes")
         List<Class<? extends Solve>> types = streamSolverTypes(String.format(
                 "com.barneyb.aoc.aoc%4d.day%02d",
@@ -132,7 +120,7 @@ public class AocAll {
         Solve<?> solver = types.get(0)
                 .getDeclaredConstructor()
                 .newInstance();
-        solver.setInputString(inputString);
+        solver.setInputSupplier(inputSupplier);
         return solver.getAnswers();
     }
 

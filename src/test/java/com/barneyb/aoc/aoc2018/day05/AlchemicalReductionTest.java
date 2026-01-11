@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2018.day05;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,7 @@ class AlchemicalReductionTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new AlchemicalReduction().test(11242, 5492);
     }

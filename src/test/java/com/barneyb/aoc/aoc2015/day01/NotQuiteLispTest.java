@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2015.day01;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.util.Answers;
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +23,7 @@ class NotQuiteLispTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new NotQuiteLisp().test(280, 1797);
     }

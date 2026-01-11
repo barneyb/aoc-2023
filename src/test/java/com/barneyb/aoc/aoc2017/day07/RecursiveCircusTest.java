@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2017.day07;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +56,7 @@ class RecursiveCircusTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new RecursiveCircus().test("hlhomy", 1505);
     }

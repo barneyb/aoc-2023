@@ -292,6 +292,11 @@ public class NeverTellMeTheOdds extends SolveEachPart<List<Hailstone>, Long, Lon
     }
 
     @Override
+    protected Input getInput() {
+        return super.getInput();
+    }
+
+    @Override
     protected List<Hailstone> buildModel(Input input) {
         return input.streamLines()
                 .map(l -> l.split("@"))

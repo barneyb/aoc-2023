@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2023.day24;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
 
@@ -38,16 +39,18 @@ class NeverTellMeTheOddsTest {
     }
 
     @Test
+    @NotInCI
     void realInput_one() {
         var solver = new NeverTellMeTheOdds();
-        var model = solver.buildModel(Input.of(NeverTellMeTheOddsTest.class));
+        var model = solver.buildModel(solver.getInput());
         assertEquals(18_651, solver.solvePartOne(model));
     }
 
     @Test
+    @NotInCI
     void realInput_two() {
         var solver = new NeverTellMeTheOdds();
-        var model = solver.buildModel(Input.of(NeverTellMeTheOddsTest.class));
+        var model = solver.buildModel(solver.getInput());
         //  x  = 200_027_938_836_082
         //  y  = 127_127_087_242_193
         //  z  = 219_339_468_239_370

@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -18,12 +19,15 @@ import java.util.function.Supplier;
 abstract class Solve<Model> {
 
     @Setter
-    private String inputString;
+    private InputSupplier inputSupplier = new AocdInputSupplier();
 
     protected abstract Model buildModel(Input input);
 
     abstract void solve(Model model,
                         Consumer<Info<?>> doneWithPart);
+
+    abstract void test(Model model,
+                       Consumer<Object> solutionConsumer);
 
     record Info<T>(T result,
                    long nanos,
@@ -90,6 +94,7 @@ abstract class Solve<Model> {
     }
 
     public final void solveAndPrint() {
+        inputSupplier.prepare(this);
         Info<Model> model = workInfo(() -> buildModel(getInput()));
         System.out.println("Load Data");
         System.out.println(info(model));
@@ -100,20 +105,25 @@ abstract class Solve<Model> {
         });
     }
 
-    public final Answers<String, String> getAnswers() {
-        Model model = buildModel(getInput());
+    public final Info<Answers<?,?>> getAnswers() {
+        inputSupplier.prepare(this);
+        Info<Model> model = workInfo(() -> buildModel(getInput()));
+        AtomicLong nanos = new AtomicLong(model.nanos());
         List<Object> ans = new ArrayList<>();
-        solve(model, a -> ans.add(a.result));
+        solve(model.result(), a -> {
+            ans.add(a.result);
+            nanos.addAndGet(a.nanos());
+        });
         while (ans.size() < 2) ans.add(null);
-        return new Answers<>(ans.get(0),
-                             ans.get(1))
-                .stringify();
+        return new Info<>(new Answers<>(ans.get(0),
+                                        ans.get(1)),
+                          nanos.longValue(),
+                          Mem.empty());
     }
 
-    Input getInput() {
-        return inputString != null
-                ? Input.of(inputString)
-                : Input.of(getClass());
+    protected Input getInput() {
+        inputSupplier.prepare(this);
+        return inputSupplier.get();
     }
 
     private String part(int i) {
@@ -158,6 +168,7 @@ abstract class Solve<Model> {
     }
 
     public void test(Object... expected) {
+        inputSupplier.prepare(this);
         List<Object> actual = new ArrayList<>();
         System.out.printf("      parts: %d%n",
                           expected.length);
@@ -182,8 +193,5 @@ abstract class Solve<Model> {
                     a));
         }
     }
-
-    abstract void test(Model model,
-                       Consumer<Object> solutionConsumer);
 
 }

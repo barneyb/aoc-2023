@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2016.day01;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.geom.Turn;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,7 @@ class NoTimeForATaxicabTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new NoTimeForATaxicab().test(288, 111);
     }

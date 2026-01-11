@@ -1,5 +1,6 @@
 package com.barneyb.aoc.aoc2016.day02;
 
+import com.barneyb.aoc.NotInCI;
 import com.barneyb.aoc.geom.Dir;
 import com.barneyb.aoc.util.Input;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ class BathroomSecurityTest {
     }
 
     @Test
+    @NotInCI
     void realWorld() {
         new BathroomSecurity().test("61529",
                                     "C2C28");

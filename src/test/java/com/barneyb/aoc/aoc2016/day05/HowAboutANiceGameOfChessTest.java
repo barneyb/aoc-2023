@@ -1,6 +1,7 @@
 package com.barneyb.aoc.aoc2016.day05;
 
 import com.barneyb.aoc.CIOnly;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +32,7 @@ class HowAboutANiceGameOfChessTest {
     }
 
     @Test
-    @CIOnly
+    @Disabled("Too slow for interactive use, and can't get input on CI")
     void realWorld() {
         new HowAboutANiceGameOfChess().test("f97c354d", "863dde27");
     }
