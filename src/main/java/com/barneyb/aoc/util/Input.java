@@ -1,5 +1,8 @@
 package com.barneyb.aoc.util;
 
+import lombok.SneakyThrows;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -13,11 +16,12 @@ import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public final class Input implements Iterable<String> {
+public final class Input implements Iterable<String>, AutoCloseable {
 
     private static final int FIRST_YEAR = 2015;
     private static final int FIRST_DAY = 1;
     private static final int LAST_DAY = 25;
+    private static final int FIRST_HALF_YEAR = 2025;
 
     public static Input of(int year, int day) {
         return new Input(year, day);
@@ -51,7 +55,9 @@ public final class Input implements Iterable<String> {
                     FIRST_YEAR,
                     maxYear));
         }
-        int maxDay = LAST_DAY;
+        int maxDay = year < FIRST_HALF_YEAR
+                ? LAST_DAY
+                : LAST_DAY / 2;
         if (year == now.getYear()) {
             // already know it's december
             maxDay = Math.min(maxDay, now.getDayOfMonth());
@@ -79,7 +85,7 @@ public final class Input implements Iterable<String> {
                 .getContextClassLoader()
                 .getResourceAsStream(path);
         if (inStream == null) {
-            throw new RuntimeException("Failed to open input " + path);
+            throw new IllegalArgumentException("Failed to open input " + path);
         }
     }
 
@@ -87,7 +93,16 @@ public final class Input implements Iterable<String> {
         this.inStream = inStream;
     }
 
-    private static class Lines implements Iterator<String> {
+    @SneakyThrows
+    @Override
+    public void close() {
+        if (inStream != null) {
+            inStream.close();
+            inStream = null;
+        }
+    }
+
+    private static class Lines implements Iterator<String>, AutoCloseable {
 
         private BufferedReader reader;
         private String line;
@@ -124,6 +139,15 @@ public final class Input implements Iterable<String> {
             String l = line;
             line = null;
             return l;
+        }
+
+        @SneakyThrows
+        @Override
+        public void close() {
+            if (reader != null) {
+                reader.close();
+                reader = null;
+            }
         }
 
     }

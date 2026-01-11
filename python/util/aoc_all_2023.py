@@ -5,6 +5,7 @@ import importlib.util
 import os
 import subprocess
 import tempfile
+import time
 
 from util.aoc import entry_point
 
@@ -27,7 +28,9 @@ def support():
 
 
 def solve(year, day, data):
-    return entry_point(year, day, data)
+    start = time.time_ns()
+    a, b = entry_point(year, day, data)
+    return a, b, (time.time_ns() - start)
 
 
 def java_dir():
@@ -78,4 +81,4 @@ def solve_java(year, day, data):
         )
 
     ans = {p: a for p, a in csv.reader(proc.stdout.strip().splitlines(True))}
-    return ans["a"], ans["b"]
+    return ans["a"], ans["b"], int(ans["nanos"])

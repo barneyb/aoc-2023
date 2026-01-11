@@ -2,6 +2,7 @@ package com.barneyb.aoc.util;
 
 import lombok.Setter;
 
+import java.io.InputStream;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
@@ -11,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -18,7 +20,7 @@ import java.util.function.Supplier;
 abstract class Solve<Model> {
 
     @Setter
-    private String inputString;
+    private Supplier<InputStream> inputSource;
 
     protected abstract Model buildModel(Input input);
 
@@ -100,19 +102,24 @@ abstract class Solve<Model> {
         });
     }
 
-    public final Answers<String, String> getAnswers() {
-        Model model = buildModel(getInput());
+    public final Info<Answers<?,?>> getAnswers() {
+        Info<Model> model = workInfo(() -> buildModel(getInput()));
+        AtomicLong nanos = new AtomicLong(model.nanos());
         List<Object> ans = new ArrayList<>();
-        solve(model, a -> ans.add(a.result));
+        solve(model.result(), a -> {
+            ans.add(a.result);
+            nanos.addAndGet(a.nanos());
+        });
         while (ans.size() < 2) ans.add(null);
-        return new Answers<>(ans.get(0),
-                             ans.get(1))
-                .stringify();
+        return new Info<>(new Answers<>(ans.get(0),
+                                        ans.get(1)),
+                          nanos.longValue(),
+                          Mem.empty());
     }
 
     Input getInput() {
-        return inputString != null
-                ? Input.of(inputString)
+        return inputSource != null
+                ? new Input(inputSource.get())
                 : Input.of(getClass());
     }
 
