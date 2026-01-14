@@ -75,7 +75,6 @@ def solve_java(year, day, data):
             ],
             cwd=java_dir(),
             env=java_env(),
-            input=data,
             capture_output=True,
             text=True,
         )
